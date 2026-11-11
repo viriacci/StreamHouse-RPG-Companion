@@ -17,7 +17,9 @@ Jeśli na VPS działa już inna witryna pod Nginx, instalator doda osobny vhost,
 ```bash
 sudo apt update
 sudo apt install -y git
-sudo git clone https://github.com/viriacci/StreamHouse-RPG-Companion.git /opt/streamhouse-rpg
+sudo mkdir -p /opt/streamhouse-rpg
+sudo chown "$(id -un):$(id -gn)" /opt/streamhouse-rpg
+git clone https://github.com/viriacci/StreamHouse-RPG-Companion.git /opt/streamhouse-rpg
 cd /opt/streamhouse-rpg
 ```
 

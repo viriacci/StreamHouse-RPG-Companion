@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 from pathlib import Path
-URL='http://127.0.0.1:8765'
+import os
+URL=os.environ.get('STREAMHOUSE_TEST_URL','http://127.0.0.1:8765')
 with sync_playwright() as p:
  browser=p.chromium.launch(headless=True, executable_path='/usr/bin/chromium', args=['--no-sandbox','--disable-dev-shm-usage'])
  context=browser.new_context(viewport={'width':1450,'height':950}, reduced_motion='reduce')
@@ -34,7 +35,7 @@ with sync_playwright() as p:
  gm.locator('#roll-form button[type="submit"]').click();gm.wait_for_timeout(800)
  print('dice result',gm.locator('#dice-total').inner_text(),'dice visible',gm.locator('#dice-view').is_visible())
  gm.locator('#dice-close').click()
- gm.screenshot(path='/mnt/data/sh_v9/podglad-v9-fabularny.png')
- gm.locator('#room-mode-switch').click();gm.screenshot(path='/mnt/data/sh_v9/podglad-v9-taktyczny.png')
+ gm.screenshot(path=str(Path(__file__).resolve().parent.parent/'podglad-v9-fabularny.png'))
+ gm.locator('#room-mode-switch').click();gm.screenshot(path=str(Path(__file__).resolve().parent.parent/'podglad-v9-taktyczny.png'))
  print('errors:',errors)
  browser.close()

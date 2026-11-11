@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 from pathlib import Path
 import re, json
-root=Path('/mnt/data/sh_v9')
+root=Path(__file__).resolve().parent.parent
 html=(root/'pokoj/index.html').read_text()
 html=re.sub(r'<script\b[^>]*src="[^"]+"[^>]*></script>','',html)
 mock_store='''
@@ -38,7 +38,7 @@ with sync_playwright() as p:
  page.locator('#roll-form button[type="submit"]').click();page.wait_for_timeout(400)
  print('dice modal',page.locator('#dice-view').is_visible(),'result',page.locator('#dice-total').inner_text())
  page.locator('#dice-close').click()
- page.screenshot(path='/mnt/data/sh_v9/podglad-v9-fabularny.png')
- page.locator('#room-mode-switch').click();page.screenshot(path='/mnt/data/sh_v9/podglad-v9-taktyczny.png')
+ page.screenshot(path=str(root/'podglad-v9-fabularny.png'))
+ page.locator('#room-mode-switch').click();page.screenshot(path=str(root/'podglad-v9-taktyczny.png'))
  print('JS ERRORS',errors)
  b.close()

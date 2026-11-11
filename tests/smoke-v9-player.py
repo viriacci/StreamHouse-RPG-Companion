@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 from pathlib import Path
 import re
-root=Path('/mnt/data/sh_v9')
+root=Path(__file__).resolve().parent.parent
 html=re.sub(r'<script\b[^>]*src="[^"]+"[^>]*></script>','',(root/'pokoj/index.html').read_text())
 with sync_playwright() as p:
  b=p.chromium.launch(headless=True,executable_path='/usr/bin/chromium',args=['--no-sandbox','--disable-dev-shm-usage'])
