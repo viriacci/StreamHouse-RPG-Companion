@@ -1,0 +1,49 @@
+{
+  "format": "streamhouse-character-v1",
+  "rules": "SRD-5.2.1",
+  "character": {
+    "id": null,
+    "name": "Talia Ciernista",
+    "title": "",
+    "bio": "Tropicielka leśnych ścieżek i ruin.",
+    "avatar": "",
+    "avatarSource": "",
+    "avatarTheme": "forest",
+    "classId": "ranger",
+    "speciesId": "elf",
+    "backgroundId": "guide",
+    "method": "standard",
+    "base": [
+      15,
+      14,
+      13,
+      12,
+      10,
+      8
+    ],
+    "bonusMode": "split",
+    "bonusPlus2": "dex",
+    "bonusPlus1": "con",
+    "languages": [
+      "Elfi",
+      "Krasnoludzki"
+    ],
+    "classSkills": [
+      "Animal Handling",
+      "Athletics",
+      "Insight"
+    ],
+    "equipChoice": "gold",
+    "classEquip": "A",
+    "alignment": "Neutralny",
+    "appearanceMode": "library",
+    "avatarAdjust": {
+      "x": 0,
+      "y": 0,
+      "z": 1
+    },
+    "flowVersion": 4,
+    "step": 0,
+    "status": "draft"
+  }
+}

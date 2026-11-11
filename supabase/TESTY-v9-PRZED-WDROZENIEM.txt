@@ -1,0 +1,27 @@
+TESTY v9 NA AKTYWNYM PROJEKCIE (wciąż NIE WYKONANE)
+
+Konta: MG-A, Gracz-B, Gracz-C niezwiązany z kampanią.
+
+[ ] Migracje v7 → v8 → v9 wykonują się bez błędów na pustym projekcie.
+[ ] Po zalogowaniu przez Discord role MG i graczy są prawidłowe.
+[ ] Obce konto nie odczyta sh_room_character_state dla cudzej kampanii.
+[ ] Obce konto nie może wywołać sh_room_save_character.
+[ ] Gracz-B nie może edytować bohatera MG-A ani bohatera innego gracza.
+[ ] Gracz-B może edytować własną postać po udostępnieniu jej kampanii.
+[ ] MG-A może zmieniać wszystkie udostępnione postacie w swojej kampanii.
+[ ] Niemożliwe HP<0, HP>maxHp, niepoprawna lista ekwipunku.
+[ ] Dwóch użytkowników edytuje jednocześnie: drugi zapis kończy się konfliktem.
+[ ] Usunięcie udostępnienia usuwa tylko stan sesji, a nie kartę źródłową.
+[ ] Rzuty gracze/MG pochodzą z RPC sh_room_roll i trafiają do kroniki.
+[ ] W dwóch przeglądarkach zmiana HP dociera przez Realtime lub odczyt.
+[ ] Oba tryby jednocześnie pokazują tę samą scenę, kronikę i karty.
+[ ] Player view nie ma dostępu do prywatnych notatek MG w bazie.
+[ ] Odnowienie sesji/wylogowanie nie pozwala użyć starego tokena.
+[ ] Zmiana/zaprzestanie członkostwa odbiera dostęp do danych kampanii.
+
+Uruchamianie testów lokalnych (bez bazy):
+    node tests/smoke-room-mock.js
+    python tests/smoke-v9-inject.py
+    python tests/smoke-v9-player.py
+Testy przeglądarkowe używają wstrzykniętego HTML ze względu na blokadę
+lokalnych adresów w środowisku testowym. Nie są testami serwera HTTP.

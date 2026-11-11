@@ -1,0 +1,102 @@
+{
+  "format": "streamhouse-starter-library-v1",
+  "version": "2026-11-10",
+  "cards": [
+    {
+      "name": "Ragna Żelazna Pięść",
+      "classId": "barbarian",
+      "speciesId": "goliath",
+      "backgroundId": "soldier",
+      "bio": "Nieustępliwa wojowniczka z północnych gór.",
+      "file": "postac-01-barbarian.json"
+    },
+    {
+      "name": "Lira Śpiewająca",
+      "classId": "bard",
+      "speciesId": "halfling",
+      "backgroundId": "entertainer",
+      "bio": "Bardka, która zbiera zapomniane ballady.",
+      "file": "postac-02-bard.json"
+    },
+    {
+      "name": "Edrin Światłonośny",
+      "classId": "cleric",
+      "speciesId": "dwarf",
+      "backgroundId": "acolyte",
+      "bio": "Opiekun sanktuarium i wędrowny uzdrowiciel.",
+      "file": "postac-03-cleric.json"
+    },
+    {
+      "name": "Maelis Zielona",
+      "classId": "druid",
+      "speciesId": "elf",
+      "backgroundId": "hermit",
+      "bio": "Druidka strzegąca granic pradawnego lasu.",
+      "file": "postac-04-druid.json"
+    },
+    {
+      "name": "Garrik z Pogranicza",
+      "classId": "fighter",
+      "speciesId": "human",
+      "backgroundId": "guard",
+      "bio": "Strażnik szlaków i doświadczony wojownik.",
+      "file": "postac-05-fighter.json"
+    },
+    {
+      "name": "Sena Bezśladu",
+      "classId": "monk",
+      "speciesId": "human",
+      "backgroundId": "sage",
+      "bio": "Wędrowna uczennica klasztoru.",
+      "file": "postac-06-monk.json"
+    },
+    {
+      "name": "Darion Przysięgły",
+      "classId": "paladin",
+      "speciesId": "dragonborn",
+      "backgroundId": "noble",
+      "bio": "Rycerz wierny dawno złożonej przysiędze.",
+      "file": "postac-07-paladin.json"
+    },
+    {
+      "name": "Talia Ciernista",
+      "classId": "ranger",
+      "speciesId": "elf",
+      "backgroundId": "guide",
+      "bio": "Tropicielka leśnych ścieżek i ruin.",
+      "file": "postac-08-ranger.json"
+    },
+    {
+      "name": "Niko Cichy Krok",
+      "classId": "rogue",
+      "speciesId": "gnome",
+      "backgroundId": "criminal",
+      "bio": "Zręczny zwiadowca miejskich zaułków.",
+      "file": "postac-09-rogue.json"
+    },
+    {
+      "name": "Vexa Iskra",
+      "classId": "sorcerer",
+      "speciesId": "tiefling",
+      "backgroundId": "charlatan",
+      "bio": "Zaklinaczka z magią, nad którą dopiero uczy się panować.",
+      "file": "postac-10-sorcerer.json"
+    },
+    {
+      "name": "Oris Cień",
+      "classId": "warlock",
+      "speciesId": "orc",
+      "backgroundId": "wayfarer",
+      "bio": "Wędrowiec związany tajemniczym paktem.",
+      "file": "postac-11-warlock.json"
+    },
+    {
+      "name": "Lorien Astralny",
+      "classId": "wizard",
+      "speciesId": "human",
+      "backgroundId": "scribe",
+      "bio": "Badacz ksiąg i tajemnych znaków.",
+      "file": "postac-12-wizard.json"
+    }
+  ]
+}

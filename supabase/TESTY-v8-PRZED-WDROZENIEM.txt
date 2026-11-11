@@ -1,0 +1,24 @@
+STREAMHOUSE V8 - TESTY PRZED PRODUKCYJNYM WDROZENIEM
+
+Testuj na osobnym aktywnym projekcie Supabase z migracjami v7 i v8.
+Nie używaj roli service_role do symulowania zwykłego gracza, bo omija RLS.
+
+[ ] Konto A: logowanie Discord, stworzenie kampanii online.
+[ ] Konto B: dołączenie przez wygenerowany link (inny profil przeglądarki).
+[ ] Konto C (nieczłonek): otwarcie URL pokoju A kończy się odmową.
+[ ] A: publikacja sceny, B: odczyt w drugim urządzeniu.
+[ ] A: pionek + ruch, B: pozycja odświeża się.
+[ ] A: inicjatywa i kolejna tura, B widzi aktywnego bohatera.
+[ ] B: wysłany chat i rzut D20, A widzi wpis oraz wynik z bazy.
+[ ] A: prywatne notatki, B nie może odczytać tabeli sh_room_gm_notes.
+[ ] B: próba wywołania RPC sh_room_update musi się zakończyć 42501.
+[ ] B: bezpośredni INSERT kind='roll' musi się zakończyć odmową.
+[ ] C: SELECT sh_room_events/sh_room_states innej kampanii nie zwraca wierszy.
+[ ] B: próba wpisania presence.user_id=A jest odrzucona.
+[ ] Dwa okna konta A: edycja starej rewizji stanu zwraca konflikt P0001.
+[ ] Niewłaściwe sides 7 w sh_room_roll odrzucane.
+[ ] WebSocket: Postgres Changes działa; gdy WebSocket jest niedostępny,
+    odczyt okresowy aktualizuje widoki.
+[ ] Po wylogowaniu tokenu odświeżane żądania są odrzucane.
+[ ] A: notatki prywatne nie są ujawniane w payload stanu ani w feedzie.
+[ ] Sprawdź limit liczby wiadomości / ewentualne rate limiting na VPS.

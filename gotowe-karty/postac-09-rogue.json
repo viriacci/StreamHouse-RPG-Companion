@@ -1,0 +1,50 @@
+{
+  "format": "streamhouse-character-v1",
+  "rules": "SRD-5.2.1",
+  "character": {
+    "id": null,
+    "name": "Niko Cichy Krok",
+    "title": "",
+    "bio": "Zręczny zwiadowca miejskich zaułków.",
+    "avatar": "",
+    "avatarSource": "",
+    "avatarTheme": "forest",
+    "classId": "rogue",
+    "speciesId": "gnome",
+    "backgroundId": "criminal",
+    "method": "standard",
+    "base": [
+      15,
+      14,
+      13,
+      12,
+      10,
+      8
+    ],
+    "bonusMode": "split",
+    "bonusPlus2": "dex",
+    "bonusPlus1": "con",
+    "languages": [
+      "Elfi",
+      "Krasnoludzki"
+    ],
+    "classSkills": [
+      "Acrobatics",
+      "Athletics",
+      "Deception",
+      "Insight"
+    ],
+    "equipChoice": "pack",
+    "classEquip": "A",
+    "alignment": "Neutralny",
+    "appearanceMode": "library",
+    "avatarAdjust": {
+      "x": 0,
+      "y": 0,
+      "z": 1
+    },
+    "flowVersion": 4,
+    "step": 0,
+    "status": "draft"
+  }
+}

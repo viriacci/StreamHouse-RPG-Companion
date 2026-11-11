@@ -1,0 +1,128 @@
+[
+  {
+    "nazwa": "Elfi lord",
+    "kategoria": "Postacie",
+    "autor": "Carmen Haberichter",
+    "licencja": "Domena publiczna (deklaracja autorki)",
+    "link": "https://commons.wikimedia.org/wiki/File:Elvenlord.jpg",
+    "tag": "elf",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Elfka, grafika wektorowa",
+    "kategoria": "Postacie",
+    "autor": "OpenClipart / FreeSVG",
+    "licencja": "Public Domain (deklaracja serwisu)",
+    "link": "https://freesvg.org/elf-princess-illustration",
+    "tag": "elf",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Skrzypek, rycina 1616",
+    "kategoria": "Postacie / klasa bard",
+    "autor": "Jacques Callot",
+    "licencja": "Domena publiczna (utwór historyczny)",
+    "link": "https://commons.wikimedia.org/wiki/File:Callot_Burlesque_Violinist.jpg",
+    "tag": "bard",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Anguekkok, ilustracja XIX w.",
+    "kategoria": "Postacie / klasa czarująca",
+    "autor": "Dictionnaire infernal (1863)",
+    "licencja": "Domena publiczna (skan starego dzieła)",
+    "link": "https://commons.wikimedia.org/wiki/File:Anguekkok.png",
+    "tag": "wizard",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Orkowie",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Orc.png",
+    "tag": "orc",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Goblin",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Goblin.png",
+    "tag": "goblin",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Gnoll",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Gnoll.png",
+    "tag": "gnoll",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Hobgoblin",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Hobgoblin.png",
+    "tag": "hobgoblin",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Smok",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Dragon.png",
+    "tag": "dragon",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Bazyliszek",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Basilisk.png",
+    "tag": "basilisk",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Hydra",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Hydra.png",
+    "tag": "hydra",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Minotaur",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Minotaur.png",
+    "tag": "minotaur",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Pegaz",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Pegasus.png",
+    "tag": "pegasus",
+    "status": "Potwierdzone na stronie źródłowej"
+  },
+  {
+    "nazwa": "Centaur",
+    "kategoria": "Bestiariusz",
+    "autor": "LadyofHats",
+    "licencja": "CC0 1.0",
+    "link": "https://commons.wikimedia.org/wiki/File:DnD_Centaur.png",
+    "tag": "centaur",
+    "status": "Potwierdzone na stronie źródłowej"
+  }
+]

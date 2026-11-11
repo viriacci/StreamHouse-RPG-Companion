@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>StreamHouse · Dziennik</title><style>
+:root{color-scheme:dark;--gold:#c9a66d;--cream:#f3e6c9;--paper:#e8d3a5}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Georgia,serif;color:var(--cream)}
+body{background:radial-gradient(ellipse at 50% -5%,#4e3d29 0%,#251a14 48%,#0e0b09 100%)}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.journal{max-width:1310px;margin:auto;padding:22px 24px 16px}
+.journal-top{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:75px;margin-bottom:17px}
+.brandline{font:600 11px 'Segoe UI',sans-serif;letter-spacing:.22em;color:#c7a574;text-transform:uppercase}
+.journal-top h1{margin:5px 0 0;font:normal 34px/1.1 Georgia,serif;color:#f1deb8}
+.book-action{border:1px solid #ad8751;background:linear-gradient(180deg,#74552f,#2a1d13);color:#f8e7c2;padding:11px 18px;box-shadow:inset 0 1px 0 #fff1d14d,0 6px 14px #0004}
+.book-action:hover{border-color:#f0d29a;filter:brightness(1.09)}.book-action:focus-visible,.book-leaf input:focus-visible,.book-leaf textarea:focus-visible{outline:2px solid #bf9658;outline-offset:3px}
+.book-frame{position:relative;border:8px ridge #725331;background:linear-gradient(90deg,#312015 0,#a8824b 1%,#442915 3%,#5e3b20 47%,#25150b 50%,#644526 53%,#382315 98%,#d0aa70 100%);padding:14px;box-shadow:0 0 0 1px #d7b77a,0 34px 70px #000a,inset 0 0 22px #000b;perspective:1600px;min-height:550px}
+.book-spread{display:grid;grid-template-columns:1fr 1fr;min-height:535px;position:relative;border:1px solid #7b5731;box-shadow:0 5px 22px #000b}
+.book-spread:after{content:'';position:absolute;left:calc(50% - 12px);top:0;bottom:0;width:24px;z-index:3;pointer-events:none;background:linear-gradient(90deg,#0007,#e7c58633 23%,#53341b88 48%,#efe0b447 74%,#0008);box-shadow:0 0 11px #0007}
+.book-leaf{position:relative;min-width:0;padding:37px 42px 26px;color:#40301c;overflow:hidden;
+ background:linear-gradient(110deg,#fffcf09a,#fff7e63b 30%,#b28b4821 100%),url('https://cdn.meshy.ai/landing-assets/textures/paper/aged-parchment-paper/aged-parchment-paper-2k.jpg') center/cover,url('StreamHouse-v14-Pergamin.jpg') center/cover,#e8d2a4;
+ box-shadow:inset 0 0 36px #91744346}
+.book-leaf.left{border-right:1px solid #805b2c;box-shadow:inset -23px 0 26px #654a2c35,inset 0 0 30px #956f2d22}
+.book-leaf.right{box-shadow:inset 23px 0 26px #654a2c38,inset 0 0 30px #956f2d22}
+.book-leaf:before{content:'';position:absolute;inset:18px;border:1px solid #8a613c60;pointer-events:none}
+.page-ornament{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:26px;color:#805c31;opacity:.7}.page-ornament:before,.page-ornament:after{content:'';width:44px;height:1px;background:#9b7b51}
+.page-title{position:relative;display:block;width:100%;height:52px;background:transparent;border:0;border-bottom:1px solid #a17a497d;color:#51391b;font:italic normal 30px/1.25 Georgia,serif;outline:0;padding:5px 0 13px}
+.page-title::placeholder{color:#9b815c}
+.page-body{display:block;width:100%;height:342px;margin-top:16px;padding:5px 4px;border:0;background:transparent;resize:none;color:#3b3023;line-height:1.58;font-size:18px;outline:0}
+.page-body::placeholder{color:#9e8460}.page-number{position:absolute;bottom:20px;left:0;right:0;text-align:center;color:#8a6d45;font:italic 15px Georgia,serif}
+.book-turn{position:absolute;top:0;left:50%;height:100%;width:50%;z-index:5;transform-origin:left center;display:none;backface-visibility:visible;pointer-events:none;transform-style:preserve-3d}
+.book-turn.active{display:block;animation:flip-forward var(--flip-time,.65s) cubic-bezier(.35,.08,.23,1) both}
+.book-turn.reverse{display:block;left:0;transform-origin:right center;animation:flip-back .65s cubic-bezier(.35,.08,.23,1) both}
+.book-turn .turn-front,.book-turn .turn-back{position:absolute;inset:0;backface-visibility:hidden;background:linear-gradient(115deg,#fff3d4,#c3a16b);border:1px solid #9e7542;box-shadow:0 0 25px #0006}
+.book-turn .turn-back{transform:rotateY(180deg);background:linear-gradient(115deg,#c19b60,#f5e3ba)}
+@keyframes flip-forward{0%{transform:rotateY(0deg)}50%{box-shadow:-30px 0 40px #0009}100%{transform:rotateY(-180deg)}}
+@keyframes flip-back{0%{transform:rotateY(-180deg)}50%{box-shadow:30px 0 40px #0009}100%{transform:rotateY(0deg)}}
+.journal-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px}
+.page-controls{display:flex;align-items:center;gap:14px}.page-status{font:italic 15px Georgia,serif;color:#d3b887}
+.icon-btn{width:45px;height:42px;display:grid;place-items:center;border:1px solid #9d7a50;background:linear-gradient(180deg,#6d502e,#2c2017);color:#efdab2;font-size:26px}
+.icon-btn:disabled{opacity:.35;cursor:default}.icon-btn:not(:disabled):hover{border-color:#e1c593}
+.toc-backdrop{display:flex;position:fixed;inset:0;background:#070605dc;z-index:20;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(5px)}.toc-backdrop.hidden{display:none}
+.toc-modal{width:min(650px,100%);max-height:min(85vh,720px);overflow:auto;border:4px double #b58f5b;background:linear-gradient(180deg,#1e1811,#110d09);padding:25px;box-shadow:0 30px 100px #000}
+.toc-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #99754b;margin-bottom:12px;padding-bottom:16px}.toc-header h2{margin:0;font:normal 32px Georgia,serif}
+.toc-list{display:grid;gap:8px}.toc-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;border:1px solid #7e633e;background:linear-gradient(180deg,#32271b,#211810);color:#f2dfbc;text-align:left}.toc-row:hover{background:#4c3823;border-color:#e3bd83}.toc-row span:last-child{font:italic 14px Georgia,serif;color:#c4ab7c}
+@media(max-width:780px){.journal{padding:12px}.journal-top{align-items:flex-start}.journal-top h1{font-size:25px}.book-frame{padding:7px;min-height:480px}.book-spread{grid-template-columns:1fr;min-height:475px}.book-leaf{padding:25px 26px 38px}.book-leaf.left{display:none}.book-spread:after{display:none}.book-turn{width:100%;left:0}.book-leaf .page-body{height:325px}.journal-bottom{flex-wrap:wrap}.book-action{font-size:13px;padding:10px 12px}}
+</style><style id="streamhouse-crossnav-style">#sh-crossnav{position:fixed;right:14px;bottom:14px;z-index:99990;background:#141715ed;color:#eddfc2;border:1px solid #6a5a3c;border-radius:9px;padding:9px 12px;display:flex;gap:11px;align-items:center;box-shadow:0 6px 24px #0009;font:12px/1.3 system-ui, sans-serif;max-width:calc(100vw - 28px);flex-wrap:wrap}#sh-crossnav a{color:#ead39c;text-decoration:none;white-space:nowrap}#sh-crossnav a:hover{text-decoration:underline}@media(max-width:530px){#sh-crossnav{position:static;border-radius:0;justify-content:center}}</style>
+</head><body>
+<nav id="sh-crossnav" aria-label="Przejście między modułami StreamHouse"><a href="../StreamHouse-Portal.html#campaigns">← Portal</a><a href="../Kreator-Postaci.html">Kuźnia bohatera</a><a href="StreamHouse-v21-MG.html">MG</a><a href="StreamHouse-v21-Gracz.html">Gracz</a><a href="StreamHouse-v21-Pracownia-Kosci.html">Kości</a></nav>
+<div class="journal"><header class="journal-top"><div><div class="brandline">StreamHouse RPG Companion</div><h1 id="book-name">Dziennik</h1></div><button class="book-action" id="toc-open">Spis treści</button></header>
+<div class="book-frame"><div class="book-spread" id="spread"><section class="book-leaf left" id="page-left"></section><section class="book-leaf right" id="page-right"></section><div class="book-turn" id="book-turn"><div class="turn-front"></div><div class="turn-back"></div></div></div></div>
+<footer class="journal-bottom"><div class="page-controls"><button class="icon-btn" id="page-prev" aria-label="Poprzednie strony">‹</button><span class="page-status" id="page-status">1–2</span><button class="icon-btn" id="page-next" aria-label="Następne strony">›</button></div><button class="book-action" id="full-screen">⛶ Pełny ekran</button></footer></div>
+<div class="toc-backdrop hidden" id="toc"><div class="toc-modal" role="dialog" aria-modal="true" aria-labelledby="toc-title"><div class="toc-header"><h2 id="toc-title">Spis treści</h2><button class="book-action" id="toc-close">Zamknij</button></div><div class="toc-list" id="toc-list"></div></div></div>
+<script>
+(()=>{'use strict';
+const params=new URLSearchParams(location.search),key=params.get('key')||'gm';
+const $=id=>document.getElementById(id),storage='sh-rpg-book-v10-'+key,legacy='sh-rpg-notes-'+key;
+$('book-name').textContent=key==='gm'?'Dziennik Mistrza Gry':'Dziennik bohatera';
+let pages=[];try{pages=JSON.parse(localStorage.getItem(storage)||'[]')}catch{}
+// Remove the legacy canned player example, including previously persisted demo data.
+if(Array.isArray(pages)&&key.startsWith('player-'))pages=pages.map(p=>{const t=(p.body||'').trim();if(t==='Co kryje twierdza? Zapytać strażnika o pieczęć.'||t==='Co kryje twierdza?'){return {...p,title:p.title==='Pierwszy trop'?'':p.title,body:''}}return p});
+if(!Array.isArray(pages)||!pages.length){let old=[];try{old=JSON.parse(localStorage.getItem(legacy)||'[]')||[]}catch{}pages=old.filter(p=>!(key.startsWith('player-')&&['Co kryje twierdza? Zapytać strażnika o pieczęć.','Co kryje twierdza?'].includes((p.text||'').trim()))).map((p,i)=>({id:p.id||Date.now()+i,title:'',body:p.text||''}));while(pages.length<6)pages.push({id:Date.now()+pages.length,title:'',body:''})}
+let leftIndex=0,flipping=false;
+function save(){try{localStorage.setItem(storage,JSON.stringify(pages))}catch{}}
+function ensure(n){while(pages.length<=n)pages.push({id:Date.now()+pages.length,title:'',body:''})}
+function pageHtml(index){ensure(index);const p=pages[index];const safe=t=>String(t).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');return `<div class="page-ornament">✦</div><input class="page-title" data-page="${index}" data-field="title" value="${safe(p.title)}" placeholder="Tytuł strony" maxlength="85" aria-label="Tytuł strony ${index+1}"><textarea class="page-body" data-page="${index}" data-field="body" placeholder="Zapisz, co wydarzyło się podczas przygody..." aria-label="Treść strony ${index+1}">${safe(p.body)}</textarea><div class="page-number">${index+1}</div>`}
+function render(){ensure(leftIndex+1);$('page-left').innerHTML=pageHtml(leftIndex);$('page-right').innerHTML=pageHtml(leftIndex+1);$('page-status').textContent=`${leftIndex+1}–${leftIndex+2}`;$('page-prev').disabled=leftIndex===0;save()}
+function flipTo(index){if(flipping)return;index=Math.max(0,Math.floor(index/2)*2);if(index===leftIndex)return;ensure(index+1);flipping=true;const forward=index>leftIndex,turn=$('book-turn');turn.className='book-turn '+(forward?'active':'reverse');turn.style.setProperty('--flip-time',Math.abs(index-leftIndex)>2?'.38s':'.68s');const duration=Math.abs(index-leftIndex)>2?390:690;setTimeout(()=>{leftIndex=index;turn.className='book-turn';render();flipping=false},duration)}
+function showToc(){const cont=$('toc-list');cont.textContent='';pages.forEach((p,i)=>{const b=document.createElement('button');b.className='toc-row';b.type='button';b.innerHTML=`<span>${(p.title||'Strona '+(i+1)).replaceAll('<','&lt;')}</span><span>${i+1}</span>`;b.onclick=()=>{$('toc').classList.add('hidden');flipTo(i)};cont.append(b)});$('toc').classList.remove('hidden')}
+$('spread').addEventListener('input',e=>{const el=e.target;if(!el.dataset.field)return;pages[Number(el.dataset.page)][el.dataset.field]=el.value;save()});
+$('page-next').onclick=()=>flipTo(leftIndex+2);$('page-prev').onclick=()=>flipTo(leftIndex-2);
+$('toc-open').onclick=showToc;$('toc-close').onclick=()=>$('toc').classList.add('hidden');$('toc').onclick=e=>{if(e.target.id==='toc')$('toc').classList.add('hidden')};
+$('full-screen').onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('toc').classList.add('hidden');if(['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(e.key==='ArrowRight')flipTo(leftIndex+2);if(e.key==='ArrowLeft')flipTo(leftIndex-2)});
+render();
+})();
+</script></body></html>

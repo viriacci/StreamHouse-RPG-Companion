@@ -1,0 +1,48 @@
+{
+  "format": "streamhouse-character-v1",
+  "rules": "SRD-5.2.1",
+  "character": {
+    "id": null,
+    "name": "Maelis Zielona",
+    "title": "",
+    "bio": "Druidka strzegąca granic pradawnego lasu.",
+    "avatar": "",
+    "avatarSource": "",
+    "avatarTheme": "forest",
+    "classId": "druid",
+    "speciesId": "elf",
+    "backgroundId": "hermit",
+    "method": "standard",
+    "base": [
+      15,
+      14,
+      13,
+      12,
+      10,
+      8
+    ],
+    "bonusMode": "split",
+    "bonusPlus2": "con",
+    "bonusPlus1": "wis",
+    "languages": [
+      "Elfi",
+      "Krasnoludzki"
+    ],
+    "classSkills": [
+      "Arcana",
+      "Animal Handling"
+    ],
+    "equipChoice": "gold",
+    "classEquip": "A",
+    "alignment": "Neutralny",
+    "appearanceMode": "library",
+    "avatarAdjust": {
+      "x": 0,
+      "y": 0,
+      "z": 1
+    },
+    "flowVersion": 4,
+    "step": 0,
+    "status": "draft"
+  }
+}

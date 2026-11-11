@@ -1,0 +1,19 @@
+STREAMHOUSE V7 - TESTY PO WDROŻENIU SQL NA AKTYWNYM SUPABASE
+
+Używaj DWÓCH odrębnych kont Discord i osobnych profili przeglądarki.
+1. A zapisuje kartę. B nie widzi jej bez zaproszenia.
+2. A jako MG tworzy kampanię. B nie widzi jej przed dołączeniem.
+3. A tworzy link. B otwiera, loguje się i dołącza. Zobaczy kampanię.
+4. B próbuje przypisać do kampanii nie swoją kartę. Operacja ma zostać
+   odrzucona przez klucz złożony/RLS.
+5. B udostępnia własną kartę; A i B widzą pełną kartę w drużynie.
+6. C (spoza drużyny) próbuje pobrać ID karty przez REST: brak danych.
+7. B próbuje aktualizować / usuwać kartę A: operacja odrzucona.
+8. B próbuje tworzyć kod zaproszenia jako gracz: RPC odrzucone.
+9. Token z błędnymi znakami, wygasły, przekroczony max_uses: odrzucone.
+10. Użytkownik wylogowany bez tokena próbuje odczytać tabele przez REST:
+    dane prywatne są niedostępne.
+11. Test konfliktu aktualizacji i ponownego dołączenia tym samym kodem.
+12. Sprawdź w Supabase Advisors ostrzeżenia Security po migracji.
+
+To checklisty do przeprowadzenia NA ŻYWO. Nie są oznaczone jako wykonane.

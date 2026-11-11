@@ -1,54 +1,51 @@
 # StreamHouse RPG Companion
 
-Wspólna aplikacja internetowa do prowadzenia sesji RPG. **Wersja integracyjna v10**. Frontend działa jako statyczna strona HTML/JS hostowana przez Nginx. Konta, postacie i sesje online wymagają osobnego, aktywnego Supabase z Discord OAuth. Nie uruchamiamy bazy na niewielkim VPS.
+Portal i narzędzia do prowadzenia sesji D&D online, stworzone z zachowaniem oryginalnego pokoju v21.
 
-## Wejścia do aplikacji
+**Wejście:** `index.html` → `StreamHouse-Portal.html` → `Kreator-Postaci.html` lub `pokoj/index.html`.
 
-| Adres | Funkcja |
-|---|---|
-| `/` | Ekran powitalny StreamHouse |
-| `/StreamHouse-Portal.html` | Portal konta, bohaterowie, kampanie, zaproszenia |
-| `/Kreator-Postaci.html` | Kreator postaci (8 kroków) |
-| `/Katalog-Rycin-PD.html` | Katalog ilustracji |
-| `/pokoj/index.html?demo=camp-demo&role=gm&layout=classic` | Lokalny pokój fabularny (demo) |
-| `/pokoj/index.html?campaign=UUID&layout=classic` | Pokój fabularny online (po skonfigurowaniu Supabase) |
-| `/pokoj/index.html?campaign=UUID&layout=tactical` | Opcjonalny widok z planszą |
-| `/rozgrywka/StreamHouse-v21-MG.html` | Oryginalny panel MG v21, **lokalny/offline** |
-| `/rozgrywka/StreamHouse-v21-Gracz.html` | Oryginalny panel gracza v21, **lokalny/offline** |
-| `/rozgrywka/StreamHouse-v21-Dziennik.html` | Oryginalny dziennik v21 |
-| `/rozgrywka/StreamHouse-v21-Pracownia-Kosci.html` | 20 zestawów kości PBR |
+## Moduły
 
-**Uwaga:** Stare panele v21 wymieniają zdarzenia lokalnie. Nie są tym samym pokojem online co `/pokoj/index.html`; połączenie tych silników pozostaje osobnym zadaniem. Domyślny tryb sesji to *fabularny*, a plansza taktyczna jest opcjonalna.
+| Moduł | Plik | Działanie |
+| --- | --- | --- |
+| Strona główna | `index.html` | Wprowadzenie i wejście do portalu |
+| Konto, bohaterowie, kampanie | `StreamHouse-Portal.html` | Local demo albo Discord OAuth + Supabase |
+| Kuźnia bohatera | `Kreator-Postaci.html` | 8 etapów, portrety, zapisy i import |
+| Pokój fabularny | `pokoj/index.html?...&layout=classic` | Narracja bez obowiązkowej planszy |
+| Pokój taktyczny | `pokoj/index.html?...&layout=tactical` | Dodatkowo plansza i pionki |
+| Oryginalny pokój v21 | `rozgrywka/StreamHouse-v21-{MG,Gracz}.html` | Prototyp lokalny, nie wspólna chmura |
+| Pracownia Kości | `rozgrywka/StreamHouse-v21-Pracownia-Kosci.html` | 20 zestawów i efekty 3D |
+| Katalog rycin | `Katalog-Rycin-PD.html` | Katalog pomocniczy |
 
-## Szybki start lokalny
+Ważne: oryginalne okna v21 mają lokalną komunikację, **nie** łączą się automatycznie z pokojem online. Pełna sesja sieciowa w v9 to `pokoj/` z aktywną bazą Supabase. Mapa jest **opcjonalna**, a domyślny jest pokój fabularny.
+
+## Uruchom lokalnie
 
 ```bash
+bash scripts/unpack-media.sh       # tylko po pobraniu repozytorium z GitHub
+python3 scripts/check-project.py
 python3 -m http.server 8000
-# otwórz http://localhost:8000/
-node scripts/verify.mjs
 ```
 
-W portalu wybierz „Otwórz tryb lokalny”. To demonstracja jednego originu przeglądarki, nie sieć pomiędzy graczami.
+Otwórz `http://localhost:8000` i wybierz tryb demonstracyjny. Otwieranie HTML przez `file://` może blokować pobieranie JSON. Lokalne demo korzysta z danych w przeglądarce, **nie** łączy komputerów zdalnie.
 
-## Wdrożenie na Ubuntu VPS
+## Produkcyjne uruchomienie
 
-Kompletny opis od DNS przez HTTPS, Supabase, OAuth, migracje i aktualizacje jest w **[docs/WDROZENIE-VPS.md](docs/WDROZENIE-VPS.md)**. Na VPS wystarczą Nginx, Git i Python 3. Nie instalujemy Node.js ani bazy danych w produkcji. 1 GB RAM wystarczy do serwowania plików statycznych, ale **Supabase musi działać oddzielnie**.
+Zobacz **[Instrukcję wdrożenia VPS](docs/WDROZENIE-VPS.md)**. System publikuje Nginx; nie wymaga Node.js ani uruchamiania usługi w tle. Osobno konfigurujesz Supabase i Discord OAuth.
 
-Przygotowane skrypty:
+Do kolejnych aktualizacji na VPS:
 
-- `deploy/install-vps.sh`: instalacja Nginx, konfiguracja vhost, publikacja plików
-- `deploy/deploy.sh`: bezpieczna nowa wersja + przełączenie symlinka
-- `deploy/update.sh`: `git pull --ff-only` i wdrożenie nowej wersji
-- `scripts/verify.mjs`: podstawowe testy integralności plików i JS
+```bash
+cd /opt/streamhouse-rpg
+bash scripts/update-vps.sh
+```
 
-## Konfiguracja i bezpieczeństwo
+Plik `/etc/streamhouse/cloud-config.local.js` zawiera tylko **publiczny** URL i klucz `sb_publishable_...`. Nie wpisuj tam `service_role`, `sb_secret_...`, tokenów ani Discord Client Secret. Projekt GitHub pozostaje bez danych wrażliwych.
 
-- W GitHubie **nigdy** nie umieszczaj `service_role`, `sb_secret`, Discord Client Secret ani tokenów dostępu.
-- `/etc/streamhouse/streamhouse.env` na VPS zawiera wyłącznie publiczny URL Supabase i publishable key. Skrypt generuje z tego publiczny `/assets/cloud-config.js`.
-- Secret Discord OAuth pozostaje wyłącznie w ustawieniach Supabase Auth.
-- Migruj SQL **w kolejności v7 → v8 → v9** z folderu `supabase/migrations/`, tylko do projektu przeznaczonego dla StreamHouse.
-- RLS i dostęp dwóch różnych kont wymagają testów przed udostępnieniem realnym użytkownikom: `supabase/TESTY-v9-PRZED-WDROZENIEM.txt`.
+## Projekt i stan
 
-## Stan projektu
-
-Fizyczne pliki, ścieżki i skrypty startowe są scalone oraz przechodzą testy lokalne. Funkcje online wymagają aktywnego projektu Supabase i realnego sprawdzenia Discord OAuth/RLS. Dalsza rozbudowa powinna odbywać się przez commity/PR-y, nie osobne archiwa HTML.
+- Architektura i granice integracji: [`docs/ARCHITEKTURA.md`](docs/ARCHITEKTURA.md).
+- Testy przed publicznym udostępnieniem: [`docs/TESTY-PRZED-PRODUKCJA.md`](docs/TESTY-PRZED-PRODUKCJA.md).
+- Migracje bazy znajdują się w `supabase/migrations/`; **uruchom je kolejno**, dopiero na przygotowanym projekcie Supabase.
+- Trzeba przetestować na prawdziwych kontach Discord / aktywnej bazie: OAuth, RLS i synchronizację. Dotychczasowe wyniki testów lokalnych i mocków nie są gwarancją produkcyjną.
+- Repo zawiera źródła HTML/CSS/JS oraz podzielone archiwum zasobów (`bundles/media.part*`), które `scripts/unpack-media.sh` automatycznie rozpakowuje. To konieczne, ponieważ biblioteki tekstur kości są duże.

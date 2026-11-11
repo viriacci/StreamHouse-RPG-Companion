@@ -1,0 +1,40 @@
+from playwright.sync_api import sync_playwright
+from pathlib import Path
+URL='http://127.0.0.1:8765'
+with sync_playwright() as p:
+ browser=p.chromium.launch(headless=True, executable_path='/usr/bin/chromium', args=['--no-sandbox','--disable-dev-shm-usage'])
+ context=browser.new_context(viewport={'width':1450,'height':950}, reduced_motion='reduce')
+ errors=[]
+ portal=context.new_page();portal.on('pageerror',lambda e:errors.append('portal '+str(e)))
+ portal.goto(URL+'/StreamHouse-Portal.html',wait_until='domcontentloaded',timeout=15000)
+ print('portal',portal.title())
+ print('portal buttons',portal.locator('a:has-text("Pokój fabularny")').count(),portal.locator('a:has-text("Plansza taktyczna")').count())
+ gm=context.new_page();gm.on('pageerror',lambda e:errors.append('gm '+str(e)))
+ gm.goto(URL+'/pokoj/index.html?demo=camp-demo&role=gm&layout=classic',wait_until='domcontentloaded',timeout=15000)
+ gm.wait_for_selector('#workspace:not([hidden])',timeout=10000)
+ print('GM classic visible',gm.locator('#classic-panel').is_visible(),'map',gm.locator('#map-panel').is_visible())
+ gm.locator('#room-mode-switch').click();print('GM tactical visible',gm.locator('#map-panel').is_visible())
+ gm.locator('#room-mode-switch').click()
+ print('hero buttons',gm.locator('.hero-entry-session').count())
+ if gm.locator('.hero-entry-session').count():
+  gm.locator('.hero-entry-session').first.click()
+  print('hero state',gm.locator('#hero-hp').input_value(),gm.locator('#hero-maxhp').input_value())
+  gm.locator('#hero-hp').fill('7');gm.locator('#hero-maxhp').fill('22');gm.locator('#hero-inventory').fill('Miecz\nEliksir')
+  gm.locator('#hero-save').click()
+  gm.wait_for_timeout(400)
+  print('hero after',gm.locator('#hero-hp').input_value(),gm.locator('#hero-inventory').input_value())
+ player=context.new_page();player.on('pageerror',lambda e:errors.append('player '+str(e)))
+ player.goto(URL+'/pokoj/index.html?demo=camp-demo&role=player&layout=classic',wait_until='domcontentloaded',timeout=15000)
+ player.wait_for_selector('#workspace:not([hidden])',timeout=10000)
+ if player.locator('.hero-entry-session').count():
+  player.locator('.hero-entry-session').first.click();print('player hero hp',player.locator('#hero-hp').input_value())
+ gm.locator('#chat-input').fill('Test v9 wspólnej kroniki');gm.locator('#chat-form button[type="submit"]').click()
+ player.wait_for_timeout(500)
+ print('feed player',player.locator('#feed-entries').inner_text()[-130:])
+ gm.locator('#roll-form button[type="submit"]').click();gm.wait_for_timeout(800)
+ print('dice result',gm.locator('#dice-total').inner_text(),'dice visible',gm.locator('#dice-view').is_visible())
+ gm.locator('#dice-close').click()
+ gm.screenshot(path='/mnt/data/sh_v9/podglad-v9-fabularny.png')
+ gm.locator('#room-mode-switch').click();gm.screenshot(path='/mnt/data/sh_v9/podglad-v9-taktyczny.png')
+ print('errors:',errors)
+ browser.close()

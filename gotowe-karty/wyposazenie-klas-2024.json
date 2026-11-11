@@ -1,0 +1,263 @@
+{
+  "source": "https://www.dndbeyond.com/sources/dnd/br-2024/character-classes",
+  "classes": {
+    "barbarian": [
+      {
+        "id": "A",
+        "name": "Oręż i ekwipunek",
+        "gp": 15,
+        "items": [
+          "Wielki topór",
+          "4 × toporek ręczny",
+          "Pakiet odkrywcy"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 75,
+        "items": []
+      }
+    ],
+    "bard": [
+      {
+        "id": "A",
+        "name": "Wyposażenie barda",
+        "gp": 19,
+        "items": [
+          "Skórzany pancerz",
+          "2 × sztylet",
+          "Wybrany instrument muzyczny",
+          "Pakiet artysty"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 90,
+        "items": []
+      }
+    ],
+    "cleric": [
+      {
+        "id": "A",
+        "name": "Wyposażenie kleryka",
+        "gp": 7,
+        "items": [
+          "Koszulka kolcza",
+          "Tarcza",
+          "Buława",
+          "Święty symbol",
+          "Pakiet kapłana"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 110,
+        "items": []
+      }
+    ],
+    "druid": [
+      {
+        "id": "A",
+        "name": "Wyposażenie druida",
+        "gp": 9,
+        "items": [
+          "Skórzany pancerz",
+          "Tarcza",
+          "Sierp",
+          "Fokus druida (kostur)",
+          "Pakiet odkrywcy",
+          "Zestaw zielarski"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 50,
+        "items": []
+      }
+    ],
+    "fighter": [
+      {
+        "id": "A",
+        "name": "Ciężki oręż",
+        "gp": 4,
+        "items": [
+          "Kolczuga",
+          "Wielki miecz",
+          "Korbacz",
+          "8 × oszczep",
+          "Pakiet lochów"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Lekki oręż i łuk",
+        "gp": 11,
+        "items": [
+          "Skórzany pancerz nabijany ćwiekami",
+          "Sejmitar",
+          "Krótki miecz",
+          "Długi łuk",
+          "20 × strzała",
+          "Kołczan",
+          "Pakiet lochów"
+        ]
+      },
+      {
+        "id": "C",
+        "name": "Złoto na zakupy",
+        "gp": 155,
+        "items": []
+      }
+    ],
+    "monk": [
+      {
+        "id": "A",
+        "name": "Wyposażenie mnicha",
+        "gp": 11,
+        "items": [
+          "Włócznia",
+          "5 × sztylet",
+          "Wybrane narzędzia rzemieślnicze lub instrument",
+          "Pakiet odkrywcy"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 50,
+        "items": []
+      }
+    ],
+    "paladin": [
+      {
+        "id": "A",
+        "name": "Wyposażenie paladyna",
+        "gp": 9,
+        "items": [
+          "Kolczuga",
+          "Tarcza",
+          "Długi miecz",
+          "6 × oszczep",
+          "Święty symbol",
+          "Pakiet kapłana"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 150,
+        "items": []
+      }
+    ],
+    "ranger": [
+      {
+        "id": "A",
+        "name": "Wyposażenie tropiciela",
+        "gp": 7,
+        "items": [
+          "Skórzany pancerz nabijany ćwiekami",
+          "Sejmitar",
+          "Krótki miecz",
+          "Długi łuk",
+          "20 × strzała",
+          "Kołczan",
+          "Fokus druida (gałązka jemioły)",
+          "Pakiet odkrywcy"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 150,
+        "items": []
+      }
+    ],
+    "rogue": [
+      {
+        "id": "A",
+        "name": "Wyposażenie łotrzyka",
+        "gp": 8,
+        "items": [
+          "Skórzany pancerz",
+          "2 × sztylet",
+          "Krótki miecz",
+          "Krótki łuk",
+          "20 × strzała",
+          "Kołczan",
+          "Narzędzia złodziejskie",
+          "Pakiet włamywacza"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 100,
+        "items": []
+      }
+    ],
+    "sorcerer": [
+      {
+        "id": "A",
+        "name": "Wyposażenie zaklinacza",
+        "gp": 28,
+        "items": [
+          "Włócznia",
+          "2 × sztylet",
+          "Fokus magiczny (kryształ)",
+          "Pakiet lochów"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 50,
+        "items": []
+      }
+    ],
+    "warlock": [
+      {
+        "id": "A",
+        "name": "Wyposażenie czarnoksiężnika",
+        "gp": 15,
+        "items": [
+          "Skórzany pancerz",
+          "Sierp",
+          "2 × sztylet",
+          "Fokus magiczny (kula)",
+          "Księga wiedzy tajemnej",
+          "Pakiet uczonego"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 100,
+        "items": []
+      }
+    ],
+    "wizard": [
+      {
+        "id": "A",
+        "name": "Wyposażenie czarodzieja",
+        "gp": 5,
+        "items": [
+          "2 × sztylet",
+          "Fokus magiczny (kostur)",
+          "Szata",
+          "Księga zaklęć",
+          "Pakiet uczonego"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Złoto na zakupy",
+        "gp": 55,
+        "items": []
+      }
+    ]
+  }
+}

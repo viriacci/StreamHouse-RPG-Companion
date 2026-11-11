@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#0b0d0b"/>
+<meta name="description" content="StreamHouse RPG Companion — Twórz bohaterów, prowadź kampanie i zapamiętuj każdą przygodę."/>
+<title>StreamHouse RPG Companion · Początek opowieści</title>
+<style>
+:root { color-scheme:dark; --night:#0c0d0a; --ink:#10120e; --deep:#171a14; --gold:#c69f64; --gold2:#f7dfaa; --line:#59482e; --cream:#eee2c9; --mute:#b2a48d; --forest:#315043; --serif:'Baskerville','Palatino Linotype',Georgia,serif; --display:'Palatino Linotype','Book Antiqua',Georgia,serif; }
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:#0d0e0b;color:var(--cream);font:15px/1.55 Georgia,serif;min-width:320px;overflow-x:hidden} button,a{font:inherit} a{color:inherit;text-decoration:none} button{cursor:pointer} button:focus-visible,a:focus-visible{outline:2px solid #f7dba0;outline-offset:5px}
+body:before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.22;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E")}
+.shell{position:relative;max-width:1530px;margin:auto} .eyebrow{font:600 10px/1.4 var(--display);letter-spacing:.27em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:14px}.eyebrow:before{content:'';display:block;width:28px;height:1px;background:#b79256}
+header.site-head{position:relative;z-index:10;height:93px;border-bottom:1px solid #ae8d5240;background:#0e100cc7;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5.6vw,90px);gap:24px;backdrop-filter:blur(15px)}
+.logo{display:flex;align-items:center;gap:13px;flex:none}.logo-mark{width:47px;height:47px;display:flex;align-items:center;justify-content:center;border:1px solid #8e7146;transform:rotate(45deg);background:linear-gradient(135deg,#1c211a,#151710);box-shadow:0 0 0 4px #a18b5420,inset 0 0 10px #d3af5440}.logo-mark svg{width:28px;height:28px;transform:rotate(-45deg)}.logo-word{font:600 16px var(--display);letter-spacing:.13em;line-height:1.2;color:#e9dbbf}.logo-word span{display:block;font:500 9px var(--display);letter-spacing:.33em;color:var(--gold);margin-top:7px}
+.nav-links{display:flex;gap:clamp(16px,3vw,47px);align-items:center;margin-left:auto;padding-right:20px}.nav-links a{font:500 11px var(--display);letter-spacing:.14em;color:#c8bca5;transition:color .2s}.nav-links a:hover{color:#fff0c6}
+.entry-small{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;padding:13px 18px;border:1px solid #9b7844;background:#271f15;color:#e8d2a9;font:600 10px var(--display);letter-spacing:.12em;text-transform:uppercase;transition:.25s}.entry-small:hover{border-color:#efd49e;background:#3f2e1c;color:#fff6d8}.entry-small svg{width:16px}
+.hero{min-height:min(775px,calc(100svh - 93px));position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;padding:65px clamp(24px,7.5vw,120px) 90px;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 76% 44%,#42533d38,transparent 38%),radial-gradient(ellipse at 10% 110%,#73562c25,transparent 60%),linear-gradient(100deg,#0c0e0b 20%,#12150f 100%)}
+.hero:before,.hero:after{content:'';position:absolute;pointer-events:none;z-index:-1}.hero:before{top:21px;bottom:21px;left:22px;right:22px;border:1px solid #b28f4b27}.hero:after{inset:0;background:radial-gradient(circle at 70% 45%,transparent 10%,#090a08a3 83%)}
+.hero-copy{position:relative;z-index:5;max-width:615px;align-self:center;padding-top:8px;opacity:0;transform:translateY(24px);transition:opacity 1.05s ease,transform 1.05s ease}.entered .hero-copy{opacity:1;transform:none}.hero-title{font:500 clamp(66px,6.5vw,106px)/.96 var(--serif);letter-spacing:-.023em;margin:28px 0 25px;text-shadow:0 6px 30px #0009}.hero-title strong{display:block;font-weight:600;color:#f5e8ca}.hero-title em{display:block;color:#d9ae6a;font-weight:500;letter-spacing:-.017em;font-style:italic}.hero-lead{color:#c1b7a2;max-width:440px;font:400 clamp(18px,1.6vw,22px)/1.45 var(--serif);letter-spacing:.003em;margin:0 0 31px}
+.actions{display:flex;gap:20px;align-items:center;flex-wrap:wrap}.action-main{position:relative;min-width:230px;padding:17px 22px;background:linear-gradient(130deg,#ead1a2 0%,#c29c5d 58%,#e3bb7e 100%);border:1px solid #f4d6a3;color:#2b2115;font:700 11px var(--display);letter-spacing:.115em;text-transform:uppercase;box-shadow:0 11px 27px #0008,inset 0 1px 0 #fff5d8a3;display:flex;align-items:center;justify-content:space-between;gap:24px;transition:transform .2s,box-shadow .2s}.action-main:hover{transform:translateY(-3px);box-shadow:0 17px 36px #000b,0 0 24px #e9bc6b44}.action-main svg{width:17px}.action-alt{display:flex;gap:12px;align-items:center;background:none;border:0;color:#e3d5b7;font:600 10px var(--display);letter-spacing:.1em;text-transform:uppercase;padding:14px 0}.action-alt svg{width:14px;color:#cfaa70}.action-alt:hover{color:#fff}
+.hero-detail{display:flex;align-items:center;gap:14px;white-space:nowrap;margin-top:58px;font:500 10px/1.4 var(--display);letter-spacing:.15em;color:#897f6c}.hero-detail .line{height:1px;width:40px;background:#99825760}.hero-detail b{color:#bb9a62;font-weight:600}
+.portal-wrap{height:600px;position:relative;display:grid;place-items:center;min-width:0;filter:drop-shadow(0 16px 40px #000a)}.portal-wrap:before{content:'';position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle,#7b9a6e21,transparent 65%);animation:breath 6s ease-in-out infinite}.portal-svg{width:min(100%,615px);max-height:100%;overflow:visible;filter:drop-shadow(0 0 12px #d6ad5433);animation:riseIn 2s cubic-bezier(.2,.6,.1,1) both}.ring-outer{transform-origin:300px 300px;animation:rotation 100s linear infinite}.ring-inner{transform-origin:300px 300px;animation:rotationReverse 75s linear infinite}.ring-glow{animation:ringPulse 5.8s ease-in-out infinite}.portal-glyph{transform-origin:300px 300px;animation:glyphFloat 7s ease-in-out infinite}.rune{fill:#d6ae6e;opacity:.8}.star{animation:starPulse 3.7s ease-in-out infinite}.star:nth-of-type(3n){animation-delay:1.2s}
+.portal-caption{position:absolute;bottom:1%;left:50%;transform:translateX(-50%);white-space:nowrap;text-align:center;color:#bba883;font:500 9px/1.2 var(--display);letter-spacing:.32em}.portal-caption:before{content:'✦';display:block;margin-bottom:11px;font:17px Georgia;color:#d5b372}
+#dust{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:.8}
+.floating-index{position:absolute;top:36px;left:50%;color:#665e49;font:500 10px var(--display);letter-spacing:.26em;white-space:nowrap;transform:translateX(-50%)}.scroll-note{position:absolute;bottom:31px;left:50%;transform:translateX(-50%);color:#887e68;font:500 9px var(--display);letter-spacing:.26em;display:flex;align-items:center;gap:14px;white-space:nowrap}.scroll-note:after,.scroll-note:before{content:'';height:1px;width:65px;background:#8d7548a3}
+.ornament-bar{display:flex;align-items:center;justify-content:center;gap:35px;min-height:65px;background:linear-gradient(90deg,#14170f,#1b1b14,#14170f);border-top:1px solid #6b5936;border-bottom:1px solid #6b5936;color:#a69169;font:600 11px var(--display);letter-spacing:.26em}.ornament-bar .diamond{font-size:16px;color:#e0bf82}
+.chapter{position:relative;padding:104px clamp(24px,8vw,125px) 125px;background:radial-gradient(ellipse at 5% 75%,#3a332026,transparent 43%),#0d0f0c}.chapter-main{max-width:1180px;margin:auto;display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(36px,7vw,110px);align-items:start}.chapter-head h2{font:500 clamp(47px,4.5vw,70px)/1.07 var(--serif);color:#ede2c9;margin:18px 0 16px}.chapter-head h2 em{color:#cfa466;font-weight:500}.chapter-head p{font:19px/1.45 var(--serif);color:#a99c86;margin:0}.features{border-top:1px solid #6a5d45}.feature{display:grid;grid-template-columns:56px 1fr;gap:24px;padding:22px 0 24px;border-bottom:1px solid #65583e87;align-items:start}.feature .roman{font:500 17px var(--display);color:#bf995f;padding-top:7px}.feature strong{font:600 27px/1.13 var(--serif);color:#ecdec2}.feature p{font:17px/1.4 var(--serif);color:#ac9f86;margin:7px 0 0;max-width:530px}
+.end-cta{max-width:1200px;margin:0 auto 35px;padding:55px 30px;background:linear-gradient(100deg,#202419,#12180f 85%);border:1px solid #79613d;box-shadow:inset 0 0 0 5px #0f110d,inset 0 0 0 6px #6d5a37;display:flex;align-items:center;justify-content:space-around;gap:20px;text-align:center;flex-wrap:wrap}.end-cta p{font:500 39px/1 var(--serif);margin:0;color:#f3dfb6}.end-cta p em{color:#d6ab6b}.end-cta .action-main{min-width:210px}
+footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding:25px clamp(24px,5.6vw,90px);border-top:1px solid #65543d;background:#0b0d0a;color:#8d826d;font:12px/1.4 var(--serif)}footer a{color:#bba177}footer a:hover{color:#eac78b}footer .fine{font-size:11px;color:#827764}
+/* Intro: a short, skippable cinematic title card */
+.intro{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,#1d2c20 0,#10150f 33%,#070908 73%);overflow:hidden;opacity:1;visibility:visible;transition:opacity .8s ease,visibility .8s}.intro.is-out{opacity:0;visibility:hidden;pointer-events:none}.intro:before{content:'';position:absolute;inset:24px;border:1px solid #9d7c463c;pointer-events:none}.intro:after{content:'';position:absolute;inset:34px;border:1px solid #ae8e3f20;pointer-events:none}.intro-stage{position:relative;text-align:center;display:grid;justify-items:center;align-items:center;gap:13px;transform:translateY(-10px)}.intro-sigil{width:clamp(146px,20vw,228px);height:clamp(146px,20vw,228px);position:relative;display:grid;place-items:center;margin-bottom:18px}.intro-sigil svg{width:100%;height:100%;filter:drop-shadow(0 0 18px #cca95b64)}.intro-sigil .trace{stroke-dasharray:800;stroke-dashoffset:800;animation:draw 2.1s ease-in-out forwards}.intro-sigil .small-orbit{transform-origin:120px 120px;animation:rotation 15s linear infinite}.intro-sigil .crest{animation:introCrest 2.6s ease-out both}.intro-kicker{font:600 10px var(--display);letter-spacing:.44em;color:#bea477;opacity:0;animation:fadeRise 1s 1.2s ease forwards}.intro-name{font:500 clamp(32px,5vw,62px)/1.1 var(--display);color:#eee0bd;letter-spacing:.11em;text-shadow:0 0 20px #cca15f33;opacity:0;animation:fadeRise 1.2s 1.4s forwards;margin:0}.intro-sub{font:400 clamp(14px,2vw,20px) var(--serif);font-style:italic;letter-spacing:.13em;color:#ad996f;opacity:0;animation:fadeRise .8s 2.1s forwards;margin:0}.intro-progress{height:2px;width:160px;background:#594b2d;margin-top:30px;overflow:hidden;opacity:0;animation:fadeRise .5s 1s forwards}.intro-progress i{display:block;height:100%;background:#e9c481;animation:progress 3.75s linear both}.skip-intro{position:absolute;z-index:2;top:45px;right:clamp(24px,5.5vw,85px);background:transparent;border:0;border-bottom:1px solid #796b4d;color:#c7b48a;font:600 10px var(--display);letter-spacing:.2em;text-transform:uppercase;padding:12px 0 9px}.skip-intro:hover{color:#fff0cf}.intro-corner{position:absolute;bottom:35px;left:50%;transform:translateX(-50%);color:#6d6249;font:500 9px var(--display);letter-spacing:.3em;white-space:nowrap}
+/* auth prototype */
+.modal-shroud{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:#050704db;backdrop-filter:blur(11px);padding:20px}.modal-shroud.show{display:flex}.auth-dialog{width:min(480px,100%);padding:45px 38px;border:1px solid #a78b58;outline:5px solid #121610;background:radial-gradient(ellipse at top,#243024,#10150f 68%);box-shadow:0 0 0 6px #937747,0 35px 90px #000;position:relative;text-align:center}.auth-dialog .dismiss{position:absolute;top:11px;right:15px;font-size:25px;color:#e7cb99;border:0;background:transparent}.auth-dialog .auth-emblem{width:75px;height:75px;margin:0 auto 22px;border:1px solid #9d7f4b;display:grid;place-items:center;transform:rotate(45deg);background:#1f2a21}.auth-dialog .auth-emblem svg{transform:rotate(-45deg);width:37px;height:37px}.auth-dialog h2{font:500 42px/.95 var(--serif);color:#eddbb6;margin:14px 0}.auth-dialog p{font:18px/1.4 var(--serif);color:#bdb092;margin:0 0 24px}.auth-dialog .auth-disabled{display:block;width:100%;margin:0 auto 12px;background:#302e27;color:#a59d8e;border:1px solid #71644e;padding:15px;cursor:not-allowed;font:600 12px var(--display);letter-spacing:.1em}.auth-dialog .auth-caption{font:13px/1.4 var(--serif);color:#927e5a}.auth-dialog a{display:inline-block;margin-top:18px;color:#dcb87e;font:500 12px var(--display);letter-spacing:.09em}
+/* animations */
+@keyframes draw{to{stroke-dashoffset:0}}@keyframes rotation{to{transform:rotate(360deg)}}@keyframes rotationReverse{to{transform:rotate(-360deg)}}@keyframes fadeRise{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}@keyframes progress{from{width:0}to{width:100%}}@keyframes introCrest{0%{opacity:0;transform:scale(.63) rotate(-21deg)}60%{opacity:1}100%{opacity:1;transform:scale(1) rotate(0)}}@keyframes breath{0%,100%{opacity:.45;transform:scale(.96)}50%{opacity:.9;transform:scale(1.05)}}@keyframes ringPulse{0%,100%{opacity:.55}50%{opacity:.93}}@keyframes glyphFloat{0%,100%{transform:translateY(-8px) rotate(-3deg)}50%{transform:translateY(9px) rotate(3deg)}}@keyframes starPulse{0%,100%{opacity:.35}50%{opacity:1}}@keyframes riseIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@media(max-width:1030px){header.site-head{height:78px;padding:0 24px}.nav-links{gap:20px;padding-right:0}.nav-links a{font-size:9px}.hero{padding:45px 40px 95px;min-height:710px}.portal-wrap{height:490px}.hero-title{font-size:clamp(59px,6.7vw,84px)}.hero-detail{margin-top:40px}.chapter{padding:85px 45px}}
+@media(max-width:760px){.site-head .nav-links{display:none}.site-head .entry-small{font-size:9px;padding:12px}.logo-word{font-size:12px}.logo-word span{font-size:8px}.logo-mark{width:37px;height:37px}.hero{grid-template-columns:1fr;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;padding:50px 23px 74px;min-height:0}.hero:before{inset:12px}.hero-copy{order:1}.hero .eyebrow{justify-content:center;font-size:9px}.hero .eyebrow:before{width:20px}.hero-title{font-size:clamp(58px,11vw,78px);margin:15px 0}.hero-lead{margin:0 auto 24px;font-size:19px}.actions{justify-content:center;gap:8px 18px}.action-main{min-width:220px}.hero-detail{margin:29px auto 0;justify-content:center;font-size:9px;white-space:normal}.portal-wrap{order:0;width:min(100%,410px);height:350px;margin:-31px 0 -13px;pointer-events:none}.portal-svg{max-height:365px}.portal-caption,.floating-index,.scroll-note{display:none}.ornament-bar{gap:14px;min-height:55px;font-size:8px;letter-spacing:.1em}.chapter{padding:65px 24px}.chapter-main{display:block}.chapter-head{margin-bottom:38px}.chapter-head h2{font-size:54px}.feature{grid-template-columns:39px 1fr;gap:14px}.end-cta{margin:0 15px 35px}.end-cta p{font-size:31px}footer{text-align:center;justify-content:center;flex-direction:column}.intro-name{font-size:31px;letter-spacing:.06em}}
+@media(max-width:415px){header.site-head{padding:0 15px}.logo-word{font-size:11px}.entry-small{padding:10px 11px!important;font-size:8px!important;letter-spacing:.01em!important}.entry-small svg{display:none}.hero-title{font-size:55px}.hero-lead{font-size:18px}.hero-detail{font-size:8px}.portal-wrap{height:305px;width:330px;margin:-30px 0 -9px}.ornament-bar .diamond{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.intro{display:none!important}.hero-copy{opacity:1;transform:none}.portal-svg,.ring-outer,.ring-inner,.ring-glow,.portal-glyph,.star,.portal-wrap:before{animation:none!important}.action-main{transition:none}}
+
+/* Strona główna v2: rzeczywista D20 z biblioteki StreamHouse v21 */
+.logo{gap:27px}
+.hero-title--question{font-size:clamp(47px,5.3vw,82px);line-height:1.02;letter-spacing:-.038em}
+.hero-title--question em{display:inline;color:#d9ae6a;font-style:italic;font-weight:500}
+.hero-lead{max-width:520px}
+.portal-wrap{isolation:isolate}
+.portal-svg{position:relative;z-index:1}
+.portal-die-layer{position:absolute;inset:0;display:grid;place-items:center;z-index:2;opacity:0;pointer-events:none;transition:opacity 1s ease}
+.portal-die-layer canvas{display:block;width:min(62%,355px);height:auto;aspect-ratio:1;filter:drop-shadow(0 18px 20px #000b);animation:glyphFloat 7s ease-in-out infinite}
+.portal-wrap.dice-ready .portal-die-layer{opacity:1}
+.portal-wrap.dice-ready .portal-glyph{opacity:0;animation:none}
+.portal-caption{z-index:3}
+.end-cta p{font-size:clamp(26px,3vw,39px);line-height:1.18;max-width:760px}
+.intro-kicker{max-width:min(90vw,660px);letter-spacing:.2em;line-height:1.8}
+.intro-corner{font-size:clamp(8px,.9vw,11px);text-align:center;line-height:1.7;max-width:90vw;white-space:normal}
+.ornament-bar{gap:25px}
+@media(max-width:1030px){.hero-title--question{font-size:clamp(46px,5.7vw,68px)}}
+@media(max-width:760px){.logo{gap:19px}.hero-title--question{font-size:clamp(39px,8.4vw,58px);line-height:1.04}.portal-die-layer canvas{width:min(61%,310px)}.ornament-bar{gap:12px;letter-spacing:.11em}.hero-lead{max-width:450px}.intro-kicker{font-size:9px;letter-spacing:.15em;padding:0 20px}}
+@media(max-width:415px){.logo{gap:15px}.hero-title--question{font-size:clamp(36px,9.1vw,45px)}.intro-kicker{font-size:8px}.ornament-bar{font-size:9px;letter-spacing:.07em}.end-cta p{font-size:26px}}
+@media(prefers-reduced-motion:reduce){.portal-die-layer canvas{animation:none}}
+
+</style>
+</head>
+<body>
+<div class="intro" id="intro" role="dialog" aria-label="Intro StreamHouse RPG Companion" aria-modal="true">
+  <div class="intro-stage">
+    <div class="intro-sigil" aria-hidden="true">
+      <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle class="trace" cx="120" cy="120" r="91" stroke="#ba9b65" stroke-width=".8"/>
+        <circle class="trace" cx="120" cy="120" r="79" stroke="#d2b67d" stroke-width="1.2"/>
+        <circle class="small-orbit trace" cx="120" cy="120" r="103" stroke="#b79760" stroke-width=".7" stroke-dasharray="3 10"/>
+        <path class="trace" d="M120 11L132 27L120 42L108 27Z M120 198L132 213L120 229L108 213Z M11 120L27 108L42 120L27 132Z M198 120L213 108L229 120L213 132Z" stroke="#c8a46b" stroke-width="1"/>
+        <g class="crest" stroke="#e5c990" stroke-width="2.0" stroke-linejoin="round" fill="#173329">
+          <path d="M120 59L179 99L156 171L84 171L61 99Z"/>
+          <path d="M120 59L120 109L61 99M120 109L179 99M120 109L156 171M120 109L84 171" fill="none"/>
+          <path d="M120 59L179 99L120 109Z" fill="#416254" stroke="none"/><path d="M120 109L156 171L84 171Z" fill="#162b25" stroke="none"/>
+          <path d="M120 59L179 99L156 171L84 171L61 99Z" fill="none"/>
+        </g>
+        <circle cx="120" cy="120" r="2" fill="#fff2c9"/>
+      </svg>
+    </div>
+    <div class="intro-kicker">WITAJ W MIEJSCU, GDZIE WSZYSTKO SIĘ ZACZYNA</div>
+    <h2 class="intro-name">STREAMHOUSE</h2>
+    <p class="intro-sub">RPG Companion</p>
+    <div class="intro-progress" aria-hidden="true"><i></i></div>
+  </div>
+  <div class="intro-corner">CZY STARCZY CI ODWAGI, ŻEBY KREOWAĆ WŁASNY ŚWIAT?</div>
+</div>
+<div class="shell" id="pageShell">
+  <header class="site-head">
+    <a class="logo" href="#hero" aria-label="StreamHouse RPG Companion, strona główna">
+      <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none"><path d="M18 2L33 13L27 31H9L3 13Z" stroke="#dfbd7d" stroke-width="1.5"/><path d="M18 2V18L3 13M18 18L33 13M18 18L27 31M18 18L9 31" stroke="#dfbd7d" stroke-width="1.1"/></svg></span>
+      <span class="logo-word">STREAMHOUSE <span>RPG COMPANION</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Nawigacja główna"><a href="#world">O PROJEKCIE</a><a href="#world">JAK TO DZIAŁA</a><a href="https://discord.gg/pBG3ybyjk3" target="_blank" rel="noopener noreferrer">DISCORD ↗</a></nav>
+    <a class="entry-small" href="StreamHouse-Portal.html">WEJDŹ DO ŚRODKA <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+  </header>
+  <main>
+    <section class="hero" id="hero">
+      <div class="floating-index">PanSzczesniak przedstawia</div>
+      <canvas id="dust" aria-hidden="true"></canvas>
+      <div class="hero-copy">
+        <div class="eyebrow">DRZWI DO TWOJEJ OPOWIEŚCI</div>
+        <h1 class="hero-title hero-title--question">Pozwolisz innym<br>opowiadać <em>Twoją</em><br>historię?</h1>
+        <p class="hero-lead">Stwórz bohatera, zbierz drużynę, zmieńcie świat.</p>
+        <div class="actions">
+          <a class="action-main" href="StreamHouse-Portal.html">WEJDŹ DO GRY <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+          <a class="action-alt" href="#world">ODKRYJ PLATFORMĘ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18m-6-6 6 6 6-6"/></svg></a>
+        </div>
+        
+      </div>
+      <div class="portal-wrap" id="portal">
+        <svg class="portal-svg" viewBox="0 0 600 600" fill="none" aria-hidden="true">
+          <defs>
+            <radialGradient id="core" cx="45%" cy="39%" r="62%"><stop stop-color="#35584b" stop-opacity=".68"/><stop offset=".54" stop-color="#18382c" stop-opacity=".33"/><stop offset="1" stop-color="#0e1710" stop-opacity="0"/></radialGradient>
+            <linearGradient id="metal" x1=".1" y1="0" x2=".9" y2="1"><stop stop-color="#f6dba0"/><stop offset=".48" stop-color="#977146"/><stop offset="1" stop-color="#e3c17b"/></linearGradient>
+            <linearGradient id="gem" x1=".2" y1=".2" x2=".85" y2=".95"><stop stop-color="#4e8670"/><stop offset=".42" stop-color="#234d3e"/><stop offset="1" stop-color="#0a1715"/></linearGradient>
+            <filter id="halo"><feGaussianBlur stdDeviation="5"/></filter>
+          </defs>
+          <circle cx="300" cy="300" r="250" fill="url(#core)"/>
+          <circle class="ring-glow" cx="300" cy="300" r="216" stroke="#d2a75b" stroke-width="8" opacity=".12" filter="url(#halo)"/>
+          <g class="ring-outer">
+            <circle cx="300" cy="300" r="236" stroke="#c4a16a" stroke-width=".8" opacity=".7"/>
+            <circle cx="300" cy="300" r="229" stroke="#7e704c" stroke-width="1" stroke-dasharray="2 7"/>
+            <circle cx="300" cy="300" r="220" stroke="#b49058" stroke-width=".5" stroke-dasharray="28 12"/>
+            <path d="M300 29L316 65L300 83L284 65Z M300 517L316 535L300 571L284 535Z M29 300L65 284L83 300L65 316Z M517 300L535 284L571 300L535 316Z" stroke="#d4b17d" stroke-width="1.4"/>
+            <g stroke="#b89b62" stroke-width=".8"><path d="M139 139L165 158M461 139L435 158M139 461L165 442M461 461L435 442"/><path d="M300 49L308 59L300 71L292 59Z M300 529L308 541L300 553L292 541Z"/></g>
+          </g>
+          <g class="ring-inner">
+            <circle cx="300" cy="300" r="204" stroke="#cba96e" stroke-width=".8"/>
+            <circle cx="300" cy="300" r="187" stroke="#7e936d" stroke-width=".8" stroke-dasharray="1 12"/>
+            <circle cx="300" cy="300" r="178" stroke="#ac956a" stroke-opacity=".38" stroke-width=".7"/>
+            <path d="M300 97L480 402H120Z" stroke="#c9a46c" stroke-opacity=".4" stroke-width=".8"/>
+            <path d="M300 503L120 198H480Z" stroke="#c9a46c" stroke-opacity=".4" stroke-width=".8"/>
+            <g class="rune"><path d="M304 111v13m-11-7h22M300 480l9 12-9 10-9-10zM112 300l9-8 11 8-11 8zM488 300l-9-8-11 8 11 8z"/></g>
+          </g>
+          <g opacity=".4"><circle cx="300" cy="300" r="163" stroke="#d7bc8d" stroke-width=".6"/><circle cx="300" cy="300" r="145" stroke="#b8a06c" stroke-width=".8"/></g>
+          <g class="portal-glyph" stroke-linejoin="round">
+            <path d="M300 142L426 229L378 399L222 399L174 229Z" fill="#13271d" stroke="url(#metal)" stroke-width="7"/>
+            <path d="M300 142L426 229L300 267L174 229Z" fill="url(#gem)" stroke="#d9b881" stroke-width="2"/>
+            <path d="M174 229L300 267L222 399Z" fill="#224839" stroke="#c49b65" stroke-width="2"/>
+            <path d="M426 229L378 399L300 267Z" fill="#113226" stroke="#c49b65" stroke-width="2"/>
+            <path d="M300 267L378 399H222Z" fill="#132b25" stroke="#c49b65" stroke-width="2"/>
+            <path d="M300 142V267M174 229L300 267L426 229" stroke="#ead49f" stroke-opacity=".7" stroke-width="1.5"/>
+            <g stroke="#e4c58a" stroke-width=".8" opacity=".4"><path d="M182 238L223 388L295 270M418 238L377 388L305 270"/></g>
+            <text x="300" y="317" text-anchor="middle" fill="#eadbb4" font-family="Georgia,serif" font-size="62" font-weight="bold" stroke="none" opacity=".87">20</text>
+          </g>
+          <g fill="#e6c58a" class="star"><path d="M110 110l2.5 7.5 7.5 2.5-7.5 2.5-2.5 7.5-2.5-7.5-7.5-2.5 7.5-2.5z"/><path d="M495 451l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></g>
+        </svg>
+        <div class="portal-die-layer" aria-hidden="true"><canvas id="portal-die" width="420" height="420"></canvas></div>
+        <div class="portal-caption">PRZEZNACZENIE CZEKA NA SWÓJ RZUT</div>
+      </div>
+      <div class="scroll-note">PRZEWIŃ, BY ODKRYĆ WIĘCEJ</div>
+    </section>
+    <div class="ornament-bar"><span class="diamond">✧</span><span>WYOBRAŹNIA ZACZYNA SIĘ TUTAJ</span><span class="diamond">✧</span></div>
+    <section class="chapter" id="world">
+      <div class="chapter-main">
+        <div class="chapter-head"><div class="eyebrow">WITAJ AWANTURNIKU</div><h2>Usiądź wygodnie i napisz <em>swoją</em> historię.</h2><p>Stół jest wirtualny, ale decyzje pozostają Twoje.</p></div>
+        <div class="features">
+          <div class="feature"><div class="roman">I.</div><div><strong>Bądź kim chcesz</strong><p>Postać, atrybuty, ekwipunek i historia. Wszystko w jednej karcie, zawsze pod ręką.</p></div></div>
+          <div class="feature"><div class="roman">II.</div><div><strong>Bądź z własną drużyną</strong><p>Jeden link do kampanii, wspólna historia i kostki, których los naprawdę widać.</p></div></div>
+          <div class="feature"><div class="roman">III.</div><div><strong>Bądź gdzie chcesz</strong><p>Scenariusze, materiały narracyjne i kronika wydarzeń dla Mistrza Gry.</p></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="end-cta"><p>W każdej legendzie tkwi ziarno prawdy.<br>Stwórz <em>własną historię</em></p><a class="action-main" href="StreamHouse-Portal.html">WEJDŹ DO GRY <span aria-hidden="true">↗</span></a></section>
+  </main>
+  <footer><span>© 2026 STREAMHOUSE RPG COMPANION</span><span>Wyciągnął z czeluści piekieł: <a href="https://www.instagram.com/pan.szczesniak/" target="_blank" rel="noopener noreferrer">PanSzczesniak</a></span><span class="fine"><a href="https://discord.gg/pBG3ybyjk3" target="_blank" rel="noopener noreferrer">StreamHouse · Discord</a> &nbsp;·&nbsp; <button type="button" id="replayIntro" style="background:none;border:0;color:#bba177;cursor:pointer;font:inherit;padding:0">Odtwórz intro</button></span></footer>
+</div>
+
+<script>
+(()=>{
+ 'use strict';
+ const intro=document.getElementById('intro'), replay=document.getElementById('replayIntro');
+ let introTimer; let introFinished=false;
+ function finish(){if(introFinished)return;introFinished=true;clearTimeout(introTimer);intro.classList.add('is-out');intro.setAttribute('aria-hidden','true');document.body.classList.add('entered')}
+ function start(){clearTimeout(introTimer);introFinished=false;document.body.classList.remove('entered');intro.classList.remove('is-out');intro.removeAttribute('aria-hidden');introTimer=setTimeout(finish,3800)}
+ replay.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});start()});
+ document.querySelectorAll('[data-open-auth]').forEach(button=>button.addEventListener('click',()=>location.assign('StreamHouse-Portal.html')));
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');if(reduced.matches)finish();else start();
+ // Atmospheric sparks: decorative only, disabled for reduced motion.
+ const canvas=document.getElementById('dust');const ctx=canvas.getContext('2d');if(!ctx||reduced.matches)return;
+ let pts=[],w=0,h=0,last=0;const parent=canvas.parentElement;let visible=true;
+ function resize(){const r=parent.getBoundingClientRect();w=Math.round(r.width);h=Math.round(r.height);const d=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0);pts=Array.from({length:w<760?21:56},()=>({x:Math.random()*w,y:Math.random()*h,r:.45+Math.random()*1.35,vy:.10+Math.random()*.26,vx:(Math.random()-.5)*.20,a:.15+Math.random()*.42}))}
+ let observer=new IntersectionObserver(e=>{visible=e[0]?.isIntersecting??false});observer.observe(parent);resize();window.addEventListener('resize',resize,{passive:true});
+ function frame(time){requestAnimationFrame(frame);if(!visible||document.hidden||time-last<24)return;last=time;ctx.clearRect(0,0,w,h);for(const p of pts){p.y-=p.vy;p.x+=p.vx;if(p.y<-10){p.y=h+8;p.x=Math.random()*w}if(p.x<0)p.x=w;if(p.x>w)p.x=0;ctx.beginPath();ctx.fillStyle=`rgba(222,189,122,${p.a*(.7+.3*Math.sin(time/750+p.x))})`;ctx.arc(p.x,p.y,p.r,0,6.2832);ctx.fill()}}
+ requestAnimationFrame(frame);
+})();
+</script>
+<script defer src="assets/dice-geometry.js"></script>
+<script defer src="assets/welcome-d20.js"></script>
+</body>
+</html>

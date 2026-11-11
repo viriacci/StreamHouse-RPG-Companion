@@ -1,0 +1,14 @@
+# Media rozpakowywane lokalnie z bundles/media.part*
+/assets/portrety/
+/assets/emerald-d20-albedo.webp
+/rozgrywka/assets/
+/rozgrywka/StreamHouse-v21-Pergamin.jpg
+/podglad-v9-fabularny.png
+/podglad-v9-taktyczny.png
+# środowisko
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+*.log

@@ -1,0 +1,49 @@
+{
+  "format": "streamhouse-character-v1",
+  "rules": "SRD-5.2.1",
+  "character": {
+    "id": null,
+    "name": "Lira Śpiewająca",
+    "title": "",
+    "bio": "Bardka, która zbiera zapomniane ballady.",
+    "avatar": "",
+    "avatarSource": "",
+    "avatarTheme": "forest",
+    "classId": "bard",
+    "speciesId": "halfling",
+    "backgroundId": "entertainer",
+    "method": "standard",
+    "base": [
+      15,
+      14,
+      13,
+      12,
+      10,
+      8
+    ],
+    "bonusMode": "split",
+    "bonusPlus2": "str",
+    "bonusPlus1": "dex",
+    "languages": [
+      "Elfi",
+      "Krasnoludzki"
+    ],
+    "classSkills": [
+      "Animal Handling",
+      "Arcana",
+      "Athletics"
+    ],
+    "equipChoice": "gold",
+    "classEquip": "A",
+    "alignment": "Neutralny",
+    "appearanceMode": "library",
+    "avatarAdjust": {
+      "x": 0,
+      "y": 0,
+      "z": 1
+    },
+    "flowVersion": 4,
+    "step": 0,
+    "status": "draft"
+  }
+}
