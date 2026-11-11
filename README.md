@@ -31,7 +31,7 @@ Otwórz `http://localhost:8000` i wybierz tryb demonstracyjny. Otwieranie HTML p
 
 ## Produkcyjne uruchomienie
 
-Zobacz **[Instrukcję wdrożenia VPS](docs/WDROZENIE-VPS.md)**. System publikuje Nginx; nie wymaga Node.js ani uruchamiania usługi w tle. Osobno konfigurujesz Supabase i Discord OAuth.
+Najpierw rozpakuj media jako zwykły użytkownik repozytorium, nie przez sudo. Zobacz **[Instrukcję wdrożenia VPS](docs/WDROZENIE-VPS.md)**. System publikuje Nginx; nie wymaga Node.js ani uruchamiania usługi w tle. Osobno konfigurujesz Supabase i Discord OAuth.
 
 Do kolejnych aktualizacji na VPS:
 

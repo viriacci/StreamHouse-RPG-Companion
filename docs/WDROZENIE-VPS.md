@@ -21,6 +21,8 @@ sudo mkdir -p /opt/streamhouse-rpg
 sudo chown "$(id -un):$(id -gn)" /opt/streamhouse-rpg
 git clone https://github.com/viriacci/StreamHouse-RPG-Companion.git /opt/streamhouse-rpg
 cd /opt/streamhouse-rpg
+bash scripts/unpack-media.sh
+python3 scripts/check-project.py
 ```
 
 W repo źródła są jawne, a duże tekstury do kości są spakowane w `bundles/media.part*`.
@@ -34,7 +36,7 @@ cd /opt/streamhouse-rpg
 sudo DOMAIN=rpg.example.com EMAIL=admin@example.com bash scripts/install-vps.sh
 ```
 
-Skrypt instaluje Nginx, rsync, unzip, certbot; rozpakowuje zasoby, weryfikuje kompletność plików, publikuje wyłącznie katalog publiczny w `/var/www/streamhouse/current`, tworzy osobny plik Nginx `/etc/nginx/sites-available/streamhouse` i pobiera certyfikat Let's Encrypt. Nie kopiuje SQL/testów do katalogu WWW. Bez poprawnego DNS operacja certyfikatu się nie uda. Certbot może wymagać konfiguracji sieciowego firewallu.
+Skrypt instaluje Nginx, rsync, unzip, certbot; weryfikuje rozpakowane wcześniej zasoby i kompletność plików, publikuje wyłącznie katalog publiczny w `/var/www/streamhouse/current`, tworzy osobny plik Nginx `/etc/nginx/sites-available/streamhouse` i pobiera certyfikat Let's Encrypt. Nie kopiuje SQL/testów do katalogu WWW. Bez poprawnego DNS operacja certyfikatu się nie uda. Certbot może wymagać konfiguracji sieciowego firewallu.
 
 Po instalacji sprawdź:
 

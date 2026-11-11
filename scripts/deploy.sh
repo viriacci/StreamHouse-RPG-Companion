@@ -5,7 +5,10 @@ PROJECT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SITE_ROOT="${STREAMHOUSE_SITE_ROOT:-/var/www/streamhouse}"
 CONFIG="${STREAMHOUSE_RUNTIME_CONFIG:-/etc/streamhouse/cloud-config.local.js}"
 cd "$PROJECT"
-[[ -f rozgrywka/assets/premium-atlases.js ]] || bash scripts/unpack-media.sh
+if [[ ! -f rozgrywka/assets/premium-atlases.js ]]; then
+  echo 'Brakuje zasobów. W katalogu projektu uruchom: bash scripts/unpack-media.sh (jako właściciel repozytorium).' >&2
+  exit 1
+fi
 python3 scripts/check-project.py
 release_id="$(date -u +%Y%m%d%H%M%S)-$$"
 release="$SITE_ROOT/releases/$release_id"
