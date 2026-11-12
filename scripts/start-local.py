@@ -60,7 +60,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description='Lokalny serwer StreamHouse RPG Companion v11')
+    parser = argparse.ArgumentParser(description='Lokalny serwer StreamHouse RPG Companion v11.1')
     parser.add_argument('--port', type=int, default=8765)
     parser.add_argument('--no-browser', action='store_true')
     args = parser.parse_args()
@@ -69,14 +69,18 @@ def main() -> int:
     except Exception as exc:
         print(f'BLAD: {exc}')
         return 1
-    try:
-        server = http.server.ThreadingHTTPServer(('127.0.0.1', args.port), Handler)
-    except OSError as exc:
-        print(f'Port {args.port} jest zajęty lub niedostępny: {exc}')
-        print('Zamknij poprzedni serwer lub uzyj --port 8766')
+    server = None
+    for port in range(args.port, args.port + 16):
+        try:
+            server = http.server.ThreadingHTTPServer(('127.0.0.1', port), Handler)
+            break
+        except OSError:
+            pass
+    if server is None:
+        print(f'BLAD: Porty {args.port}-{args.port+15} sa zajete lub zablokowane.')
         return 2
     url = f'http://127.0.0.1:{server.server_port}/'
-    print(f'\nStreamHouse v11 -> {url}')
+    print(f'\nStreamHouse v11.1 -> {url}')
     print('Dziala tylko na tym komputerze. Zatrzymaj przez Ctrl+C.')
     if not args.no_browser:
         threading.Timer(0.8, lambda: webbrowser.open(url)).start()

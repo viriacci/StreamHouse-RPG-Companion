@@ -42,6 +42,19 @@ footer.app-foot{padding:20px clamp(20px,4vw,60px);border-top:1px solid #79623d66
 .gate-portrait{isolation:isolate}
 .gate-portrait .seal-die{display:grid;place-items:center;aspect-ratio:1;height:auto;width:65%;max-height:none;filter:drop-shadow(0 24px 30px #050c08aa);transition:opacity .5s ease;animation:float 6.8s ease-in-out infinite}
 .gate-portrait .seal-die canvas{width:100%;height:100%;display:block;aspect-ratio:1}
+/* Klikniecie podbija sama kosc, bez resetowania stalego unoszenia obudowy. */
+.gate-portrait .seal-die{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.gate-portrait::before,.gate-portrait::after,.gate-portrait .seal-ring{pointer-events:none}
+.gate-portrait .seal-die:focus-visible{outline:2px solid #e9c486;outline-offset:7px;border-radius:22%}
+.gate-portrait .seal-die.sh-die-hop>canvas,.gate-portrait .seal-die.sh-die-hop>svg{animation:sh-die-click-hop .62s cubic-bezier(.2,.7,.28,1) both}
+@keyframes sh-die-click-hop{
+  0%,100%{transform:translateY(0) scale(1)}
+  32%{transform:translateY(-18px) scale(1.035)}
+  61%{transform:translateY(3px) scale(.985)}
+  82%{transform:translateY(-5px) scale(1.012)}
+}
+@media(prefers-reduced-motion:reduce){.gate-portrait .seal-die.sh-die-hop>canvas,.gate-portrait .seal-die.sh-die-hop>svg{animation:none;filter:brightness(1.12)}}
+
 /* znajomi */
 .friends-head{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin:22px 0 18px}
 .friends-discord{font:600 12px var(--display);color:#e7c58a;text-decoration:none;border-bottom:1px solid #b6935b;padding:6px 0}
@@ -86,9 +99,9 @@ footer.app-foot{padding:20px clamp(20px,4vw,60px);border-top:1px solid #79623d66
 <section id="loginScreen" aria-label="Wejście do StreamHouse">
   <div class="gate-art">
     <div class="gate-art-top">WITAJ AWANTURNIKU</div>
-    <div class="gate-portrait" aria-hidden="true">
+    <div class="gate-portrait">
       <div class="seal-ring"></div>
-      <div class="seal-die" id="portal"><canvas id="portal-die" width="420" height="420" aria-label="Animowana kość D20 Szmaragdowa Relikwia"></canvas></div>
+      <div class="seal-die" id="portal" role="button" tabindex="0" aria-label="Podrzuć kość D20"><canvas id="portal-die" width="420" height="420" aria-label="Animowana kość D20 Szmaragdowa Relikwia"></canvas></div>
     </div>
     <div class="gate-art-bottom">Każdy bohater potrzebuje miejsca, w którym rozpocznie swoją historię.</div>
   </div>

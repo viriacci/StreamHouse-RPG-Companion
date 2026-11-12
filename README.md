@@ -1,6 +1,6 @@
 # StreamHouse RPG Companion
 
-> **NAPRAWA v11 / wydanie wizualne.** Przywrócono szatę v7 i oryginalny pokój/kości v21. Wersja ZIP zawiera wszystkie tekstury fizycznie. Uruchamiaj przez `Uruchom-StreamHouse.bat`, nie przez dwuklik `index.html`. Zobacz [README-V11-NAPRAWA.md](README-V11-NAPRAWA.md).
+> **POPRAWKA v11.1 / launcher i klikana D20.** Przywrócono szatę v7 i oryginalny pokój/kości v21. Wersja ZIP zawiera wszystkie tekstury fizycznie. Uruchamiaj przez `Uruchom-StreamHouse.bat`, nie przez dwuklik `index.html`. Kostka na portalu lekko podskakuje po kliknięciu. Zobacz [README-V11-NAPRAWA.md](README-V11-NAPRAWA.md).
 
 
 Portal i narzędzia do prowadzenia sesji D&D online, stworzone z zachowaniem oryginalnego pokoju v21.
@@ -24,7 +24,7 @@ Ważne: oryginalne okna v21 mają lokalną komunikację, **nie** łączą się a
 
 ## Uruchom lokalnie (v11)
 
-**Windows:** kliknij `Uruchom-StreamHouse.bat` (Python 3 lub Node.js). **Linux/macOS:** `bash Uruchom-StreamHouse.sh`. ZIP v11 zawiera gotowe grafiki; kod z GitHuba odtwarza tekstury automatycznie.
+**Windows 10/11:** kliknij `Uruchom-StreamHouse.bat`. Skrypt użyje Pythona lub Node.js, jeśli są zainstalowane, a w przeciwnym razie wbudowanego Windows PowerShell. **Nie trzeba instalować** Pythona lub Node.js. **Linux/macOS:** `bash Uruchom-StreamHouse.sh`. ZIP v11.1 zawiera gotowe grafiki; kod z GitHuba odtwarza tekstury automatycznie.
 
 ### Uruchomienie ręczne
 

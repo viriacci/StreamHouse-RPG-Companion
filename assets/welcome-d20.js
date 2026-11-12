@@ -7,6 +7,22 @@
   'use strict';
   const canvas=document.getElementById('portal-die');
   const portal=document.getElementById('portal');
+  // Interakcja dziala takze wtedy, gdy silnik renderujacy potrzebuje fallbacku.
+  if (portal) {
+    const hop = () => {
+      portal.classList.remove('sh-die-hop');
+      void portal.offsetWidth; // restart animacji przy szybkim ponownym kliknieciu
+      portal.classList.add('sh-die-hop');
+    };
+    portal.addEventListener('click', hop);
+    portal.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); hop(); }
+    });
+    portal.addEventListener('animationend', event => {
+      if (event.animationName === 'sh-die-click-hop') portal.classList.remove('sh-die-hop');
+    });
+  }
+
   const mesh=window.StreamHouseEmeraldGeometry?.d20;
   const ctx=canvas?.getContext('2d',{alpha:true});
   if(!canvas||!ctx||!portal||!mesh)return;

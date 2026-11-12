@@ -1,4 +1,4 @@
-# StreamHouse RPG Companion v11: przywrócenie interfejsów
+# StreamHouse RPG Companion v11.1: przywrócenie interfejsów i launcher
 
 Ta wersja naprawia regresje powstałe podczas scalania v10. Bazą są oryginalny ekran wejściowy v7 oraz przekazane przez autora panele MG/Gracza/Pracowni Kości v21.
 
@@ -12,13 +12,14 @@ Ta wersja naprawia regresje powstałe podczas scalania v10. Bazą są oryginalny
 
 ## Uruchomienie na Windows
 
-1. Rozpakuj **cały** plik ZIP v11 do osobnego katalogu. Nie uruchamiaj aplikacji z podglądu archiwum.
+1. Rozpakuj **cały** plik ZIP v11.1 do osobnego katalogu. Nie uruchamiaj aplikacji z podglądu archiwum.
 2. Otwórz `Uruchom-StreamHouse.bat`.
-3. Jeżeli masz Python 3 (lub Node.js), otworzy się `http://127.0.0.1:8765/`. Okno serwera pozostaw otwarte podczas testów.
+3. Skrypt uruchomi serwer przez Python 3 lub Node.js, jeśli są dostępne. W przeciwnym razie użyje **Windows PowerShell**, wbudowanego w Windows 10/11. Python i Node.js nie są wymagane. Adres zostanie pokazany w oknie, zwykle `http://127.0.0.1:8765/`. Okno serwera pozostaw otwarte podczas testów.
 4. W portalu wybierz „Otwórz tryb lokalny”, a następnie kampanię demonstracyjną i „Pokój fabularny”.
-5. W razie zajętego portu: `python scripts/start-local.py --port 8766` (i otwórz pokazany adres).
+5. Jeśli port `8765` jest zajęty, launcher automatycznie wybierze kolejny wolny port (do `8780`). Jeśli start się nie powiedzie, okno **nie zamknie się**: pokaże komunikat błędu. Zrób zrzut komunikatu, zamiast zgadywać przyczynę.
+6. Na ekranie logowania **kliknij zieloną kość D20**: lekko podskoczy, zachowując normalny obrót. Działa również klawisz Enter po wybraniu jej klawiszem Tab.
 
-**Nie otwieraj `index.html` dwuklikiem**. Tryb `file://` blokuje pobieranie JSON i może zepsuć kreator, portal oraz obrazy. Python 3 lub Node.js wystarcza do uruchomienia lokalnego serwera, bez instalacji dodatkowych bibliotek.
+**Nie otwieraj `index.html` dwuklikiem**. Tryb `file://` blokuje pobieranie JSON i może zepsuć kreator, portal oraz obrazy. Na Windows 10/11 wystarcza również wbudowany Windows PowerShell, bez żadnych dodatkowych instalacji.
 
 ## Uruchomienie na Linux/macOS
 

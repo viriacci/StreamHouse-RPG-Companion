@@ -19,11 +19,16 @@ const server=createServer((req,res)=>{
   if(path.startsWith('/bundles/')||path.startsWith('/supabase/')||path.startsWith('/scripts/')||path.startsWith('/docs/')||path.startsWith('/tests/')||path.startsWith('/.')){res.writeHead(403);res.end('Forbidden');return;}
   try {const st=statSync(actual);if(!st.isFile())throw Error();res.writeHead(200,{'Content-Type':mime[extname(actual).toLowerCase()]||'application/octet-stream','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});if(req.method==='HEAD'){res.end();return;}createReadStream(actual).pipe(res);}catch{res.writeHead(404);res.end('Not found');}
 });
-server.on('error',e=>{console.error('Nie udalo sie uruchomic lokalnego serwera:',e.message);process.exit(2)});
-server.listen(port,'127.0.0.1',()=>{
- const url=`http://127.0.0.1:${port}/`;
- console.log('StreamHouse v11 ->',url,'\nZatrzymaj przez Ctrl+C.');
+let activePort=port;
+server.on('error',e=>{
+ if(e.code==='EADDRINUSE' && activePort < port+15) { activePort++; server.listen(activePort,'127.0.0.1'); return; }
+ console.error('Nie udalo sie uruchomic serwera:',e.message);process.exitCode=2;
+});
+server.on('listening',()=>{
+ const url=`http://127.0.0.1:${activePort}/`;
+ console.log('StreamHouse v11.1 ->',url,'\nZatrzymaj przez Ctrl+C.');
  if(process.platform==='win32')execFile('cmd',['/c','start','',url],()=>{});
  else if(process.platform==='darwin')execFile('open',[url],()=>{});
  else execFile('xdg-open',[url],()=>{});
 });
+server.listen(activePort,'127.0.0.1');
