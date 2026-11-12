@@ -27,10 +27,8 @@
  #ritual-close{background:linear-gradient(180deg,#765b36,#3b2a19);color:#fff2d8;border:1px solid #c9a66b;padding:11px 22px;font:600 14px Georgia,serif;margin-top:18px;cursor:pointer}#ritual-close.hidden{display:none}
  @media(max-width:770px){.themes{grid-template-columns:1fr 1fr}.themes .dice-type{padding:11px 9px;min-width:0}.hero{grid-template-columns:1fr}.material{max-width:380px}.page{padding:28px 18px 50px}.dice-type{min-width:64px}}
  </style>
-<style id="streamhouse-crossnav-style">#sh-crossnav{position:fixed;right:14px;bottom:14px;z-index:99990;background:#141715ed;color:#eddfc2;border:1px solid #6a5a3c;border-radius:9px;padding:9px 12px;display:flex;gap:11px;align-items:center;box-shadow:0 6px 24px #0009;font:12px/1.3 system-ui, sans-serif;max-width:calc(100vw - 28px);flex-wrap:wrap}#sh-crossnav a{color:#ead39c;text-decoration:none;white-space:nowrap}#sh-crossnav a:hover{text-decoration:underline}@media(max-width:530px){#sh-crossnav{position:static;border-radius:0;justify-content:center}}</style>
 </head>
 <body>
-<nav id="sh-crossnav" aria-label="Przejście między modułami StreamHouse"><a href="../StreamHouse-Portal.html#campaigns">← Portal</a><a href="../Kreator-Postaci.html">Kuźnia bohatera</a><a href="StreamHouse-v21-MG.html">MG</a><a href="StreamHouse-v21-Gracz.html">Gracz</a><a href="StreamHouse-v21-Pracownia-Kosci.html">Kości</a></nav>
  <div class="page"><header><div><div class="logo">StreamHouse <span style="color:#d3b37a">RPG Companion</span></div><small>Pracownia Kości · 20 zestawów PBR</small></div><span class="s-label" id="renderer-status">WEBGL2 / UV CANVAS</span></header>
  <div class="hero"><main><div class="eyebrow">Kolekcja relikwii / królewskie złoto</div><h1 id="selected-title">Królewski<br>Ametyst</h1><p id="selected-description">Fioletowy marmur, chłodne srebro i wypolerowane metaliczne ramki na każdej ściance. Krawędzie są osobną geometrią bryły, odbijającą światło niezależnie od kamienia.</p><div class="choice"><h2>Wybierz zestaw</h2><div class="types themes" id="premium-themes"><button class="dice-type" data-theme="goblin">Szmaragdowa Relikwia<small>Marble · polerowany minerał</small></button><button class="dice-type active" data-theme="amethyst">Królewski Ametyst<small>Marble · metaliczne okucia</small></button><button class="dice-type" data-theme="midnight">Nocna Mgławica<small>Galaxy · metaliczne okucia</small></button><button class="dice-type" data-theme="sapphire">Lodowy Szafir<small>Crystal · metaliczne okucia</small></button><button class="dice-type" data-theme="obsidian">Obsydianowa Korona<small>Obsidian · metaliczne okucia</small></button><button class="dice-type" data-theme="iron">Stalowy Gwardzista<small>Metal · metaliczne okucia</small></button><button class="dice-type" data-theme="brass">Mosiężny Bastion<small>Metal · metaliczne okucia</small></button><button class="dice-type" data-theme="ruby">Krwawy Rubin<small>Crystal · metaliczne okucia</small></button><button class="dice-type" data-theme="ivory">Kość Przodków<small>Bone · metaliczne okucia</small></button><button class="dice-type" data-theme="opal">Opal Oceanu<small>Opal · metaliczne okucia</small></button><button class="dice-type" data-theme="pharaoh">Złoto Faraona<small>Sand · metaliczne okucia</small></button><button class="dice-type" data-theme="scroll">Runiczny Pergamin<small>Parchment · metaliczne okucia</small></button><button class="dice-type" data-theme="inferno">Piekielna Kuźnia<small>Lava · metaliczne okucia</small></button><button class="dice-type" data-theme="moonstone">Księżycowy Kryształ<small>Ice · metaliczne okucia</small></button><button class="dice-type" data-theme="verdigris">Zatruta Patyna<small>Patina · metaliczne okucia</small></button><button class="dice-type" data-theme="druid">Serce Puszczy<small>Wood · metaliczne okucia</small></button><button class="dice-type" data-theme="stardust">Astralny Pył<small>Galaxy · metaliczne okucia</small></button><button class="dice-type" data-theme="amber">Bursztynowy Tron<small>Amber · metaliczne okucia</small></button><button class="dice-type" data-theme="rose">Różany Opal<small>Opal · metaliczne okucia</small></button><button class="dice-type" data-theme="antique">Stara Korona<small>Aged · metaliczne okucia</small></button></div></div>
  <div class="divider"></div><div class="choice"><h2>Wybierz kość</h2><div class="types" id="types"></div></div><div class="actions"><button class="roll-btn" id="roll">Rzuć kością</button><label class="toggle"><input type="checkbox" id="bonus" checked> Pokaż modyfikatory przykładowego testu</label></div>
@@ -44,7 +42,7 @@
  const themeNames=Object.fromEntries(Object.entries(library).map(([k,v])=>[k,v.name]));
  document.getElementById('premium-themes').addEventListener('click',e=>{
    const btn=e.target.closest('[data-theme]');if(!btn)return;
-   theme=btn.dataset.theme;
+   theme=btn.dataset.theme;try{localStorage.setItem('streamhouse:dice:theme',theme)}catch{}
    document.querySelectorAll('[data-theme]').forEach(b=>b.classList.toggle('active',b===btn));
    const m=library[theme];document.getElementById('selected-title').textContent=m.name;
    document.getElementById('selected-description').textContent=m.desc;
@@ -68,4 +66,20 @@
 <script defer src="assets/premium-library.js"></script>
 <script defer src="assets/premium-canvas.js"></script>
 <script defer src="assets/premium-webgl.js"></script>
+<script>
+// StreamHouse v11: secure, same-origin display bridge. The server/room owns the roll result.
+window.addEventListener('DOMContentLoaded',()=>{
+  window.addEventListener('message',event=>{
+    if(event.origin!==window.location.origin||event.source!==window.parent||!event.data||event.data.type!=='streamhouse:display-server-roll')return;
+    const o=event.data.options||{};
+    const sides=Number(o.sides),value=Number(o.value);
+    if(![4,6,8,10,12,20,100].includes(sides)||!Number.isInteger(value)||value<1||value>sides)return;
+    const allowed=['goblin','amethyst','midnight','sapphire','obsidian','iron','brass','ruby','ivory','opal','pharaoh','scroll','inferno','moonstone','verdigris','druid','stardust','amber','rose','antique'];
+    const theme=allowed.includes(o.theme)?o.theme:'goblin';
+    const modifier=Math.max(-30,Math.min(30,Number(o.modifier)||0));
+    const title=typeof o.title==='string'?o.title.slice(0,65):'Rzut kością';
+    Promise.resolve(window.SH?.ritualRoll?.({title,detail:'Rzut z pokoju sesji',sides,value,theme,modifiers:modifier?[{label:'Modyfikator',value:modifier}]:[]})).catch(console.error);
+  });
+});
+</script>
 </body></html>

@@ -186,6 +186,7 @@ function install(){
  })});
  $('classic-notes-form').addEventListener('submit',e=>{e.preventDefault();doAction(async()=>{await commit(s=>s.sharedNote=$('classic-notes-input').value.slice(0,4000));notice('Zapisano wspólne ustalenia.');})});
  $('dice-close').onclick=()=>{$('dice-view').hidden=true};
+ if($('premium-close'))$('premium-close').onclick=()=>{$('premium-dice-modal').hidden=true};
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('dice-view').hidden)$('dice-view').hidden=true});
  $('edit-scene').onclick=()=>{const show=$('editing-panel').hidden;$('editing-panel').hidden=!show;if(show){const s=state();$('edit-chapter').value=s.chapter||'';$('edit-title').value=s.scene||'';$('edit-description').value=s.narration||'';$('edit-theme').value=VALID_SCENES.includes(s.theme)?s.theme:'fortress'}};
  $('cancel-edit').onclick=()=>$('editing-panel').hidden=true;
@@ -202,9 +203,20 @@ function install(){
  document.querySelectorAll('[data-die]').forEach(btn=>btn.addEventListener('click',()=>{die=Number(btn.dataset.die);document.querySelectorAll('[data-die]').forEach(x=>x.classList.toggle('active',x===btn))}));
  $('roll-form').addEventListener('submit',e=>{e.preventDefault();doAction(async()=>{const mod=clamp($('roll-modifier').value,-30,30),label=($('roll-name').value.trim()||'Rzut D'+die).slice(0,60);const result=await room.roll(die,mod,label);await refresh();
  const val=result?.value??result?.meta?.value;const total=result?.total??result?.meta?.total;
- if(Number.isFinite(Number(val))&&window.StreamHouseRitual){$('dice-view').hidden=false;
-  $('dice-result-title').textContent=label;
-  try{await window.StreamHouseRitual.play($('dice-canvas'),{sides:die,value:Number(val),total:Number(total),modifier:mod});}catch(err){$('dice-total').textContent='Wynik: '+total}}
+ if(Number.isFinite(Number(val))){
+    const premium=$('premium-dice-modal'),iframe=$('premium-dice-frame');
+    const options={sides:die,value:Number(val),modifier:mod,title:label,theme:(localStorage.getItem('streamhouse:dice:theme')||'goblin')};
+    const message=()=>iframe.contentWindow?.postMessage({type:'streamhouse:display-server-roll',options},location.origin);
+    if(premium&&iframe){
+      premium.hidden=false;
+      if(!iframe.getAttribute('src')){iframe.addEventListener('load',message,{once:true});iframe.src='../rozgrywka/StreamHouse-v21-Pracownia-Kosci.html?embed=1';}
+      else if(iframe.contentDocument?.readyState==='complete')message();
+      else iframe.addEventListener('load',message,{once:true});
+    }else if(window.StreamHouseRitual){
+      $('dice-view').hidden=false;$('dice-result-title').textContent=label;
+      try{await window.StreamHouseRitual.play($('dice-canvas'),{sides:die,value:Number(val),total:Number(total),modifier:mod});}catch(err){$('dice-total').textContent='Wynik: '+total;}
+    }
+  }
 })});
  showTab('map');
 }

@@ -394,4 +394,13 @@ if(cloud?.configured){
   }
  }).catch(err=>notify('Chmura: '+err.message));
 }else if(existingCloudId)notify('Ta karta wymaga aktywnej chmury i logowania Discord.');
-</script></body></html>
+</script><script>
+// Notice only for file://; normal site appearance on http(s) remains unchanged.
+if(location.protocol==='file:')addEventListener('DOMContentLoaded',()=>{
+  const el=document.createElement('div');el.setAttribute('role','alert');
+  el.style.cssText='position:fixed;left:12px;right:12px;top:12px;z-index:2147483647;padding:15px 20px;border:2px solid #dfc18a;background:#19211c;color:#ffe7b8;box-shadow:0 12px 50px #000e;font:600 14px/1.6 Segoe UI,Arial,sans-serif;text-align:center';
+  el.textContent='StreamHouse otwarto jako plik. Zamknij tę kartę i uruchom Uruchom-StreamHouse.bat, aby działały tekstury, portrety i karty postaci.';
+  document.body.appendChild(el);
+});
+</script>
+</body></html>

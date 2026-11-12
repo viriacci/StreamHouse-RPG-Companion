@@ -29,6 +29,14 @@ body[data-layout="tactical"] #classic-panel{display:none!important}
 .character-session{margin-top:16px}.character-session h2{font-size:19px}.character-session .btn{font-size:10px}.ability-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:13px 0}.ability-grid>div{border:1px solid #756746;text-align:center;padding:7px 3px}.ability-grid strong{display:block;font:21px Georgia,serif;color:#f2d3a1}.ability-grid span{font-size:10px;color:#b9b8a9}.hp-label{display:grid;gap:5px;font-size:11px;color:#e5ca90}.hero-edit-hint{line-height:1.4}.member.hero-entry-session{width:100%;cursor:pointer;color:#f5e2bf;text-align:left}.member.hero-entry-session:hover{border-color:#d7b67f;background:#334035}.member.hero-entry-session.selected{border-color:#f1d498}
 .dice-view{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 45%,#3a3525,#090e0bea 60%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:22px;backdrop-filter:blur(15px)}.dice-view[hidden]{display:none}.dice-view h2{font:32px Georgia,serif;color:#f0d49f;margin:0}.dice-view canvas{max-width:min(550px,90vw);width:100%;height:auto;aspect-ratio:500/320}.dice-view .dice-result{font:31px Georgia,serif;color:#f6dfb1;min-height:40px}.dice-view #dice-close{position:absolute;right:20px;top:20px}
 @media(max-width:680px){.top{height:auto;min-height:90px;flex-wrap:wrap;padding:12px}.statusline{flex-wrap:wrap}.classic-panel{padding:17px}.classic-panel h2{font-size:26px}}
+
+/* v11: roll renderer from the original v21 Pracownia Kości. */
+#premium-dice-modal{position:fixed;inset:0;z-index:199;background:#080d0afb;display:flex;flex-direction:column;align-items:stretch;padding:0;backdrop-filter:blur(9px)}
+#premium-dice-modal[hidden]{display:none!important}
+#premium-dice-modal iframe{height:100%;min-height:0;width:100%;border:0;background:#0a0e0b;flex:1}
+#premium-dice-toolbar{position:absolute;top:10px;right:13px;z-index:3;display:flex;gap:8px}
+#premium-close{padding:10px 17px;color:#f4dfb4;background:#171d18e8;border:1px solid #b69765;font:13px Georgia,serif;cursor:pointer}
+#premium-close:hover{background:#4d3824}
 </style>
 </head>
 <body>
@@ -88,6 +96,7 @@ body[data-layout="tactical"] #classic-panel{display:none!important}
     <section id="handout-panel" class="handout panel" hidden><h3>Ujawnij wskazówkę</h3><form id="handout-form" class="group"><textarea class="field" id="handout-text" maxlength="1200" placeholder="Treść, którą mają zobaczyć wszyscy gracze" required rows="3"></textarea><button class="btn" type="submit">Ujawnij drużynie</button></form></section>
   </aside>
 </main>
+<section id="premium-dice-modal" hidden role="dialog" aria-modal="true" aria-label="Rzut kośćmi z kolekcji v21"><div id="premium-dice-toolbar"><button id="premium-close" type="button" aria-label="Zamknij rzut">× Powrót do stołu</button></div><iframe id="premium-dice-frame" title="Pracownia Kości v21" loading="lazy" referrerpolicy="same-origin"></iframe></section>
 <div id="room-alert" role="status" aria-live="polite" hidden></div>
 <script src="../assets/dice-geometry.js"></script><script src="../assets/dice-ritual.js"></script><script src="../assets/cloud-config.js"></script><script src="../assets/cloud-config.local.js"></script><script src="../assets/cloud.js"></script><script src="../assets/room.js"></script><script src="room-ui.js"></script>
 </body></html>

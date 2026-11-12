@@ -106,5 +106,16 @@
     function frame(now){requestAnimationFrame(frame);if(!visible||document.hidden||now-last<32)return;last=now;draw(now)}
     draw(performance.now());portal.classList.add('dice-ready');requestAnimationFrame(frame);
   }
-  if(atlas.complete)init();else atlas.addEventListener('load',init,{once:true});
+  function failImage(){
+    console.error('[StreamHouse] Brakuje assets/emerald-d20-albedo.webp. Uruchom lokalny serwer z kompletnymi zasobami.');
+    canvas.setAttribute('data-error','missing-texture');
+    // This SVG fallback appears ONLY if the original v21 texture cannot be loaded.
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 300 300');svg.setAttribute('aria-label','Kość D20, awaryjny wygląd bez tekstury');
+    svg.style.cssText='width:100%;height:100%;filter:drop-shadow(0 14px 21px #000b)';
+    svg.innerHTML='<defs><linearGradient id="sh-metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4da96"/><stop offset=".55" stop-color="#806039"/><stop offset="1" stop-color="#ddc08e"/></linearGradient><linearGradient id="sh-stone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#406b56"/><stop offset=".56" stop-color="#172b26"/><stop offset="1" stop-color="#31594a"/></linearGradient></defs><path d="M150 18 280 104 232 262H68L20 104Z" fill="url(#sh-metal)" stroke="#f4d69a" stroke-width="5"/><path d="M150 29 268 108 225 248H75L32 108Z" fill="url(#sh-stone)" stroke="#c7a76a" stroke-width="3"/><path d="M150 29 150 144 32 108M150 144l118-36M150 144l75 104M150 144 75 248" stroke="#cba36b" stroke-width="4" fill="none"/><text x="150" y="123" text-anchor="middle" fill="#f1d6a0" font-size="44" font-family="Georgia">20</text></svg>';
+    canvas.style.display='none';canvas.parentElement?.append(svg);portal.classList.add('dice-ready');
+  }
+  atlas.addEventListener('error',failImage,{once:true});
+  if(atlas.complete){if(atlas.naturalWidth)init();else failImage()}else atlas.addEventListener('load',init,{once:true});
 })();

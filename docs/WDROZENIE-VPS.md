@@ -1,4 +1,6 @@
-# Wdrożenie StreamHouse na VPS Ubuntu 24.04
+# Wdrożenie StreamHouse v11 na VPS Ubuntu 24.04
+
+**Naprawa wyglądu v11:** przywrócono oryginalne panele v21 i zasoby D20; lokalny tryb fabularny wskazuje na v21. Wariant sieciowy `pokoj/` pozostaje osobnym interfejsem beta. Po pobraniu GitHuba nie pomijaj `bash scripts/unpack-media.sh`.
 
 Przewodnik dla VPS z Ubuntu 24.04 i Nginx, także małych maszyn. **Nie wymaga Node.js, Dockera ani procesu systemd dla samego StreamHouse.** Potrzebujesz dostępu SSH/sudo, własnej domeny/subdomeny, aktywnego projektu Supabase i aplikacji OAuth Discord. Przed zmianą Nginx zachowaj backup obecnej konfiguracji, zwłaszcza jeśli VPS obsługuje inne strony.
 
