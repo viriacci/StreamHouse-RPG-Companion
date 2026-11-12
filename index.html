@@ -48,7 +48,7 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
 .portal-svg{position:relative;z-index:1}
 .portal-die-layer{position:absolute;inset:0;display:grid;place-items:center;z-index:2;opacity:0;pointer-events:none;transition:opacity 1s ease}
 .portal-die-layer canvas{display:block;width:min(62%,355px);height:auto;aspect-ratio:1;filter:drop-shadow(0 18px 20px #000b);animation:glyphFloat 7s ease-in-out infinite}
-.portal-wrap.dice-ready .portal-die-layer{opacity:1}
+.portal-wrap.dice-ready .portal-die-layer{opacity:1;pointer-events:auto;cursor:pointer}
 .portal-wrap.dice-ready .portal-glyph{opacity:0;animation:none}
 .portal-caption{z-index:3}
 .end-cta p{font-size:clamp(26px,3vw,39px);line-height:1.18;max-width:760px}
@@ -59,6 +59,9 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
 @media(max-width:760px){.logo{gap:19px}.hero-title--question{font-size:clamp(39px,8.4vw,58px);line-height:1.04}.portal-die-layer canvas{width:min(61%,310px)}.ornament-bar{gap:12px;letter-spacing:.11em}.hero-lead{max-width:450px}.intro-kicker{font-size:9px;letter-spacing:.15em;padding:0 20px}}
 @media(max-width:415px){.logo{gap:15px}.hero-title--question{font-size:clamp(36px,9.1vw,45px)}.intro-kicker{font-size:8px}.ornament-bar{font-size:9px;letter-spacing:.07em}.end-cta p{font-size:26px}}
 @media(prefers-reduced-motion:reduce){.portal-die-layer canvas{animation:none}}
+.portal-wrap{cursor:pointer}
+.portal-wrap:focus-visible{outline:2px solid #cbaa70;outline-offset:2px}
+@media(max-width:760px){.portal-wrap{pointer-events:auto}}
 
 </style>
 </head>
@@ -110,7 +113,7 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
         </div>
         
       </div>
-      <div class="portal-wrap" id="portal">
+      <div class="portal-wrap" id="portal" role="button" tabindex="0" aria-label="Rzuć kością D20">
         <svg class="portal-svg" viewBox="0 0 600 600" fill="none" aria-hidden="true">
           <defs>
             <radialGradient id="core" cx="45%" cy="39%" r="62%"><stop stop-color="#35584b" stop-opacity=".68"/><stop offset=".54" stop-color="#18382c" stop-opacity=".33"/><stop offset="1" stop-color="#0e1710" stop-opacity="0"/></radialGradient>

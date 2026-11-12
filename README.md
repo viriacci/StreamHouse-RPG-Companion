@@ -56,3 +56,7 @@ Plik `/etc/streamhouse/cloud-config.local.js` zawiera tylko **publiczny** URL i 
 - Migracje bazy znajdują się w `supabase/migrations/`; **uruchom je kolejno**, dopiero na przygotowanym projekcie Supabase.
 - Trzeba przetestować na prawdziwych kontach Discord / aktywnej bazie: OAuth, RLS i synchronizację. Dotychczasowe wyniki testów lokalnych i mocków nie są gwarancją produkcyjną.
 - Repo zawiera źródła HTML/CSS/JS oraz podzielone archiwum zasobów (`bundles/media.part*`), które `scripts/unpack-media.sh` automatycznie rozpakowuje. To konieczne, ponieważ biblioteki tekstur kości są duże.
+
+## v11.2 — interakcje portalu
+
+Kość D20 na stronie powitalnej i logowania obraca się po kliknięciu bez wyróżniania wyniku. Bohaterów (także przykładowych) usuwa się przez przycisk czaszki, z potwierdzeniem i powiadomieniem. W profilu można ustawić własny podpis pod nazwą użytkownika, wspólny dla widoku profilu i bocznego menu. W bocznym menu Discord widoczny jest jako sama ikona. Szczegóły: [README-V11.2.md](README-V11.2.md).

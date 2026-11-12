@@ -7,19 +7,21 @@
   'use strict';
   const canvas=document.getElementById('portal-die');
   const portal=document.getElementById('portal');
-  // Interakcja dziala takze wtedy, gdy silnik renderujacy potrzebuje fallbacku.
-  if (portal) {
-    const hop = () => {
-      portal.classList.remove('sh-die-hop');
-      void portal.offsetWidth; // restart animacji przy szybkim ponownym kliknieciu
-      portal.classList.add('sh-die-hop');
-    };
-    portal.addEventListener('click', hop);
-    portal.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); hop(); }
-    });
-    portal.addEventListener('animationend', event => {
-      if (event.animationName === 'sh-die-click-hop') portal.classList.remove('sh-die-hop');
+  // Animacja rzutu dotyczy samej bryły 3D, nie wartości ani podświetlenia ścianki.
+  // Trzy pełne obroty po kliknięciu, bez losowania wyniku.
+  let rollStart=null;
+  const rollDuration=1150;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function startRoll(){
+    if(!portal)return;
+    rollStart=performance.now();
+    portal.classList.add('sh-die-rolling');
+    if(reduced){rollStart=null;portal.classList.remove('sh-die-rolling')}
+  }
+  if(portal){
+    portal.addEventListener('click',startRoll);
+    portal.addEventListener('keydown',event=>{
+      if(event.key==='Enter'||event.key===' '){event.preventDefault();startRoll()}
     });
   }
 
@@ -103,7 +105,14 @@
     ctx.clearRect(0,0,w,h);
     const t=time*.001;
     // Slow yaw + small tilts, with no synchronized or fake camera-facing numerals.
-    const q=qm(qa([0,1,0],t*.39+.58),qm(qa([1,0,0],.32+Math.sin(t*.32)*.24),qa([0,0,1],.1+Math.sin(t*.2)*.14)));
+    let q=qm(qa([0,1,0],t*.39+.58),qm(qa([1,0,0],.32+Math.sin(t*.32)*.24),qa([0,0,1],.1+Math.sin(t*.2)*.14)));
+    if(rollStart!==null){
+      const progress=Math.min(1,Math.max(0,(time-rollStart)/rollDuration));
+      const eased=1-Math.pow(1-progress,3);
+      // Pełne obroty sklejają się dokładnie z powolnym, pierwotnym ruchem.
+      q=qm(qa([.7,1,.34],6*Math.PI*eased),q);
+      if(progress>=1){rollStart=null;portal.classList.remove('sh-die-rolling')}
+    }
     const sorted=faces.map(face=>({face,z:qr(q,face.center)[2]})).sort((a,b)=>a.z-b.z);
     for(const {face} of sorted)drawFace(face,q,w,h);
   }
@@ -115,7 +124,6 @@
       c.getContext('2d').drawImage(atlas,(i%cols)*cellW,Math.floor(i/cols)*cellH,cellW,cellH,0,0,c.width,c.height);
       return c;
     });
-    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let visible=true,last=0;
     if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{visible=!!entries[0]?.isIntersecting});observer.observe(portal)}
     if(reduced){draw(1500);portal.classList.add('dice-ready');return}

@@ -65,6 +65,7 @@
     const url=typeof avatarUrl==='string'&&/^https:\/\//i.test(avatarUrl)?avatarUrl.slice(0,2048):'';
     return query(c.from('sh_profiles').upsert({id:u.id,display_name:String(displayName||'Awanturnik').slice(0,40),avatar_url:url,updated_at:new Date().toISOString()},{onConflict:'id'}).select('id').single());
   }
+  async function saveProfileTitle(title){const c=await ensureAPI();await own();const {data,error}=await c.auth.updateUser({data:{streamhouse_profile_title:String(title||'Kronikarz StreamHouse').slice(0,50)}});if(error)return fail(error);authUser=data?.user||authUser;fire();return authUser;}
   async function upsertHero(hero){
     const u=await own(),c=await ensureAPI();
     if(!hero||typeof hero!=='object'||!hero.id||!hero.name||!hero.sheet)throw Error('Niepoprawna karta bohatera.');
@@ -73,7 +74,7 @@
   }
   async function listHeroes(){const u=await own(),c=await ensureAPI();return query(c.from('sh_characters').select('id,client_id,name,payload,updated_at').eq('owner_id',u.id).order('updated_at',{ascending:false}).limit(200))}
   async function getHeroById(id){const u=await own(),c=await ensureAPI();return query(c.from('sh_characters').select('id,client_id,name,payload').eq('owner_id',u.id).eq('id',id).single())}
-  async function deleteHero(id){const u=await own(),c=await ensureAPI();return query(c.from('sh_characters').delete().eq('id',id).eq('owner_id',u.id).select('id'))}
+  async function deleteHero(id){const u=await own(),c=await ensureAPI();const rows=await query(c.from('sh_characters').delete().eq('id',id).eq('owner_id',u.id).select('id'));if(!rows?.length)throw Error('Nie znaleziono postaci na Twoim koncie.');return rows}
   async function upsertCampaign(campaign){
     const u=await own(),c=await ensureAPI();
     if(!campaign?.id||!campaign.name)throw Error('Niepoprawne dane kampanii.');
@@ -101,5 +102,5 @@
     const chars=await query(c.from('sh_characters').select('id,name,payload').in('id',links.map(x=>x.character_id)));
     return chars.map(x=>({id:x.id,name:x.name,owner_id:links.find(link=>link.character_id===x.id)?.owner_id||null,character:x.payload}));
   }
-  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,saveProfile,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,createInvite,joinByCode,shareHero,listShared,client:ensureAPI});
+  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,createInvite,joinByCode,shareHero,listShared,client:ensureAPI});
 })(window);
