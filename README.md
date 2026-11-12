@@ -1,5 +1,13 @@
 # StreamHouse RPG Companion
 
+## Poprawki v11.3 (interfejs)
+
+- Połowę węższe obrzeża kości w rendererach powitalnym, WebGL i Canvas.
+- Panele MG i gracza bez nieużywanej nawigacji ikonowej; przycisk „Opuść pokój” przy nagłówku.
+- W kampaniach przycisk „Wejdź do świata” i mniejsze, niepogrubione opisy profilu.
+- Szczegóły i założenia lekkiego czatu w [`README-V11.3.md`](README-V11.3.md).
+
+
 > **POPRAWKA v11.1 / launcher i klikana D20.** Przywrócono szatę v7 i oryginalny pokój/kości v21. Wersja ZIP zawiera wszystkie tekstury fizycznie. Uruchamiaj przez `Uruchom-StreamHouse.bat`, nie przez dwuklik `index.html`. Kostka na portalu lekko podskakuje po kliknięciu. Zobacz [README-V11-NAPRAWA.md](README-V11-NAPRAWA.md).
 
 

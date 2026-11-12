@@ -87,7 +87,7 @@
     closedPolygon(ps);
     ctx.fillStyle=lit<0?`rgba(2,12,11,${Math.min(.5,-lit*.33)})`:`rgba(243,226,188,${Math.min(.17,lit*.12)})`;ctx.fill();
     // Brushed-metal bevel, much like the rim material of the in-game die.
-    const inset=.13;
+    const inset=.065;
     for(let j=0;j<ps.length;j++){
       const k=(j+1)%ps.length,p=ps[j],e=ps[k];
       const pi=[p[0]*(1-inset)+mid[0]*inset,p[1]*(1-inset)+mid[1]*inset];
