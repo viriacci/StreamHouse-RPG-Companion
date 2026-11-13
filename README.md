@@ -1,3 +1,7 @@
+### v11.8 · Zarządzanie drużyną i zaproszeniami
+
+MG może zaprosić zaakceptowanego znajomego bezpośrednio do kampanii, przeglądać rzeczywisty skład i usuwać graczy. Odbiorca akceptuje lub odrzuca zaproszenie w „Moje kampanie”. Usunięty gracz nie wróci starym kodem, ale może zostać ponownie zaproszony. Migracja Supabase jest już wykonana w projekcie StreamHouseRPG, a szczegóły i testy opisano w [docs/ZMIANY-V11.8.md](docs/ZMIANY-V11.8.md).
+
 ### v11.6 · Portal tylko online
 
 Usunięto dostęp do portalu bez logowania Discord. Profil, postacie, kampanie i archiwum zapisują się w Supabase, a przeglądarka wykorzystuje jedynie cache po zweryfikowaniu sesji. Szczegóły: [README-V11.6.md](README-V11.6.md).
