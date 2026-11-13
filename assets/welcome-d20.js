@@ -114,11 +114,24 @@
       c.getContext('2d').drawImage(atlas,(i%cols)*cellW,Math.floor(i/cols)*cellH,cellW,cellH,0,0,c.width,c.height);
       return c;
     });
-    let visible=true,last=0;
-    if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{visible=!!entries[0]?.isIntersecting});observer.observe(portal)}
     if(reduced){draw(1500);portal.classList.add('dice-ready');return}
-    function frame(now){requestAnimationFrame(frame);if(!visible||document.hidden||now-last<32)return;last=now;draw(now)}
-    draw(performance.now());portal.classList.add('dice-ready');requestAnimationFrame(frame);
+    let visible=true,last=0,rafId=0;
+    function frame(now){
+      rafId=0;
+      if(!visible||document.hidden)return;
+      if(now-last>=32){last=now;draw(now)}
+      rafId=requestAnimationFrame(frame);
+    }
+    function syncAnimation(){
+      if(!visible||document.hidden){if(rafId)cancelAnimationFrame(rafId);rafId=0;return}
+      if(!rafId)rafId=requestAnimationFrame(frame);
+    }
+    if('IntersectionObserver' in window){
+      const observer=new IntersectionObserver(entries=>{visible=!!entries[0]?.isIntersecting;syncAnimation()});
+      observer.observe(portal);
+    }
+    document.addEventListener('visibilitychange',syncAnimation);
+    draw(performance.now());portal.classList.add('dice-ready');syncAnimation();
   }
   function failImage(){
     console.error('[StreamHouse] Brakuje assets/emerald-d20-albedo.webp. Uruchom lokalny serwer z kompletnymi zasobami.');
