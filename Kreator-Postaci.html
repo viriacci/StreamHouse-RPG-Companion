@@ -22,7 +22,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{
 @media(max-width:720px){.topbar{height:66px;padding:0 14px}.brand{gap:12px}.brand-name{font-size:12px}.brand-name small{font-size:8px}.brand-sigil{width:30px;height:30px}.top-note{display:none}.back-link{font-size:10px;padding:9px 10px}.shell{display:block}.rail{padding:16px 13px 12px;border-right:0;border-bottom:1px solid #806b44}.rail:before,.rail-title,.rail-end,.rail-eyebrow{display:none}.steps{display:flex;overflow-x:auto;gap:7px;scrollbar-width:thin}.step{flex:0 0 auto;width:auto;grid-template-columns:auto auto;min-height:auto;padding:10px 11px}.step-label{font-size:12px}.step-label small{display:none}.work{padding:26px 17px 22px}.stage-title{font-size:37px}.stage-top{align-items:start}.progress{display:none}.choices,.two-col,.three-col,.bonus-config,.skills-grid,.language-row,.item-list{grid-template-columns:1fr}.hero-portrait-area{grid-template-columns:1fr}.portrait-btn{width:175px}.portrait-gallery{grid-template-columns:1fr 1fr}.ability-line{grid-template-columns:1fr 110px 54px;gap:8px}.ab-total{grid-column:2}.ab-mod{grid-column:3}.ability-line .bonus-flag{display:none}.ability-line .ab-name{grid-row:1/3}.ability-line .score-select,.ability-line .ability-stepper{grid-column:2}.preview{padding:20px 16px 32px}.footer-actions{flex-wrap:wrap}.footer-actions .btn{padding:10px 15px}.crop-view{height:270px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
-/* Styled, keyboard-operable selection menus: no native white system popups. */
+
 .field .enhanced-select{position:relative;min-width:0}
 .field .enhanced-select>select{position:absolute;inset:0;opacity:0;pointer-events:none;width:1px;height:1px;overflow:hidden;padding:0;border:0}
 .fancy-select{position:relative;z-index:2}
@@ -39,7 +39,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{
 .portrait-group h3{font:normal 22px var(--display);color:#f0d6a5}
 .portrait-group p{font-size:13px;color:#ac9b80;margin-top:5px}
 
-/* Galeria malarskich portretów i źródeł zewnętrznych v3 */
+
 .portrait-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .portrait-entry{min-width:0;display:flex;flex-direction:column}
 .portrait-entry>.portrait-card{width:100%;flex:1}
@@ -56,7 +56,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{
 @media(max-width:920px){.portrait-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){.portrait-link-row{grid-template-columns:1fr}}
 
-/* StreamHouse creator v4: deliberate portrait selection and understated monochrome emblems. */
+
 .choice-icon{width:41px;height:41px;display:grid;place-items:center;color:#f1d29e;flex-shrink:0}
 .choice-icon .mono-icon{width:26px;height:26px;display:block;stroke:currentColor}
 .choice.active .choice-icon{color:#f9db9e;border-color:#edc98d}
@@ -169,7 +169,6 @@ function portraitById(id){for(const group of portraitGroups()){for(const card of
 function safePortraitLink(value){try{const p=new URL(value);return p.protocol==='https:'&&/^https?:$/.test(p.protocol)?p.href:null}catch{return null}}
 function imageWithFallback(card,alt){return `<img src="${esc(card.src)}" alt="${esc(alt)}" loading="lazy" data-fallback="assets/portrety/${char.speciesId}.webp">`}
 let char=defaultChar();
-// Szkice sa odczytywane dopiero po zweryfikowaniu konta Discord.
 char.step=Math.max(0,Math.min(STEPS.length-1,Number(char.step)||0));
 function notify(message){const node=$('#toast');node.textContent=message;node.classList.remove('hidden');clearTimeout(notify.timer);notify.timer=setTimeout(()=>node.classList.add('hidden'),3400)}
 function persistDraft(){
@@ -236,8 +235,6 @@ $('#stage-content').addEventListener('input',e=>{const t=e.target;if(t.id==='her
 $('#stage-content').addEventListener('change',e=>{const t=e.target;if(t.dataset.score!==undefined){const i=+t.dataset.score,v=+t.value;if(char.method!=='points'){const other=char.base.findIndex((x,j)=>j!==i&&x===v);if(other!==-1)char.base[other]=char.base[i]}char.base[i]=v;render();return}if(t.dataset.skill){const skill=t.dataset.skill;char.classSkills=t.checked?[...char.classSkills,skill]:char.classSkills.filter(x=>x!==skill);if(char.classSkills.length>classes[char.classId].pick){char.classSkills=char.classSkills.filter(x=>x!==skill);notify('To już maksymalna liczba biegłości klasy.')}render();return}if(t.id==='bonus-2'){char.bonusPlus2=t.value;if(char.bonusPlus1===t.value)char.bonusPlus1=backgrounds[char.backgroundId].abilities.find(k=>k!==t.value);render();return}if(t.id==='bonus-1'){char.bonusPlus1=t.value;if(char.bonusPlus2===t.value)char.bonusPlus2=backgrounds[char.backgroundId].abilities.find(k=>k!==t.value);render();return}if(t.dataset.language!==undefined){char.languages[+t.dataset.language]=t.value;renderPreview();persistDraft();return}if(t.id==='alignment'){char.alignment=t.value;render();return}});
 $('#prev').onclick=()=>{if(char.step>0){char.step--;render();window.scrollTo({top:0,behavior:'smooth'})}};$('#next').onclick=goNext;$('#save-draft').onclick=()=>saveHero(true);
 
-// v6: publiczny katalog JSON hostowany obok aplikacji lub na VPS.
-// Offline nadal dostępnych jest 12 kart przykładowych z paczki.
 let libraryEntries=starterCards.map((card,index)=>({meta:card,source:'offline',index}));
 let libraryBase=null,libraryOnline=false,libraryError='',libraryBusy=false,libraryOpened=false;
 const libraryMeta=$('#starter-meta');
@@ -394,7 +391,6 @@ if(cloud?.configured){
  }).catch(err=>notify('Chmura: '+err.message));
 }else notify('Brak połączenia z Supabase. Dostęp wymaga logowania Discord.');
 </script><script>
-// Notice only for file://; normal site appearance on http(s) remains unchanged.
 if(location.protocol==='file:')addEventListener('DOMContentLoaded',()=>{
   const el=document.createElement('div');el.setAttribute('role','alert');
   el.style.cssText='position:fixed;left:12px;right:12px;top:12px;z-index:2147483647;padding:15px 20px;border:2px solid #dfc18a;background:#19211c;color:#ffe7b8;box-shadow:0 12px 50px #000e;font:600 14px/1.6 Segoe UI,Arial,sans-serif;text-align:center';
