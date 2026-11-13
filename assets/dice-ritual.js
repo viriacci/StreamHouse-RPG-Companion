@@ -1,5 +1,4 @@
-/* StreamHouse v9 | Animacja brył 3D na płótnie; wynik wyłącznie z zatwierdzonego rzutu.
- * Nie generuje wyniku, nie jest źródłem autoryzacji i nie zastępuje 20 zestawów v21. */
+
 (function(global){'use strict';
  const models=global.StreamHouseEmeraldGeometry||{};
  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
