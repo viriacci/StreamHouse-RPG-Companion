@@ -7,7 +7,7 @@ const themes={fortress:'TWIERDZA NA WZGÓRZU',crypt:'KRYPTA POD KAPLICĄ',letter
 const uid=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID():'local-'+Date.now()+'-'+Math.random().toString(36).slice(2);
 const clone=x=>JSON.parse(JSON.stringify(x));
 const clamp=(n,low,high,otherwise=0)=>{const v=Number(n);return Number.isFinite(v)?Math.max(low,Math.min(high,Math.trunc(v))):otherwise};
-let room=null,session=null,snapshot=null,selectedToken=null,selectedHeroId=null,tab='map',layout=params.get('layout')==='tactical'?'tactical':'classic',die=20,lastFeed='',refreshing=false,needsRefresh=false,off=null,tick=null,pulse=null,working=false;
+let room=null,session=null,snapshot=null,selectedToken=null,selectedHeroId=null,tab='map',layout=params.get('layout')==='tactical'?'tactical':'classic',die=20,lastFeed='',refreshing=false,needsRefresh=false,refreshTimer=null,lastRoster='',lastHeroes='',off=null,tick=null,pulse=null,working=false;
 let timeoutToast;
 function textNode(tag,text,className){const el=document.createElement(tag);if(className)el.className=className;el.textContent=String(text??'');return el}
 function clear(el){el.replaceChildren()}
@@ -44,14 +44,14 @@ async function start(){
    $('workspace').hidden=false;
    await room.heartbeat();await refresh(true);
    off=room.subscribe(()=>scheduleRefresh());
-   tick=setInterval(()=>{if(!document.hidden)scheduleRefresh()},6500);
-   pulse=setInterval(()=>{room.heartbeat().then(()=>scheduleRefresh()).catch(e=>notice('Brak odświeżenia obecności: '+e.message))},25000);
+   tick=setInterval(()=>{if(!document.hidden)scheduleRefresh()},18000);
+   pulse=setInterval(()=>{if(!document.hidden)room.heartbeat().catch(e=>notice('Brak odświeżenia obecności: '+e.message))},25000);
    document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleRefresh()});
-   window.addEventListener('pagehide',()=>{off?.();clearInterval(tick);clearInterval(pulse)},{once:true});
+   window.addEventListener('pagehide',()=>{off?.();clearTimeout(refreshTimer);clearInterval(tick);clearInterval(pulse)},{once:true});
    setConnection(session.mode==='online'?'POŁĄCZONO':'TRYB LOKALNY');
  }catch(e){error(e.message||String(e));}
 }
-function scheduleRefresh(){if(refreshing){needsRefresh=true;return}refresh().catch(e=>{setConnection('PROBLEM Z SIECIĄ');notice(e.message)})}
+function scheduleRefresh(){if(document.hidden||refreshTimer)return;refreshTimer=setTimeout(()=>{refreshTimer=null;if(refreshing){needsRefresh=true;return}refresh().catch(e=>{setConnection('PROBLEM Z SIECIĄ');notice(e.message)})},200)}
 async function refresh(initial=false){
  if(refreshing){needsRefresh=true;return}
  refreshing=true;
@@ -59,8 +59,10 @@ async function refresh(initial=false){
    const next=await room.read();
    const changed=!snapshot||snapshot.state?.revision!==next.state?.revision;
    const eventChanged=!snapshot||snapshot.events?.at(-1)?.id!==next.events?.at(-1)?.id||snapshot.events.length!==next.events.length;
-   const rosterChanged=!snapshot||JSON.stringify(next.presence)!==JSON.stringify(snapshot.presence);
-   const heroChanged=!snapshot||JSON.stringify(next.characters)!==JSON.stringify(snapshot.characters);
+   const rosterState=JSON.stringify(next.presence),heroState=JSON.stringify(next.characters);
+   const rosterChanged=!snapshot||rosterState!==lastRoster;
+   const heroChanged=!snapshot||heroState!==lastHeroes;
+   lastRoster=rosterState;lastHeroes=heroState;
    snapshot=next;
    if(changed)renderScene();
    if(rosterChanged)renderRoster();
