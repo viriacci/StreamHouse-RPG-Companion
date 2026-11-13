@@ -52,7 +52,6 @@ const params=new URLSearchParams(location.search),key=params.get('key')||'gm';
 const $=id=>document.getElementById(id),storage='sh-rpg-book-v10-'+key,legacy='sh-rpg-notes-'+key;
 $('book-name').textContent=key==='gm'?'Dziennik Mistrza Gry':'Dziennik bohatera';
 let pages=[];try{pages=JSON.parse(localStorage.getItem(storage)||'[]')}catch{}
-// Remove the legacy canned player example, including previously persisted demo data.
 if(Array.isArray(pages)&&key.startsWith('player-'))pages=pages.map(p=>{const t=(p.body||'').trim();if(t==='Co kryje twierdza? Zapytać strażnika o pieczęć.'||t==='Co kryje twierdza?'){return {...p,title:p.title==='Pierwszy trop'?'':p.title,body:''}}return p});
 if(!Array.isArray(pages)||!pages.length){let old=[];try{old=JSON.parse(localStorage.getItem(legacy)||'[]')||[]}catch{}pages=old.filter(p=>!(key.startsWith('player-')&&['Co kryje twierdza? Zapytać strażnika o pieczęć.','Co kryje twierdza?'].includes((p.text||'').trim()))).map((p,i)=>({id:p.id||Date.now()+i,title:'',body:p.text||''}));while(pages.length<6)pages.push({id:Date.now()+pages.length,title:'',body:''})}
 let leftIndex=0,flipping=false;
