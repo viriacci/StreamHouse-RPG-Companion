@@ -1,4 +1,4 @@
-/* StreamHouse v9: Pokój sesji. UI nigdy nie traktuje query ?role jako uprawnienia online. */
+
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const params=new URLSearchParams(location.search);
