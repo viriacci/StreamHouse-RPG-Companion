@@ -1,7 +1,4 @@
-/* StreamHouse Premium Dice fallback v18.
- * Software 3D renderer: atlas texture and numerals are UV-mapped onto rotating
- * polygon faces. Extruded-looking metallic bevels are shaded with each face.
- * Used only when native WebGL2 fails, never the old screen-space 2D dice. */
+
 (() => {
   'use strict';
   const S = window.SH;
@@ -109,13 +106,9 @@
       const k=(j+1)%ps.length;
       textureTri(image,[srcC,uv(face.points[j]),uv(face.points[k])],[dstC,ps[j],ps[k]]);
     }
-    // Lighting reacts to the face normal instead of staying fixed over the image.
     const lit=dot(normal,norm([-.65,.8,1.4]));
     ctx.fillStyle=lit<0?`rgba(2,2,8,${Math.min(.55,-lit*.46)})`:`rgba(255,245,224,${Math.min(.16,lit*.10)})`;
     polygon(ctx,ps);ctx.fill();
-    // The selected face is covered by slow, translucent royal-gold light.
-    // A radial gradient keeps the mineral pattern visible and lets the bevels
-    // retain their silver finish. The numeral is stamped back on top from UV.
     if(finished&&face.index===item.face){
       const phase=clamp(glow,0,1);
       const radius=Math.max(1,...ps.map(pt=>Math.hypot(pt[0]-mid[0],pt[1]-mid[1])));
@@ -124,7 +117,6 @@
       fill.addColorStop(.48,`rgba(249,193,63,${(.22+.26*phase).toFixed(3)})`);
       fill.addColorStop(1,`rgba(222,160,41,${(.085+.12*phase).toFixed(3)})`);
       ctx.fillStyle=fill;polygon(ctx,ps);ctx.fill();
-      // Numbers remain above the gold. Their UVs rotate together with the die.
       const ink=face.inkAtlas;
       for(let j=0;j<ps.length;j++){
         const k=(j+1)%ps.length;
@@ -153,7 +145,6 @@
       }
     }
     ctx.restore();
-    // Restrained outline reflects the illuminated gold coating, not a neon rim.
     if(finished&&face.index===item.face){
       ctx.save();ctx.lineJoin='round';polygon(ctx,ps);
       ctx.shadowBlur=Math.min(14,w*.022);ctx.shadowColor='rgba(245,193,99,.52)';
@@ -163,7 +154,6 @@
     }
   }
   function paint(items,finished,glow=1){const [w,h]=resize();ctx.clearRect(0,0,w,h);
-    // Shared ambient floor shadow: below dice and behind material.
     const bg=ctx.createRadialGradient(w*.5,h*.84,5,w*.5,h*.84,h*.4);
     bg.addColorStop(0,'#00000084');bg.addColorStop(1,'#00000000');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
     const faces=[];
@@ -196,7 +186,6 @@
     const items=[];
     for(let index=0;index<entries.length;index++){
       const [s,v,part]=entries[index],faces=shapeFor(s);
-      // A face's atlas cell is a genuine surface UV, not a camera-facing sprite.
       const completeFaces=await Promise.all(faces.map(async f=>({...f,atlas:await setupAtlas(f,theme,s,part),inkAtlas:await setupAtlas(f,theme,s,part,'ink')}))); 
       const face=faceIdx(s,v,part);
       items.push({faces:completeFaces,face,theme,q:spin(0,index*.22),target:target(completeFaces[face]),scale:two?.83:1.12,x:two?(index===0?-1.06:1.06):0,y:0,offset:index*.2});
@@ -214,7 +203,6 @@
       if(t<1&&canvas.isConnected)requestAnimationFrame(tick);else resolve();
     };requestAnimationFrame(tick)});
     for(const item of items)item.q=item.target;
-    // A gentle, royal-gold fade-in rather than a sharp flash.
     if(!reduced){await new Promise(resolve=>{const startFade=performance.now();const fade=now=>{const p=clamp((now-startFade)/480,0,1);paint(items,true,.08+.42*p);if(p<1&&canvas.isConnected)requestAnimationFrame(fade);else resolve()};requestAnimationFrame(fade)})}
     paint(items,true,.5);
     const modHtml=mods.map(m=>`<span class="sh-mod-tag ${Number(m.value)>=0?'positive':'negative'}"><em>${htmlEscape(m.label||'Modyfikator')}</em><b>${signed(m.value)}</b></span>`).join('');
