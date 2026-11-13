@@ -1,14 +1,8 @@
-/* StreamHouse Landing D20
-   Real D20 mesh + per-face atlas from the v21 in-game dice engine.
-   UV numbers and malachite texture rotate together with the mesh.
-   Small software 3D viewer keeps the home screen lightweight, offline, and portable.
-*/
+
 (() => {
   'use strict';
   const canvas=document.getElementById('portal-die');
   const portal=document.getElementById('portal');
-  // Animacja rzutu dotyczy samej bryły 3D, nie wartości ani podświetlenia ścianki.
-  // Trzy pełne obroty po kliknięciu, bez losowania wyniku.
   let rollStart=null;
   const rollDuration=1150;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -60,7 +54,6 @@
   let tiles=[];
 
   function closedPolygon(ps){ctx.beginPath();ctx.moveTo(...ps[0]);for(let i=1;i<ps.length;i++)ctx.lineTo(...ps[i]);ctx.closePath()}
-  // Affine texture mapping, the same per-face UV triangulation used by in-game Canvas 3D.
   function texturedTriangle(image,src,dst){
     const [[x0,y0],[x1,y1],[x2,y2]]=src,[[u0,v0],[u1,v1],[u2,v2]]=dst;
     const den=(x1-x0)*(y2-y0)-(x2-x0)*(y1-y0);
@@ -86,7 +79,6 @@
     const lit=dot(normal,norm([-.65,.8,1.4]));
     closedPolygon(ps);
     ctx.fillStyle=lit<0?`rgba(2,12,11,${Math.min(.5,-lit*.33)})`:`rgba(243,226,188,${Math.min(.17,lit*.12)})`;ctx.fill();
-    // Brushed-metal bevel, much like the rim material of the in-game die.
     const inset=.065;
     for(let j=0;j<ps.length;j++){
       const k=(j+1)%ps.length,p=ps[j],e=ps[k];
@@ -104,12 +96,10 @@
     const w=canvas.width,h=canvas.height;
     ctx.clearRect(0,0,w,h);
     const t=time*.001;
-    // Slow yaw + small tilts, with no synchronized or fake camera-facing numerals.
     let q=qm(qa([0,1,0],t*.39+.58),qm(qa([1,0,0],.32+Math.sin(t*.32)*.24),qa([0,0,1],.1+Math.sin(t*.2)*.14)));
     if(rollStart!==null){
       const progress=Math.min(1,Math.max(0,(time-rollStart)/rollDuration));
       const eased=1-Math.pow(1-progress,3);
-      // Pełne obroty sklejają się dokładnie z powolnym, pierwotnym ruchem.
       q=qm(qa([.7,1,.34],6*Math.PI*eased),q);
       if(progress>=1){rollStart=null;portal.classList.remove('sh-die-rolling')}
     }
@@ -133,7 +123,6 @@
   function failImage(){
     console.error('[StreamHouse] Brakuje assets/emerald-d20-albedo.webp. Uruchom lokalny serwer z kompletnymi zasobami.');
     canvas.setAttribute('data-error','missing-texture');
-    // This SVG fallback appears ONLY if the original v21 texture cannot be loaded.
     const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
     svg.setAttribute('viewBox','0 0 300 300');svg.setAttribute('aria-label','Kość D20, awaryjny wygląd bez tekstury');
     svg.style.cssText='width:100%;height:100%;filter:drop-shadow(0 14px 21px #000b)';
