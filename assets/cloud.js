@@ -91,12 +91,10 @@
   }
   async function listCampaigns(){
     const u=await own(),c=await ensureAPI();
-    const [campaigns,members]=await Promise.all([
-      query(c.from('sh_campaigns').select('id,owner_id,client_id,title,description,currency').order('created_at',{ascending:false}).limit(150)),
-      query(c.from('sh_campaign_members').select('campaign_id,role').eq('user_id',u.id).limit(150))
-    ]);
-    const roles=new Map(members.map(m=>[m.campaign_id,m.role]));
-    return campaigns.map(x=>({...x,role:roles.get(x.id)||(x.owner_id===u.id?'gm':'player')}));
+    const campaigns=await query(c.from('sh_campaigns')
+      .select('id,owner_id,client_id,title,description,currency')
+      .order('created_at',{ascending:false}).limit(150));
+    return campaigns.map(x=>({...x,role:x.owner_id===u.id?'gm':'player'}));
   }
   async function listArchive(){
     const u=await own(),c=await ensureAPI();
