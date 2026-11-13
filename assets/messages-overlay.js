@@ -67,7 +67,7 @@ async function mount(){
   C.subscribeMessages(()=>{if(alive&&!panel.hidden)refresh()}).then(fn=>{if(alive)unsubscribe=fn;else fn()}).catch(()=>{});
   tick=setInterval(()=>{if(alive&&!panel.hidden&&document.visibilityState==='visible')refresh()},20000);
   mounted={destroy(){alive=false;clearInterval(tick);unsubscribe?.();panel.remove();toggle.remove()}};
- }catch(err){/* The overlay must not block the app. */}finally{mounting=false}
+ }catch(err){}finally{mounting=false}
 }
 window.addEventListener('streamhouse:cloud-change',()=>{if(!C.user()){mounted?.destroy();mounted=null}else mount()});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
