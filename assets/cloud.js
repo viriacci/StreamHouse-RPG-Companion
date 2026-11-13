@@ -8,7 +8,7 @@
   const runtime=global.STREAMHOUSE_CLOUD_CONFIG||{};
   const fallback=global.STREAMHOUSE_CLOUD_DEFAULT_CONFIG||{};
   const settings=runtime.url&&runtime.publishableKey?runtime:fallback;
-  let sdk=null, api=null, authUser=null, bootPromise=null, sdkPromise=null;
+  let sdk=null, api=null, authUser=null, bootPromise=null, sdkPromise=null, friendCache=null;
   let lastError='';
   const publicUrl=String(settings.url||'').trim().replace(/\/$/,'');
   const publishableKey=String(settings.publishableKey||'').trim();
@@ -41,7 +41,7 @@
     if(!bootPromise)bootPromise=(async()=>{
       const c=await ensureAPI();
       c.auth.onAuthStateChange((_event,session)=>{
-        authUser=session?.user||null;fire();
+        authUser=session?.user||null;if(friendCache?.owner!==authUser?.id)friendCache=null;fire();
       });
       const {data,error}=await c.auth.getUser();
       if(error&&error.name!=='AuthSessionMissingError')throw error;
@@ -154,17 +154,22 @@
   // v11.4: identyfikatory kont (nie nicki) wiążą zaproszenia i wiadomości prywatne.
   const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   function peerId(value){const id=String(value||'').trim().toLowerCase();if(!uuid.test(id))throw Error('Wpisz poprawne ID konta StreamHouse (UUID).');return id;}
-  async function requestFriend(id){await own();return query((await ensureAPI()).rpc('sh_friend_request',{p_target:peerId(id)}))}
-  async function respondFriend(id,accept){await own();return query((await ensureAPI()).rpc('sh_friend_respond',{p_sender:peerId(id),p_accept:!!accept}))}
-  async function removeFriend(id){await own();return query((await ensureAPI()).rpc('sh_friend_remove',{p_peer:peerId(id)}))}
+  async function requestFriend(id){await own();const result=await query((await ensureAPI()).rpc('sh_friend_request',{p_target:peerId(id)}));friendCache=null;return result}
+  async function respondFriend(id,accept){await own();const result=await query((await ensureAPI()).rpc('sh_friend_respond',{p_sender:peerId(id),p_accept:!!accept}));friendCache=null;return result}
+  async function removeFriend(id){await own();const result=await query((await ensureAPI()).rpc('sh_friend_remove',{p_peer:peerId(id)}));friendCache=null;return result}
   async function listFriends(){
-    const u=await own(),db=await ensureAPI();
-    const links=await query(db.from('sh_friend_links').select('low_id,high_id,requested_by,status,created_at,accepted_at')
-      .or('low_id.eq.'+u.id+',high_id.eq.'+u.id).order('created_at',{ascending:false}).limit(150));
-    const accepted=links.filter(x=>x.status==='accepted');
-    const ids=accepted.map(x=>x.low_id===u.id?x.high_id:x.low_id);
-    const profiles=ids.length?await query(db.from('sh_profiles').select('id,display_name,avatar_url').in('id',ids).limit(150)):[];
-    return {me:u.id,links,profiles};
+    const u=await own(),db=await ensureAPI(),now=Date.now();
+    if(friendCache?.owner===u.id&&friendCache.expires>now)return friendCache.promise;
+    const promise=(async()=>{
+      const links=await query(db.from('sh_friend_links').select('low_id,high_id,requested_by,status,created_at,accepted_at')
+        .or('low_id.eq.'+u.id+',high_id.eq.'+u.id).order('created_at',{ascending:false}).limit(150));
+      const ids=links.filter(x=>x.status==='accepted').map(x=>x.low_id===u.id?x.high_id:x.low_id);
+      const profiles=ids.length?await query(db.from('sh_profiles').select('id,display_name,avatar_url').in('id',ids).limit(150)):[];
+      return {me:u.id,links,profiles};
+    })();
+    const cache={owner:u.id,expires:now+4000,promise};
+    friendCache=cache;
+    try{return await promise}catch(err){if(friendCache===cache)friendCache=null;throw err}
   }
   async function listDirectMessages(id){
     const peer=peerId(id),me=(await own()).id,db=await ensureAPI();
@@ -185,7 +190,7 @@
       channel.on('postgres_changes',{event:'INSERT',schema:'public',table:'sh_direct_messages',filter},onChange);
     }
     for(const filter of ['low_id=eq.'+me,'high_id=eq.'+me]){
-      channel.on('postgres_changes',{event:'*',schema:'public',table:'sh_friend_links',filter},onChange);
+      channel.on('postgres_changes',{event:'*',schema:'public',table:'sh_friend_links',filter},()=>{friendCache=null;onChange()});
     }
     channel.subscribe();return ()=>{db.removeChannel(channel)};
   }
