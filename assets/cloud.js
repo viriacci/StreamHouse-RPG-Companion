@@ -118,6 +118,28 @@
   }
   async function createInvite(campaignId){await own();const c=await ensureAPI();return query(c.rpc('sh_create_invite',{p_campaign_id:campaignId}))}
   async function joinByCode(code){await own();const c=await ensureAPI();return query(c.rpc('sh_join_by_code',{p_code:String(code||'').trim().toLowerCase()}))}
+  // v11.8: real campaign invitations and server-validated membership operations.
+  async function listCampaignInvites(){await own();return query((await ensureAPI()).rpc('sh_campaign_pending_invites'))}
+  async function listCampaignRoster(campaignId){await own();return query((await ensureAPI()).rpc('sh_campaign_list_members',{p_campaign_id:campaignId}))}
+  async function listCampaignSentInvites(campaignId){
+    await own();return query((await ensureAPI()).from('sh_campaign_direct_invites')
+      .select('receiver_id,status').eq('campaign_id',campaignId).limit(150));
+  }
+  async function inviteFriendToCampaign(campaignId,friendId){
+    await own();return query((await ensureAPI()).rpc('sh_campaign_invite_friend',{p_campaign_id:campaignId,p_receiver_id:peerId(friendId)}));
+  }
+  async function answerCampaignInvite(campaignId,accept){
+    await own();return query((await ensureAPI()).rpc('sh_campaign_respond_invite',{p_campaign_id:campaignId,p_accept:!!accept}));
+  }
+  async function kickCampaignMember(campaignId,userId){
+    await own();return query((await ensureAPI()).rpc('sh_campaign_remove_member',{p_campaign_id:campaignId,p_user_id:peerId(userId)}));
+  }
+  async function subscribeCampaignInvites(onChange){
+    const me=(await own()).id,db=await ensureAPI();
+    const channel=db.channel('sh-campaign-invites-'+me+'-'+Math.random().toString(36).slice(2));
+    channel.on('postgres_changes',{event:'*',schema:'public',table:'sh_campaign_direct_invites',filter:'receiver_id=eq.'+me},onChange);
+    channel.subscribe();return ()=>{db.removeChannel(channel)};
+  }
   async function shareHero(campaignId,characterId){
     const u=await own(),c=await ensureAPI();
     return query(c.from('sh_campaign_characters').upsert({campaign_id:campaignId,character_id:characterId,owner_id:u.id},{onConflict:'campaign_id,character_id'}).select('campaign_id,character_id').single());
@@ -167,5 +189,5 @@
     }
     channel.subscribe();return ()=>{db.removeChannel(channel)};
   }
-  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,getProfile,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,listArchive,upsertArchive,createInvite,joinByCode,shareHero,listShared,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
+  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,getProfile,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,listArchive,upsertArchive,createInvite,joinByCode,listCampaignInvites,listCampaignRoster,listCampaignSentInvites,inviteFriendToCampaign,answerCampaignInvite,kickCampaignMember,subscribeCampaignInvites,shareHero,listShared,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
 })(window);
