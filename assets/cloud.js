@@ -3,7 +3,11 @@
    No Discord secret or service_role is used client-side. */
 (function(global){
   'use strict';
-  const settings=global.STREAMHOUSE_CLOUD_CONFIG||{};
+  // Publiczne domyslne ustawienia dzialaja tez, gdy konfiguracja VPS jest pusta.
+  // Zewnetrzne ustawienia z kompletnym URL i kluczem maja pierwszenstwo.
+  const runtime=global.STREAMHOUSE_CLOUD_CONFIG||{};
+  const fallback=global.STREAMHOUSE_CLOUD_DEFAULT_CONFIG||{};
+  const settings=runtime.url&&runtime.publishableKey?runtime:fallback;
   let sdk=null, api=null, authUser=null, bootPromise=null, sdkPromise=null;
   let lastError='';
   const publicUrl=String(settings.url||'').trim().replace(/\/$/,'');

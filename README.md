@@ -70,3 +70,7 @@ Plik `/etc/streamhouse/cloud-config.local.js` zawiera tylko **publiczny** URL i 
 ## v11.2 — interakcje portalu
 
 Kość D20 na stronie powitalnej i logowania obraca się po kliknięciu bez wyróżniania wyniku. Bohaterów (także przykładowych) usuwa się przez przycisk czaszki, z potwierdzeniem i powiadomieniem. W profilu można ustawić własny podpis pod nazwą użytkownika, wspólny dla widoku profilu i bocznego menu. W bocznym menu Discord widoczny jest jako sama ikona. Szczegóły: [README-V11.2.md](README-V11.2.md).
+
+## Baza danych Supabase (13.11.2026)
+
+Projekt **StreamHouseRPG** `xqfglhaapojxnjdmxkrm` ma wgrane wszystkie migracje od v7 do v11.4 oraz migracje zabezpieczajaca `20261113154000_streamhouse_chat_hardening.sql`. Publiczny adres i **publishable key** sa wpisane w `assets/cloud-config.js`. Aby zalogowac sie przez Discord, trzeba nadal wlaczyc OAuth w panelu Supabase i podac w nim Client ID/Client Secret Discorda. Szczegoly: [docs/SUPABASE-URUCHOMIENIE.md](docs/SUPABASE-URUCHOMIENIE.md). Na VPS nie wprowadzono zadnych zmian.
