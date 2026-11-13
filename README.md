@@ -1,3 +1,5 @@
+**NOWOŚĆ v11.4:** czat v21 i wiadomości prywatne znajomych. Szczegóły: [README-V11.4.md](README-V11.4.md).
+
 # StreamHouse RPG Companion
 
 ## Poprawki v11.3 (interfejs)

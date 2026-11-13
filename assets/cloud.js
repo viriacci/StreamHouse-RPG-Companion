@@ -102,5 +102,43 @@
     const chars=await query(c.from('sh_characters').select('id,name,payload').in('id',links.map(x=>x.character_id)));
     return chars.map(x=>({id:x.id,name:x.name,owner_id:links.find(link=>link.character_id===x.id)?.owner_id||null,character:x.payload}));
   }
-  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,createInvite,joinByCode,shareHero,listShared,client:ensureAPI});
+  // v11.4: identyfikatory kont (nie nicki) wiążą zaproszenia i wiadomości prywatne.
+  const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  function peerId(value){const id=String(value||'').trim().toLowerCase();if(!uuid.test(id))throw Error('Wpisz poprawne ID konta StreamHouse (UUID).');return id;}
+  async function requestFriend(id){await own();return query((await ensureAPI()).rpc('sh_friend_request',{p_target:peerId(id)}))}
+  async function respondFriend(id,accept){await own();return query((await ensureAPI()).rpc('sh_friend_respond',{p_sender:peerId(id),p_accept:!!accept}))}
+  async function removeFriend(id){await own();return query((await ensureAPI()).rpc('sh_friend_remove',{p_peer:peerId(id)}))}
+  async function listFriends(){
+    const u=await own(),db=await ensureAPI();
+    const links=await query(db.from('sh_friend_links').select('low_id,high_id,requested_by,status,created_at,accepted_at')
+      .or('low_id.eq.'+u.id+',high_id.eq.'+u.id).order('created_at',{ascending:false}).limit(150));
+    const accepted=links.filter(x=>x.status==='accepted');
+    const ids=accepted.map(x=>x.low_id===u.id?x.high_id:x.low_id);
+    const profiles=ids.length?await query(db.from('sh_profiles').select('id,display_name,avatar_url').in('id',ids).limit(150)):[];
+    return {me:u.id,links,profiles};
+  }
+  async function listDirectMessages(id){
+    const peer=peerId(id),me=(await own()).id,db=await ensureAPI();
+    return query(db.from('sh_direct_messages').select('id,sender_id,recipient_id,body,created_at')
+      .or('and(sender_id.eq.'+me+',recipient_id.eq.'+peer+'),and(sender_id.eq.'+peer+',recipient_id.eq.'+me+')')
+      .order('id',{ascending:false}).limit(60));
+  }
+  async function sendDirectMessage(id,body){
+    const peer=peerId(id),me=(await own()).id,db=await ensureAPI(),message=String(body||'').trim();
+    if(!message||message.length>1000)throw Error('Wiadomość musi mieć 1–1000 znaków.');
+    return query(db.from('sh_direct_messages').insert({sender_id:me,recipient_id:peer,body:message})
+      .select('id,sender_id,recipient_id,body,created_at').single());
+  }
+  async function subscribeMessages(onChange){
+    const me=(await own()).id,db=await ensureAPI();
+    const channel=db.channel('sh-messages-'+me+'-'+Math.random().toString(36).slice(2));
+    for(const filter of ['sender_id=eq.'+me,'recipient_id=eq.'+me]){
+      channel.on('postgres_changes',{event:'INSERT',schema:'public',table:'sh_direct_messages',filter},onChange);
+    }
+    for(const filter of ['low_id=eq.'+me,'high_id=eq.'+me]){
+      channel.on('postgres_changes',{event:'*',schema:'public',table:'sh_friend_links',filter},onChange);
+    }
+    channel.subscribe();return ()=>{db.removeChannel(channel)};
+  }
+  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,createInvite,joinByCode,shareHero,listShared,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
 })(window);

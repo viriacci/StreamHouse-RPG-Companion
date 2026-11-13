@@ -149,3 +149,8 @@ Jeśli strona działa, ale Discord się nie loguje, sprawdź ustawienia URL i pr
 - Wersja v9 nie zapewnia jeszcze pełnej synchronizacji narzędzi v21, voice chatu ani wszystkiego z pracowni kości ze wspólną kroniką.
 - Supabase/Auth/RLS wymagają ręcznej weryfikacji produkcyjnej; same pliki na VPS nie tworzą internetowej kampanii.
 - Własne tekstury i 8-MB atlas kości przechodzą przez archiwum zasobów, które trzeba rozpakować.
+
+
+## v11.4 · Rozmowy
+
+Po wdrożeniu plików uruchom ręcznie `supabase/migrations/20261113140000_streamhouse_friends_messages.sql`, wykonując poprzednio migracje v7–v9. W Supabase Realtime ustaw publikację dla `sh_friend_links`, `sh_direct_messages` i `sh_room_events`. Sprawdź działanie i izolację rozmów na minimum trzech kontach Discord, zgodnie z `README-V11.4.md`.
