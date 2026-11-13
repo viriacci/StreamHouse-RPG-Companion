@@ -1,6 +1,4 @@
-/* StreamHouse RPG Companion v18 - UV-linked textures, raised silver frames and robust 3D fallback.
-   The user-supplied Blender mesh geometry is mapped onto original, locally
-   generated malachite texture atlases. No remote libraries or runtime APIs. */
+
 (() => {
  'use strict';
  const S = window.SH;
@@ -92,7 +90,6 @@
    return (diffuse+spec)*radiance*NL;
  }
  void main(){
-   // The physical silver edge rails are exclusive to the metal-trimmed set.
    if(vRail>.5 && uSilverRim<.5)discard;
    vec3 base=pow(texture(uAlbedo,vUV).rgb,vec3(2.2));
    float rough=clamp(texture(uRoughness,vUV).r,.13,.46);
@@ -101,12 +98,10 @@
    vec3 N=normalize(mat3(normalize(vTangent),normalize(vBitangent),normalize(vNormal))*normalize(mapped));
    vec3 V=normalize(vec3(0.0,0.0,5.0)-vPos);
    float bevel=clamp(vBevel,0.0,1.0);
-   // The bevel polygons are a dedicated silver PBR material, not a color tint.
    float metal=mix(.015,.97,bevel*uSilverRim);
    rough=mix(rough,.085,bevel*uSilverRim);
    vec3 silver=uTrimColor;
    base=mix(base,silver,bevel*uSilverRim);
-   // Emerald retains its subtle semi-metallic polished mineral edges.
    rough=mix(rough,.125,bevel*(1.0-uSilverRim)*.72);
    metal=mix(metal,.12,bevel*(1.0-uSilverRim));
    base*=mix(1.0,.7,bevel*(1.0-uSilverRim));
@@ -121,14 +116,10 @@
    color+=vec3(1.0,.99,.93)*glint*.22;
    float fres=pow(1.0-max(dot(N,V),0.0),3.0);
    color+=mix(vec3(.08,.26,.21),vec3(.24,.27,.36),uSilverRim)*fres*(1.0-.65*bevel);
-   // Broad, high-contrast environment reflections on true silver edging.
    float streak=pow(max(dot(reflect(-V,N),normalize(vec3(.48,.79,.3))),0.0),7.0);
    color+=bevel*uSilverRim*(.7+silver)*(.26+.89*streak);
    color+=bevel*uSilverRim*vec3(.25,.30,.38)*pow(1.0-max(dot(N,V),0.0),2.0);
    float win=(1.0-step(.45,abs(vFace-uWinner)))*uFinished;
-   // Magical royal-gold coating covers the WHOLE selected stone face.
-   // Use the per-cell atlas UV for a soft center-outward gradient; exclude
-   // metal edges and original pale numbers from the translucent coating.
    vec3 texel=texture(uAlbedo,vUV).rgb;
    float numeral=texture(uInkMask,vUV).a;
    vec2 faceUV=fract(vec2(vUV.x*uAtlasGrid.x,(1.0-vUV.y)*uAtlasGrid.y));
@@ -138,11 +129,9 @@
    float opacity=(.18+.37*strength)*(.42+.58*radial)*shell;
    color=mix(color,vec3(1.53,1.07,.24),opacity);
    color+=vec3(.18,.105,.028)*shell*radial*(.35+.65*strength);
-   // Maintain faint warm reflection on the metal frame, not its own neon glow.
    float goldRim=win*bevel;
    color=mix(color,vec3(1.35,1.02,.60),goldRim*(.14+.12*strength));
    color+=vec3(.12,.08,.025)*goldRim*(.3+.4*strength);
-   // Filmic compress then gamma encode, avoiding neon clipping.
    color=color/(color+vec3(1.0));
    color=pow(max(color,vec3(0.0)),vec3(1.0/2.2));
    frag=vec4(color,1.0);
@@ -153,7 +142,6 @@
    const data=meshJson['d'+sides]||meshJson.d20;
    const vertices=data.vertices,faces=[];
    const rows=Math.ceil(Math.sqrt(data.polygons.length)),cols=rows;
-   // atlas generated with columns=ceil(sqrt(n)), rows=ceil(n/columns)
    const columns=Math.ceil(Math.sqrt(data.polygons.length)),rowCount=Math.ceil(data.polygons.length/columns);
    const output=[];
    function emit(p,n,uv,tan,bitan,bevel,id,rail=0){output.push(...p,...n,...uv,...tan,...bitan,bevel,id,rail)}
@@ -169,9 +157,7 @@
     const fit=.42/Math.max(maxCoord, .001);
     const row=Math.floor(i/columns),col=i%columns;
     const uv=p=>{const l=sub(p,center);return [(col+.5+dot(l,t)*fit)/columns,1-(row+.5-dot(l,b)*fit)/rowCount]};
-    // NB: image is flipped on upload so 1-rowY maps to visual atlas top.
     const top=plus(center,mul(n,.040));
-    // Narrow metal bevel: half the original visible face width.
     const inner=pts.map(p=>plus(plus(center,mul(sub(p,center),.885)),mul(n,.036)));
     const norms=pts.map(p=>norm(plus(mul(n,.34),mul(norm(p),.66))));
     function tri(a,na,aa,c,nc,ac,d,nd,ad){emit(a,na,uv(a),t,b,aa,i);emit(c,nc,uv(c),t,b,ac,i);emit(d,nd,uv(d),t,b,ad,i)}
@@ -183,8 +169,6 @@
     }
     faces.push({n,t,b,index:i});
    });
-   // Unique polyhedral edge rails: dedicated 3D cylinders (not texture lines).
-   // 8 side segments keep the hardware modest even for the D20 (30 edges).
    const edges=new Set();
    for(const poly of data.polygons){for(let i=0;i<poly.length;i++){
      const a=poly[i],b=poly[(i+1)%poly.length];
@@ -200,8 +184,6 @@
        const n0=normalFor(j*2*Math.PI/segments),n1=normalFor((j+1)*2*Math.PI/segments);
        const rail=(p,n)=>plus(plus(p,mul(radial,offset)),mul(n,radius));
        const a0=rail(p0,n0),a1=rail(p1,n0),b0=rail(p0,n1),b1=rail(p1,n1);
-       // Place UV in an ordinary atlas cell; the fragment shader overrides
-       // albedo with polished silver whenever aBevel=1.
        const uv=[.5/cols,1-.5/Math.ceil(data.polygons.length/cols)];
        emit(a0,n0,uv,edge,lateral,1,-2,1);emit(a1,n0,uv,edge,lateral,1,-2,1);emit(b1,n1,uv,edge,lateral,1,-2,1);
        emit(a0,n0,uv,edge,lateral,1,-2,1);emit(b1,n1,uv,edge,lateral,1,-2,1);emit(b0,n1,uv,edge,lateral,1,-2,1);
@@ -215,7 +197,6 @@
    return {vao,count:output.length/17,faces,buffer:buf,columns,rowCount};
  }
  async function loadImage(url){
-    // Data URI image payloads are compatible with file:// startup and WebGL.
     const key=url.split('/').pop().replace(/\.webp(?:\?.*)?$/,'');
     const safeUrl=window.StreamHousePremiumAtlases?.[key]||url;
     return await new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('Nie można odczytać mapy '+key));i.src=safeUrl});
