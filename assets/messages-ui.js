@@ -1,5 +1,4 @@
-/* StreamHouse v11.4: bezpieczne wiadomości między zaakceptowanymi znajomymi.
-   Nie modyfikuje widoków v21 ani lokalnej listy kontaktów z v7. */
+
 (function(){
 'use strict';
 const host=document.getElementById('view-content');
