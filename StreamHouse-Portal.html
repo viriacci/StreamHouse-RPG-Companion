@@ -176,7 +176,7 @@ footer.app-foot{padding:20px clamp(20px,4vw,60px);border-top:1px solid #79623d66
 const $=id=>document.getElementById(id);
 const cachePrefix='streamhouse:portal:account-cache:v2:';
 const defaults=()=>({friends:[],nick:'Awanturnik',profileTitle:'Kronikarz StreamHouse',avatar:'',heroes:[],campaigns:[],archive:[]});
-let data=defaults(), activeView='home',priorFocus=null,modalAction='',toastTimer,authenticatedId=null,pendingInvites=[],stopCampaignInviteUpdates=null,cloudRefreshTimer=null;
+let data=defaults(), activeView='home',priorFocus=null,modalAction='',toastTimer,authenticatedId=null,pendingInvites=[],stopCampaignInviteUpdates=null,cloudRefreshTimer=null,cloudRefreshFull=false;
 const cloud=window.StreamHouseCloud;let cloudBusy=false,inviteHandled=false,sharedCache=[];
 const safe=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const trim=(s,n=64)=>String(s??'').trim().slice(0,n);
@@ -209,7 +209,7 @@ function enterDashboard(user){
  render();window.scrollTo(0,0);
 }
 function lockDashboard(){
- clearTimeout(cloudRefreshTimer);cloudRefreshTimer=null;if(stopCampaignInviteUpdates){stopCampaignInviteUpdates();stopCampaignInviteUpdates=null;}
+ clearTimeout(cloudRefreshTimer);cloudRefreshTimer=null;cloudRefreshFull=false;if(stopCampaignInviteUpdates){stopCampaignInviteUpdates();stopCampaignInviteUpdates=null;}
  authenticatedId=null;data=defaults();sharedCache=[];pendingInvites=[];
  $('dashboardScreen').hidden=true;$('loginScreen').hidden=false;
  $('header-dash').hidden=true;$('header-login').hidden=false;
@@ -217,7 +217,21 @@ function lockDashboard(){
 }
 function nav(view){if(!authenticatedId)return;activeView=view;document.querySelectorAll('[data-view]').forEach(b=>{const on=b.dataset.view===view;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});render();window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}
 function cloudPanel(){return '';}
-function scheduleCloudRefresh(){if(!authenticatedId||document.hidden||cloudRefreshTimer)return;cloudRefreshTimer=setTimeout(()=>{cloudRefreshTimer=null;pullCloud().catch(err=>showToast(err.message||'Nie udało się pobrać danych.'))},300)}
+function scheduleCloudRefresh(full=false){
+ if(full)cloudRefreshFull=true;
+ if(!authenticatedId||document.hidden||cloudRefreshTimer)return;
+ cloudRefreshTimer=setTimeout(async()=>{
+   cloudRefreshTimer=null;
+   const reloadAll=cloudRefreshFull;cloudRefreshFull=false;
+   try{
+     if(reloadAll){await pullCloud();return}
+     const account=authenticatedId,incoming=await cloud.listCampaignInvites();
+     if(authenticatedId!==account||cloud?.user()?.id!==account)return;
+     pendingInvites=incoming||[];
+     if(activeView==='campaigns')render();
+   }catch(err){showToast(err.message||'Nie udało się pobrać danych.')}
+ },300);
+}
 async function pullCloud(){
  requireLogin();const account=authenticatedId;
  const [heroes,campaigns,archive,profile,incoming]=await Promise.all([
@@ -447,7 +461,7 @@ const boot=async()=>{
   render();
   try{await pullCloud();await maybeHandleInvite();
     if(stopCampaignInviteUpdates)stopCampaignInviteUpdates();
-    stopCampaignInviteUpdates=await cloud.subscribeCampaignInvites(scheduleCloudRefresh);
+    stopCampaignInviteUpdates=await cloud.subscribeCampaignInvites(event=>scheduleCloudRefresh(event?.new?.status!=='pending'));
    }
   catch(err){showToast('Nie udało się odświeżyć danych konta: '+(err.message||err))}
  }catch(err){lockDashboard();$('oauth-info').textContent='Nie udało się sprawdzić logowania: '+(err.message||err)}
@@ -458,7 +472,7 @@ window.addEventListener('streamhouse:cloud-change',()=>{
  if(authenticatedId)render();
 });
 window.addEventListener('pagehide',()=>{if(authenticatedId)lockDashboard()});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleCloudRefresh()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleCloudRefresh(true)});
  window.addEventListener('pageshow',e=>{if(e.persisted)boot()});
 })();
 </script>
