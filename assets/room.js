@@ -1,4 +1,4 @@
-/* StreamHouse v9: transport pokoju sesji. Dane online tylko po RLS / RPC; lokalne demo wyraznie odseparowane. */
+
 (function (global) {
   'use strict';
   const STORAGE='streamhouse:room:v8:'; // zachowuje zapisane sesje v8
