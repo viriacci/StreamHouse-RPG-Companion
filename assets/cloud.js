@@ -64,10 +64,19 @@
   async function logout(){const c=await ensureAPI();const {error}=await c.auth.signOut();if(error)return fail(error);authUser=null;fire()}
   async function own(){await init();if(!authUser?.id)throw Error('Zaloguj się przez Discord, aby korzystać z chmury.');return authUser}
   async function query(promise){const result=await promise;if(result.error)return fail(result.error);return result.data}
-  async function saveProfile(displayName,avatarUrl=''){
+  async function getProfile(){
     const u=await own(),c=await ensureAPI();
-    const url=typeof avatarUrl==='string'&&/^https:\/\//i.test(avatarUrl)?avatarUrl.slice(0,2048):'';
-    return query(c.from('sh_profiles').upsert({id:u.id,display_name:String(displayName||'Awanturnik').slice(0,40),avatar_url:url,updated_at:new Date().toISOString()},{onConflict:'id'}).select('id').single());
+    return query(c.from('sh_profiles').select('id,display_name,avatar_url,avatar_data,profile_title').eq('id',u.id).maybeSingle());
+  }
+  async function saveProfile(displayName,avatar='',title='Kronikarz StreamHouse'){
+    const u=await own(),c=await ensureAPI();
+    const raw=String(avatar||'');
+    const image=raw.startsWith('data:image/webp;base64,')?raw:'';
+    if(image.length>180000)throw Error('Portret przekracza limit 180 KB. Wybierz mniejszy obraz.');
+    const url=!image&&/^https:\/\//i.test(raw)?raw.slice(0,2048):'';
+    const row={id:u.id,display_name:String(displayName||'Awanturnik').slice(0,40),avatar_url:url,
+      avatar_data:image,profile_title:String(title||'Kronikarz StreamHouse').slice(0,50),updated_at:new Date().toISOString()};
+    return query(c.from('sh_profiles').upsert(row,{onConflict:'id'}).select('id').single());
   }
   async function saveProfileTitle(title){const c=await ensureAPI();await own();const {data,error}=await c.auth.updateUser({data:{streamhouse_profile_title:String(title||'Kronikarz StreamHouse').slice(0,50)}});if(error)return fail(error);authUser=data?.user||authUser;fire();return authUser;}
   async function upsertHero(hero){
@@ -92,6 +101,20 @@
     ]);
     const roles=new Map(members.map(m=>[m.campaign_id,m.role]));
     return campaigns.map(x=>({...x,role:roles.get(x.id)||(x.owner_id===u.id?'gm':'player')}));
+  }
+  async function listArchive(){
+    const u=await own(),c=await ensureAPI();
+    return query(c.from('sh_archive_entries').select('id,client_id,name,session_date,campaign_name,body')
+      .eq('owner_id',u.id).order('session_date',{ascending:false}).limit(200));
+  }
+  async function upsertArchive(entry){
+    const u=await own(),c=await ensureAPI();
+    if(!entry?.id||!entry.name||!entry.body||!entry.date)throw Error('Niepoprawny wpis kroniki.');
+    return query(c.from('sh_archive_entries').upsert({owner_id:u.id,client_id:String(entry.id).slice(0,100),
+      name:String(entry.name).slice(0,72),session_date:entry.date,
+      campaign_name:String(entry.campaign||'').slice(0,120),body:String(entry.body).slice(0,4000),
+      updated_at:new Date().toISOString()},{onConflict:'owner_id,client_id'})
+      .select('id,client_id').single());
   }
   async function createInvite(campaignId){await own();const c=await ensureAPI();return query(c.rpc('sh_create_invite',{p_campaign_id:campaignId}))}
   async function joinByCode(code){await own();const c=await ensureAPI();return query(c.rpc('sh_join_by_code',{p_code:String(code||'').trim().toLowerCase()}))}
@@ -144,5 +167,5 @@
     }
     channel.subscribe();return ()=>{db.removeChannel(channel)};
   }
-  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,createInvite,joinByCode,shareHero,listShared,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
+  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,getProfile,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,listArchive,upsertArchive,createInvite,joinByCode,shareHero,listShared,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
 })(window);

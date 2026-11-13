@@ -24,18 +24,11 @@ async function start(){
      const displayName=String(user.user_metadata?.full_name||user.user_metadata?.name||user.user_metadata?.preferred_username||'Awanturnik').slice(0,50);
      room=await window.StreamHouseRoom.online(id,{id:user.id,displayName});
      session={mode:'online',isGM:room.isGM,userId:user.id,displayName,name:room.campaign.title,campaignId:id};
-   }else if(params.has('demo')){
-     const id=String(params.get('demo')||'demo').slice(0,100).replace(/[^a-zA-Z0-9_-]/g,'')||'demo';
-     const isGM=params.get('role')!=='player';
-     const displayName=isGM?'Mistrz Gry (demo)':'Gracz (demo)';
-     const userId=isGM?'demo-mg':'demo-gracz';
-     session={mode:'demo',isGM,userId,displayName,name:titleFromPortal(id),campaignId:id};
-     room=window.StreamHouseRoom.local(id,{id:userId,displayName,isGM});
-   }else{throw Error('Otwórz pokój z listy kampanii w portalu. W trybie demonstracyjnym użyj ?demo=camp-demo&role=gm.');}
+   }else{throw Error('Otwórz pokój z listy swoich kampanii online w portalu StreamHouse.');}
    $('room-title').textContent=session.name;
    setLayout(layout);
    $('legacy-room-link').href='../rozgrywka/StreamHouse-v21-'+(session.isGM?'MG':'Gracz')+'.html';
-   $('room-kind').textContent=session.mode==='online'?'ONLINE / DISCORD':'DEMONSTRACJA LOKALNA';
+   $('room-kind').textContent='ONLINE / DISCORD';
    $('role-badge').textContent=session.isGM?'MISTRZ GRY':'GRACZ';
    $('initiative-controls').hidden=!session.isGM;
    $('edit-scene').hidden=!session.isGM;
@@ -44,7 +37,7 @@ async function start(){
    $('gm-notes-panel').hidden=!session.isGM;
    $('handout-panel').hidden=!session.isGM;
    $('token-control').hidden=!session.isGM;
-   $('roll-hint').textContent=session.mode==='online'?'Rzuty online są generowane i zapisywane na serwerze.':'Demo: rzuty generowane lokalnie i przesyłane do otwartych kart tej przeglądarki.';
+   $('roll-hint').textContent='Rzuty online są generowane i zapisywane na serwerze.';
    if(session.mode==='demo'){
      const link=document.createElement('a');link.className='mini-link';link.id='preview-player';const u=new URL(location.href);u.searchParams.set('role',session.isGM?'player':'gm');link.href=u.href;link.target='_blank';link.rel='noopener';link.textContent=session.isGM?'Otwórz widok gracza ↗':'Otwórz widok MG ↗';$('role-badge').after(link);
    }
@@ -116,7 +109,7 @@ function renderHeroSheet(){const entry=(snapshot?.characters||[]).find(h=>h.id==
  const info=entry.character||{},derived=info.sheet?.derived||{},st=entry.session||initialHero(entry);
  panel.hidden=false;$('hero-sheet-name').textContent=entry.name;$('hero-sheet-type').textContent=[info.kind||info.speciesId||'',info.className||info.classId||'',info.background||info.backgroundId||''].filter(Boolean).join(' · ')||'Karta bohatera';
  $('hero-hp').value=st.hp;$('hero-maxhp').value=st.max_hp;$('hero-inventory').value=(Array.isArray(st.inventory)?st.inventory:[]).join('\n');
- const canEdit=session?.mode==='demo'||session?.isGM||entry.owner_id===session?.userId;
+ const canEdit=session?.isGM||entry.owner_id===session?.userId;
  $('hero-hp').disabled=!canEdit;$('hero-maxhp').disabled=!canEdit;$('hero-inventory').disabled=!canEdit;$('hero-save').disabled=!canEdit;
  $('hero-edit-hint').textContent=canEdit?'Zmieniasz stan postaci w tej kampanii, nie oryginalną kartę w kreatorze.':'Podgląd. Stan zmienia właściciel postaci lub MG.';
  const labels={str:'SIŁ',dex:'ZRE',con:'KON',int:'INT',wis:'MĄD',cha:'CHA'};const box=$('hero-attributes');clear(box);

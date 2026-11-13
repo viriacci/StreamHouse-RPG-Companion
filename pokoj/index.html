@@ -38,7 +38,7 @@ body[data-layout="tactical"] #classic-panel{display:none!important}
 #premium-close{padding:10px 17px;color:#f4dfb4;background:#171d18e8;border:1px solid #b69765;font:13px Georgia,serif;cursor:pointer}
 #premium-close:hover{background:#4d3824}
 </style>
-</head>
+<style>html.sh-auth-locked body{visibility:hidden!important}</style><script>document.documentElement.classList.add('sh-auth-locked')</script></head>
 <body>
 <header class="top">
   <a class="brand" href="../StreamHouse-Portal.html" title="Wróć do portalu"><svg viewBox="0 0 32 32" fill="none" stroke="#e4c997" stroke-width="1.5" aria-hidden="true"><path d="M16 2 29 11 24 28H8L3 11Z M16 2v14L3 11m13 5 13-5M16 16l8 12M16 16 8 28"/></svg><span><strong>STREAMHOUSE</strong><small>RPG COMPANION</small></span></a>
@@ -98,5 +98,5 @@ body[data-layout="tactical"] #classic-panel{display:none!important}
 </main>
 <section id="premium-dice-modal" hidden role="dialog" aria-modal="true" aria-label="Rzut kośćmi z kolekcji v21"><div id="premium-dice-toolbar"><button id="premium-close" type="button" aria-label="Zamknij rzut">× Powrót do stołu</button></div><iframe id="premium-dice-frame" title="Pracownia Kości v21" loading="lazy" referrerpolicy="same-origin"></iframe></section>
 <div id="room-alert" role="status" aria-live="polite" hidden></div>
-<script src="../assets/dice-geometry.js"></script><script src="../assets/dice-ritual.js"></script><script src="../assets/cloud-config.js"></script><script src="../assets/cloud-config.local.js"></script><script src="../assets/cloud.js"></script><script src="../assets/room.js"></script><script src="room-ui.js"></script>
+<script src="../assets/dice-geometry.js"></script><script src="../assets/dice-ritual.js"></script><script src="../assets/cloud-config.js"></script><script src="../assets/cloud-config.local.js"></script><script src="../assets/cloud.js"></script><script src="../assets/auth-gate.js"></script><script src="../assets/room.js"></script><script src="room-ui.js"></script>
 </body></html>

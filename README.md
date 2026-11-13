@@ -1,3 +1,7 @@
+### v11.6 · Portal tylko online
+
+Usunięto dostęp do portalu bez logowania Discord. Profil, postacie, kampanie i archiwum zapisują się w Supabase, a przeglądarka wykorzystuje jedynie cache po zweryfikowaniu sesji. Szczegóły: [README-V11.6.md](README-V11.6.md).
+
 **NOWOŚĆ v11.4:** czat v21 i wiadomości prywatne znajomych. Szczegóły: [README-V11.4.md](README-V11.4.md).
 
 # StreamHouse RPG Companion
@@ -74,13 +78,3 @@ Kość D20 na stronie powitalnej i logowania obraca się po kliknięciu bez wyr�
 ## Baza danych Supabase (13.11.2026)
 
 Projekt **StreamHouseRPG** `xqfglhaapojxnjdmxkrm` ma wgrane wszystkie migracje od v7 do v11.4 oraz migracje zabezpieczajaca `20261113154000_streamhouse_chat_hardening.sql`. Publiczny adres i **publishable key** sa wpisane w `assets/cloud-config.js`. Aby zalogowac sie przez Discord, trzeba nadal wlaczyc OAuth w panelu Supabase i podac w nim Client ID/Client Secret Discorda. Szczegoly: [docs/SUPABASE-URUCHOMIENIE.md](docs/SUPABASE-URUCHOMIENIE.md). Na VPS nie wprowadzono zadnych zmian.
-
-## Automatyczne aktualizacje VPS
-
-StreamHouse sprawdza GitHub co 5 minut i publikuje tylko nowe wydania. Jednorazowo na VPS jako root uruchom:
-
-```bash
-cd /opt/streamhouse-rpg && git pull --ff-only && bash scripts/install-auto-updates.sh
-```
-
-Szczegóły, logi i wyłączenie: [AKTUALIZACJE-VPS.md](AKTUALIZACJE-VPS.md). Baza Supabase i Nginx nie są automatycznie modyfikowane.

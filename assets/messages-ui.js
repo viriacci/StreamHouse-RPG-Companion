@@ -114,7 +114,7 @@ function check(){
  const wrapper=document.createElement('div');
  if(!C.user()){
    if(loginNotice)return;
-   wrapper.className='shm-login';wrapper.textContent='Czat online wymaga zalogowania przez Discord i migracji bazy v11.4. Lokalne kontakty poniżej nadal działają bez konta.';
+   wrapper.className='shm-login';wrapper.textContent='Zaloguj się przez Discord, aby korzystać z zaproszeń i wiadomości.';
    layout.before(wrapper);return;
  }
  wrapper.innerHTML=roomMarkup();layout.before(wrapper);
