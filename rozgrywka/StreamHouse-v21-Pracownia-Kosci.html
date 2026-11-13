@@ -67,7 +67,6 @@
 <script defer src="assets/premium-canvas.js"></script>
 <script defer src="assets/premium-webgl.js"></script>
 <script>
-// StreamHouse v11: secure, same-origin display bridge. The server/room owns the roll result.
 window.addEventListener('DOMContentLoaded',()=>{
   window.addEventListener('message',event=>{
     if(event.origin!==window.location.origin||event.source!==window.parent||!event.data||event.data.type!=='streamhouse:display-server-roll')return;
