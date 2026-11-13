@@ -1,4 +1,4 @@
-/* v11.4: lokalne uzupełnienie stylu, nie nadpisuje istniejącej skóry portalu. */
+
 .shm-shell{margin:0 0 28px;border:1px solid #8c724d;background:radial-gradient(ellipse at 85% 0,#5e4e3025,transparent 57%),#151d17;box-shadow:inset 0 0 0 5px #0e1510;padding:23px;color:#eadcc0}
 .shm-head{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid #745d3c;padding-bottom:14px}
 .shm-head h3{font:normal 29px/1.13 Georgia,serif;margin:7px 0 0}.shm-head em{color:#d6b278}.shm-eyebrow,.shm-section{font:700 10px/1.5 Georgia,serif;letter-spacing:.16em;color:#c7aa78}.shm-status{color:#b7aa8a;font:10px Georgia,serif;letter-spacing:.1em}
@@ -9,7 +9,7 @@
 .shm-thread{display:flex;flex-direction:column}.shm-thread-title,#shm-thread-title{font:20px Georgia,serif;color:#ead4a9;border-bottom:1px solid #574a35;padding-bottom:12px}#shm-feed{height:270px;max-height:38vh;overflow-y:auto;display:flex;flex-direction:column;gap:9px;flex:1;margin:10px 0;padding-right:4px}.shm-bubble{max-width:84%;align-self:flex-start;padding:10px 12px;background:#273329;border:1px solid #596b56;overflow-wrap:anywhere}.shm-bubble.mine{align-self:flex-end;background:#504028;border-color:#8d713f}.shm-bubble p{white-space:pre-wrap;font:13px/1.5 Georgia,serif;margin:0 0 4px}.shm-bubble time{font:10px Georgia,serif;color:#b1a58e;display:block;text-align:right}.shm-thread form{display:flex;gap:8px}#shm-message{flex:1;width:10px}.shm-login{margin:0 0 20px;border:1px solid #806748;padding:18px;color:#dfc79d;font:13px Georgia,serif;background:#1b2319}
 @media(max-width:850px){.shm-grid{grid-template-columns:1fr}.shm-thread,.shm-peers{min-height:0}.shm-shell{padding:15px}#shm-feed{min-height:220px}}
 
-/* v11.7: czat pływający, widoczny wyłącznie podczas autoryzowanej sesji. */
+
 .shm-overlay-toggle{position:fixed;right:20px;bottom:20px;z-index:10020;border:1px solid #ae9164;background:linear-gradient(160deg,#354331,#152018);color:#f3dfb9;padding:12px 18px;box-shadow:0 14px 36px #000a,inset 0 1px 0 #ffe5b733;font:700 13px Georgia,serif;cursor:pointer}
 .shm-overlay-toggle[hidden],.shm-overlay[hidden]{display:none!important}
 .shm-overlay{position:fixed;right:20px;bottom:78px;z-index:10019;width:min(430px,calc(100vw - 24px));max-height:min(77vh,740px);overflow:auto;background:#121b15;border:1px solid #a78a5b;box-shadow:0 24px 60px #000e}
