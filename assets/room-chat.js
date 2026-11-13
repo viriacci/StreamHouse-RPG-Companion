@@ -63,7 +63,7 @@ async function init(){
       room=await transport.online(campaign,{displayName:cloud.user().user_metadata?.full_name||'Awanturnik'});
       db=await cloud.client();
       try{await room.heartbeat();const persons=await db.from('sh_room_presence').select('user_id,display_name').eq('campaign_id',campaign).limit(100);for(const person of (persons.data||[]))people.set(person.user_id,person.display_name)}catch{}
-      setStatus('ONLINE · czat wspólny z pokojem sieciowym. Sceny i karty v21 pozostają lokalne.');
+      setStatus('Czat online aktywny.');
     }else{
       let nick='';try{nick=JSON.parse(localStorage.getItem('streamhouse:portal:v1')||'{}').nick||''}catch{}
       room=transport.local(demoId,{id:ownId,displayName:nick||'Awanturnik',isGM:role==='gm'});

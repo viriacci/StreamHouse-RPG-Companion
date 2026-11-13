@@ -12,13 +12,12 @@ function notify(el,text,bad=false){const n=el.querySelector('.shm-notice');if(!n
 function nameFor(data,id){const profile=data.profiles.find(p=>p.id===id);return profile?.display_name||('Użytkownik '+brief(id));}
 function roomMarkup(){return `<section class="shm-shell" id="shm-root" aria-label="Wiadomości StreamHouse">
   <div class="shm-head"><div><span class="shm-eyebrow">POCZTA KRONIKARZY · ONLINE</span><h3>Wiadomości <em>przy ognisku.</em></h3></div><span class="shm-status">TYLKO ZNAJOMI</span></div>
-  <div class="shm-own"><span>Twój identyfikator do zaproszeń</span><code id="shm-my-id"></code><button type="button" id="shm-copy" class="shm-button">Kopiuj ID</button></div>
+  <div class="shm-own"><span>Twój identyfikator do zaproszeń</span><code id="shm-my-id"></code><button type="button" id="shm-copy" class="shm-button">Kopiuj ID</button><button type="button" id="shm-share-id" class="shm-button gold">Udostępnij</button></div>
   <form id="shm-invite" class="shm-invite"><label for="shm-target">Zaproś znajomego po jego ID</label><div><input id="shm-target" required placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" maxlength="36" autocomplete="off" spellcheck="false"><button class="shm-button gold" type="submit">Wyślij zaproszenie</button></div></form>
   <div class="shm-notice" role="status" aria-live="polite"></div>
   <div class="shm-grid"><section class="shm-peers" aria-label="Kontakty online"><div id="shm-friends"><p class="shm-muted">Wczytywanie kontaktów…</p></div></section>
   <section class="shm-thread" aria-label="Prywatna rozmowa"><div id="shm-thread-title">Wybierz rozmowę</div><div id="shm-feed" class="shm-feed"><p class="shm-muted">Wiadomości są dostępne po zaakceptowaniu zaproszenia.</p></div>
     <form id="shm-send"><input id="shm-message" maxlength="1000" placeholder="Wybierz znajomego…" autocomplete="off" disabled required><button class="shm-button gold" type="submit" disabled>Wyślij</button></form></section></div>
-  <p class="shm-muted shm-footnote">Wiadomości są zapisane w Supabase. Widzą je wyłącznie uczestnicy zaakceptowanej znajomości. Każda rozmowa wymaga zalogowania przez Discord i zaakceptowania zaproszenia.</p>
 </section>`}
 function friendSection(data,selected){
   const my=data.me;
@@ -75,6 +74,10 @@ function makeInstance(el){
     try{
       if(button.id==='shm-copy'){
         await navigator.clipboard.writeText(connections.me);notify(el,'Skopiowano Twoje ID.');
+      }else if(button.id==='shm-share-id'){
+        const payload={title:'Mój identyfikator StreamHouse',text:'Dodaj mnie w StreamHouse: '+connections.me};
+        if(navigator.share){try{await navigator.share(payload)}catch(err){if(err.name!=='AbortError')throw err}}
+        else{await navigator.clipboard.writeText(connections.me);notify(el,'Skopiowano Twoje ID.')}
       }else if(button.dataset.shmOpen){selected=button.dataset.shmOpen;await refreshFriends();await refreshThread();}
       else if(button.dataset.shmRemove){
         if(confirm('Usunąć tego znajomego lub cofnąć zaproszenie?')){
@@ -88,6 +91,7 @@ function makeInstance(el){
     event.preventDefault();const btn=event.currentTarget.querySelector('button');btn.disabled=true;
     try{await C.requestFriend(by('shm-target').value);by('shm-target').value='';notify(el,'Wysłano zaproszenie.');await refreshFriends()}catch(err){notify(el,err.message||String(err),true)}finally{btn.disabled=false}
   });
+  by('shm-message').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();by('shm-send').requestSubmit();}});
   by('shm-send').addEventListener('submit',async event=>{
     event.preventDefault();if(!selected)return;const input=by('shm-message'),text=input.value.trim();if(!text)return;
     const btn=event.currentTarget.querySelector('button');btn.disabled=true;

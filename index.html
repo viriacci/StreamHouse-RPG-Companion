@@ -63,6 +63,7 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
 .portal-wrap:focus-visible{outline:2px solid #cbaa70;outline-offset:2px}
 @media(max-width:760px){.portal-wrap{pointer-events:auto}}
 
+.end-cta--solo{justify-content:center}.end-cta--solo p{margin-inline:auto}
 </style>
 </head>
 <body>
@@ -167,7 +168,7 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
         </div>
       </div>
     </section>
-    <section class="end-cta"><p>W każdej legendzie tkwi ziarno prawdy.<br>Stwórz <em>własną historię</em></p><a class="action-main" href="StreamHouse-Portal.html">WEJDŹ DO GRY <span aria-hidden="true">↗</span></a></section>
+    <section class="end-cta end-cta--solo"><p>W każdej legendzie tkwi ziarno prawdy.<br>Stwórz <em>własną historię</em></p></section>
   </main>
   <footer><span>© 2026 STREAMHOUSE RPG COMPANION</span><span>Wyciągnął z czeluści piekieł: <a href="https://www.instagram.com/pan.szczesniak/" target="_blank" rel="noopener noreferrer">PanSzczesniak</a></span><span class="fine"><a href="https://discord.gg/pBG3ybyjk3" target="_blank" rel="noopener noreferrer">StreamHouse · Discord</a> &nbsp;·&nbsp; <button type="button" id="replayIntro" style="background:none;border:0;color:#bba177;cursor:pointer;font:inherit;padding:0">Odtwórz intro</button></span></footer>
 </div>
@@ -202,5 +203,7 @@ if(location.protocol==='file:')addEventListener('DOMContentLoaded',()=>{
   document.body.appendChild(el);
 });
 </script>
+<link rel="stylesheet" href="assets/messages.css">
+<script src="assets/cloud-config.js"></script><script src="assets/cloud-config.local.js"></script><script src="assets/cloud.js"></script><script defer src="assets/messages-overlay.js"></script>
 </body>
 </html>
