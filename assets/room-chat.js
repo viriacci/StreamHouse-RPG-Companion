@@ -1,4 +1,4 @@
-/* StreamHouse v11.4: chat do oryginalnych okien v21, używa tej samej tabeli co /pokoj/. */
+
 (function(){
 'use strict';
 const cloud=window.StreamHouseCloud,transport=window.StreamHouseRoom;
