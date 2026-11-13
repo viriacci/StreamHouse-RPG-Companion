@@ -315,13 +315,36 @@ async function onCloudAction(type,id){
   
   if(type==='logout'){const id=authenticatedId;await cloud.logout();if(id)try{sessionStorage.removeItem(cachePrefix+id)}catch{};lockDashboard();showToast('Wylogowano z konta StreamHouse.')}
   if(type==='invite')await createInvite();
+  if(type==='roster')await openRoster();
+  if(type==='invite-friend'){
+    const c=data.campaigns.find(x=>x.id===$('dialog').dataset.campaignId);
+    if(!c?.cloudId||c.role!=='mg')throw Error('Tylko MG może zapraszać graczy.');
+    await cloud.inviteFriendToCampaign(c.cloudId,id);
+    await openRoster();showToast('Zaproszenie wysłane na konto znajomego.');
+  }
+  if(type==='kick-member'){
+    const c=data.campaigns.find(x=>x.id===$('dialog').dataset.campaignId);
+    if(!c?.cloudId||c.role!=='mg')throw Error('Tylko MG może usuwać członków.');
+    const nick=document.querySelector('[data-cloud-action="kick-member"][data-cloud-id="'+id+'"]')?.dataset.cloudName||'gracza';
+    if(!window.confirm('Usunąć '+nick+' z kampanii „'+c.name+'”? Utraci dostęp do pokoju i udostępnionych kart.'))return;
+    await cloud.kickCampaignMember(c.cloudId,id);
+    await openRoster();showToast('Gracz usunięty z kampanii.');
+  }
+  if(type==='accept-campaign-invite'||type==='decline-campaign-invite'){
+    const accepted=type==='accept-campaign-invite';
+    await cloud.answerCampaignInvite(id,accepted);await pullCloud();nav('campaigns');
+    showToast(accepted?'Dołączono do kampanii!':'Zaproszenie odrzucone.');
+  }
   if(type==='share-character')openShareCharacter();
   if(type==='shared')await showShared();
   if(type==='view-shared')showSharedCard(id);
   if(type==='send-invite-dm'){
    const url=$('dialog').dataset.inviteUrl||'';
    if(!url||!id)throw Error('Nie wskazano zaproszenia lub znajomego.');
-   await cloud.sendDirectMessage(id,'Zaproszenie do kampanii StreamHouse: '+url);
+   const c=data.campaigns.find(x=>x.id===$('dialog').dataset.campaignId);
+    if(!c?.cloudId||c.role!=='mg')throw Error('Tylko MG może zapraszać graczy.');
+    await cloud.inviteFriendToCampaign(c.cloudId,id);
+    await cloud.sendDirectMessage(id,'Zaproszenie do kampanii StreamHouse: '+url);
    showToast('Zaproszenie wysłane znajomemu.');
   }
   if(type==='copy-invite'||type==='share-invite'){
