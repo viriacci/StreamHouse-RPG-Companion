@@ -1,5 +1,4 @@
-/* StreamHouse: bramka wejscia do narzedzi RPG.
-   Oslona UI. Bezpieczenstwo danych egzekwuje Supabase RLS, nie ten skrypt. */
+
 (function(global){
   'use strict';
   const script=document.currentScript;
