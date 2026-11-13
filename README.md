@@ -1,3 +1,7 @@
+### v11.9 · Optymalizacja paneli i zapytań
+
+Wspólny CSS i JavaScript paneli MG oraz gracza został wydzielony do buforowanych zasobów. Każdy plik HTML v21 jest krótszy o 197 KB. Ograniczono cykliczne odświeżania pokoju, powtarzane pobrania listy znajomych i kampanii oraz działanie animacji poza ekranem. Usunięto niepotrzebne komentarze z kodu, zachowując historyczne migracje SQL. Szczegóły, testy i ograniczenia: [docs/ZMIANY-V11.9.md](docs/ZMIANY-V11.9.md).
+
 ### v11.8 · Zarządzanie drużyną i zaproszeniami
 
 MG może zaprosić zaakceptowanego znajomego bezpośrednio do kampanii, przeglądać rzeczywisty skład i usuwać graczy. Odbiorca akceptuje lub odrzuca zaproszenie w „Moje kampanie”. Usunięty gracz nie wróci starym kodem, ale może zostać ponownie zaproszony. Migracja Supabase jest już wykonana w projekcie StreamHouseRPG, a szczegóły i testy opisano w [docs/ZMIANY-V11.8.md](docs/ZMIANY-V11.8.md).
