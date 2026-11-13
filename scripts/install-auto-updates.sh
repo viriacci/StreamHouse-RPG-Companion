@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Jednorazowa konfiguracja automatycznej aktualizacji StreamHouse co 5 minut.
 set -euo pipefail
 if [[ "$EUID" -ne 0 ]]; then
   echo 'Uruchom jako root: sudo bash scripts/install-auto-updates.sh' >&2
