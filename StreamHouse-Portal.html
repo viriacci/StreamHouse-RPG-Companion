@@ -177,7 +177,7 @@ const $=id=>document.getElementById(id);
 // Cache nie jest biletem wstepu. Najpierw Supabase getUser(), potem mozna odczytac dane.
 const cachePrefix='streamhouse:portal:account-cache:v2:';
 const defaults=()=>({friends:[],nick:'Awanturnik',profileTitle:'Kronikarz StreamHouse',avatar:'',heroes:[],campaigns:[],archive:[]});
-let data=defaults(), activeView='home',priorFocus=null,modalAction='',toastTimer,authenticatedId=null,pendingInvites=[],stopCampaignInviteUpdates=null;
+let data=defaults(), activeView='home',priorFocus=null,modalAction='',toastTimer,authenticatedId=null,pendingInvites=[],stopCampaignInviteUpdates=null,cloudRefreshTimer=null;
 const cloud=window.StreamHouseCloud;let cloudBusy=false,inviteHandled=false,sharedCache=[];
 const safe=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const trim=(s,n=64)=>String(s??'').trim().slice(0,n);
@@ -211,7 +211,7 @@ function enterDashboard(user){
  render();window.scrollTo(0,0);
 }
 function lockDashboard(){
- if(stopCampaignInviteUpdates){stopCampaignInviteUpdates();stopCampaignInviteUpdates=null;}
+ clearTimeout(cloudRefreshTimer);cloudRefreshTimer=null;if(stopCampaignInviteUpdates){stopCampaignInviteUpdates();stopCampaignInviteUpdates=null;}
  authenticatedId=null;data=defaults();sharedCache=[];pendingInvites=[];
  $('dashboardScreen').hidden=true;$('loginScreen').hidden=false;
  $('header-dash').hidden=true;$('header-login').hidden=false;
@@ -219,11 +219,13 @@ function lockDashboard(){
 }
 function nav(view){if(!authenticatedId)return;activeView=view;document.querySelectorAll('[data-view]').forEach(b=>{const on=b.dataset.view===view;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});render();window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}
 function cloudPanel(){return '';}
+function scheduleCloudRefresh(){if(!authenticatedId||document.hidden||cloudRefreshTimer)return;cloudRefreshTimer=setTimeout(()=>{cloudRefreshTimer=null;pullCloud().catch(err=>showToast(err.message||'Nie udało się pobrać danych.'))},300)}
 async function pullCloud(){
- requireLogin();
+ requireLogin();const account=authenticatedId;
  const [heroes,campaigns,archive,profile,incoming]=await Promise.all([
    cloud.listHeroes(),cloud.listCampaigns(),cloud.listArchive(),cloud.getProfile(),cloud.listCampaignInvites()
  ]);
+ if(authenticatedId!==account||cloud?.user()?.id!==account)return;
  pendingInvites=incoming||[];
  // Baza jest zrodlem prawdy. Zadnych przykladow ani lokalnych szkicow w kolekcji online.
  data.heroes=heroes.filter(r=>r.payload&&typeof r.payload==='object'&&r.payload.sheet)
@@ -449,7 +451,7 @@ const boot=async()=>{
   render();
   try{await pullCloud();await maybeHandleInvite();
     if(stopCampaignInviteUpdates)stopCampaignInviteUpdates();
-    stopCampaignInviteUpdates=await cloud.subscribeCampaignInvites(()=>{if(authenticatedId&&!document.hidden)pullCloud().catch(err=>showToast(err.message||'Błąd aktualizacji zaproszeń.'))});
+    stopCampaignInviteUpdates=await cloud.subscribeCampaignInvites(scheduleCloudRefresh);
    }
   catch(err){showToast('Nie udało się odświeżyć danych konta: '+(err.message||err))}
  }catch(err){lockDashboard();$('oauth-info').textContent='Nie udało się sprawdzić logowania: '+(err.message||err)}
@@ -461,7 +463,7 @@ window.addEventListener('streamhouse:cloud-change',()=>{
 });
 // BFCACHE: nie przywracaj gotowego panelu po wylogowaniu w innej karcie.
 window.addEventListener('pagehide',()=>{if(authenticatedId)lockDashboard()});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&authenticatedId)pullCloud().catch(err=>showToast(err.message||'Nie udało się pobrać zaproszeń.'))});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleCloudRefresh()});
  window.addEventListener('pageshow',e=>{if(e.persisted)boot()});
 })();
 </script>
