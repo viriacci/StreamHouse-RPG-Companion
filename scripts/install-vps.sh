@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Wykonuj z sudo DOMAIN=rpg.twojadomena.pl EMAIL=adres@example.org bash scripts/install-vps.sh
 set -euo pipefail
 if [[ "${EUID}" -ne 0 ]]; then echo 'Uruchom przez sudo.' >&2; exit 1; fi
 DOMAIN="${DOMAIN:-}"; EMAIL="${EMAIL:-}"
@@ -46,7 +45,6 @@ bash "$(dirname "${BASH_SOURCE[0]}")/deploy.sh"
 nginx -t
 systemctl enable --now nginx
 systemctl reload nginx
-# DNS musi wskazywać na VPS zanim uruchomisz certbota.
 certbot --nginx --redirect --non-interactive --agree-tos --email "$EMAIL" -d "$DOMAIN"
 nginx -t && systemctl reload nginx
 echo "StreamHouse udostępniony pod https://${DOMAIN}"
