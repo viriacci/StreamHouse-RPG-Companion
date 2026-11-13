@@ -5,7 +5,7 @@ if(!campaignId||!/^[0-9a-f-]{36}$/i.test(campaignId)||!cloud?.configured)return;
 const $=id=>document.getElementById(id);
 const escape=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 const value=n=>Number.isFinite(Number(n))?String(n):'–';
-let active=true;
+let active=true,loading=false;
 const returnToPortal=()=>location.replace(new URL('../StreamHouse-Portal.html#campaigns',location.href).href);
 function miniCard(card){
  const ch=card.character||{},sheet=ch.sheet||{},derived=sheet.derived||{},attributes=derived.attributes||{};
@@ -56,7 +56,11 @@ async function load(){
  document.documentElement.classList.remove('sh-online-loading');
 }
 async function startup(){
- try{await load()}catch(err){const kind=document.body.dataset.role==='gm'?'party-list':'player-party',el=$(kind);if(el){el.textContent='Nie udało się pobrać drużyny online: '+(err.message||err)}document.documentElement.classList.remove('sh-online-loading')}
+ if(!active||loading)return;
+ loading=true;
+ try{await load()}
+ catch(err){const kind=document.body.dataset.role==='gm'?'party-list':'player-party',el=$(kind);if(el){el.textContent='Nie udało się pobrać drużyny online: '+(err.message||err)}document.documentElement.classList.remove('sh-online-loading')}
+ finally{loading=false}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startup,{once:true});else startup();
 const tick=setInterval(()=>{if(document.visibilityState==='visible'&&cloud.user())startup()},30000);
