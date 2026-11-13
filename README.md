@@ -26,7 +26,7 @@ Portal i narzędzia do prowadzenia sesji D&D online, stworzone z zachowaniem ory
 | Moduł | Plik | Działanie |
 | --- | --- | --- |
 | Strona główna | `index.html` | Wprowadzenie i wejście do portalu |
-| Konto, bohaterowie, kampanie | `StreamHouse-Portal.html` | Local demo albo Discord OAuth + Supabase |
+| Konto, bohaterowie, kampanie | `StreamHouse-Portal.html` | Discord OAuth wymagany + Supabase; cache po zalogowaniu |
 | Kuźnia bohatera | `Kreator-Postaci.html` | 8 etapów, portrety, zapisy i import |
 | Pokój fabularny | `pokoj/index.html?...&layout=classic` | Narracja bez obowiązkowej planszy |
 | Pokój taktyczny | `pokoj/index.html?...&layout=tactical` | Dodatkowo plansza i pionki |
@@ -48,7 +48,7 @@ python3 scripts/check-project.py
 python3 -m http.server 8000
 ```
 
-Otwórz `http://localhost:8000` i wybierz tryb demonstracyjny. Otwieranie HTML przez `file://` może blokować pobieranie JSON. Lokalne demo korzysta z danych w przeglądarce, **nie** łączy komputerów zdalnie.
+Otwórz `http://localhost:8000/StreamHouse-Portal.html` i zaloguj się przez Discord. Lokalny adres musi być dopisany do dozwolonych Redirect URLs w Supabase Auth. Otwieranie HTML przez `file://` nie obsługuje logowania OAuth.
 
 ## Produkcyjne uruchomienie
 
@@ -67,8 +67,8 @@ Plik `/etc/streamhouse/cloud-config.local.js` zawiera tylko **publiczny** URL i 
 
 - Architektura i granice integracji: [`docs/ARCHITEKTURA.md`](docs/ARCHITEKTURA.md).
 - Testy przed publicznym udostępnieniem: [`docs/TESTY-PRZED-PRODUKCJA.md`](docs/TESTY-PRZED-PRODUKCJA.md).
-- Migracje bazy znajdują się w `supabase/migrations/`; **uruchom je kolejno**, dopiero na przygotowanym projekcie Supabase.
-- Trzeba przetestować na prawdziwych kontach Discord / aktywnej bazie: OAuth, RLS i synchronizację. Dotychczasowe wyniki testów lokalnych i mocków nie są gwarancją produkcyjną.
+- Migracje bazy znajdują się w `supabase/migrations/`. W projekcie StreamHouseRPG są już wykonane (łącznie z v11.6); nie uruchamiaj ich ponownie.
+- Pierwsze logowanie Discord potwierdzono. Trzeba jeszcze przetestować synchronizację i uprawnienia na dwóch różnych kontach. Testy lokalne nie zastępują testu produkcyjnego.
 - Repo zawiera źródła HTML/CSS/JS oraz podzielone archiwum zasobów (`bundles/media.part*`), które `scripts/unpack-media.sh` automatycznie rozpakowuje. To konieczne, ponieważ biblioteki tekstur kości są duże.
 
 ## v11.2 — interakcje portalu
@@ -77,4 +77,4 @@ Kość D20 na stronie powitalnej i logowania obraca się po kliknięciu bez wyr�
 
 ## Baza danych Supabase (13.11.2026)
 
-Projekt **StreamHouseRPG** `xqfglhaapojxnjdmxkrm` ma wgrane wszystkie migracje od v7 do v11.4 oraz migracje zabezpieczajaca `20261113154000_streamhouse_chat_hardening.sql`. Publiczny adres i **publishable key** sa wpisane w `assets/cloud-config.js`. Aby zalogowac sie przez Discord, trzeba nadal wlaczyc OAuth w panelu Supabase i podac w nim Client ID/Client Secret Discorda. Szczegoly: [docs/SUPABASE-URUCHOMIENIE.md](docs/SUPABASE-URUCHOMIENIE.md). Na VPS nie wprowadzono zadnych zmian.
+Projekt **StreamHouseRPG** `xqfglhaapojxnjdmxkrm` ma wgrane wszystkie migracje od v7 do v11.4 oraz migracje zabezpieczajaca `20261113154000_streamhouse_chat_hardening.sql`. Publiczny adres i **publishable key** sa wpisane w `assets/cloud-config.js`. Discord OAuth został już skonfigurowany i potwierdzono pierwsze logowanie. Szczegoly: [docs/SUPABASE-URUCHOMIENIE.md](docs/SUPABASE-URUCHOMIENIE.md). Strona została opublikowana na Mikrusie z HTTPS, a aktualizacje plików są pobierane automatycznie z GitHuba.
