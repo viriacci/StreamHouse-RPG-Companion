@@ -18,7 +18,7 @@ function roomMarkup(){return `<section class="shm-shell" id="shm-root" aria-labe
   <div class="shm-grid"><section class="shm-peers" aria-label="Kontakty online"><div id="shm-friends"><p class="shm-muted">Wczytywanie kontaktów…</p></div></section>
   <section class="shm-thread" aria-label="Prywatna rozmowa"><div id="shm-thread-title">Wybierz rozmowę</div><div id="shm-feed" class="shm-feed"><p class="shm-muted">Wiadomości są dostępne po zaakceptowaniu zaproszenia.</p></div>
     <form id="shm-send"><input id="shm-message" maxlength="1000" placeholder="Wybierz znajomego…" autocomplete="off" disabled required><button class="shm-button gold" type="submit" disabled>Wyślij</button></form></section></div>
-  <p class="shm-muted shm-footnote">Wiadomości są zapisane w Supabase. Widzą je wyłącznie uczestnicy zaakceptowanej znajomości. Nicki z lokalnej listy poniżej nie mają automatycznego dostępu do czatu.</p>
+  <p class="shm-muted shm-footnote">Wiadomości są zapisane w Supabase. Widzą je wyłącznie uczestnicy zaakceptowanej znajomości. Każda rozmowa wymaga zalogowania przez Discord i zaakceptowania zaproszenia.</p>
 </section>`}
 function friendSection(data,selected){
   const my=data.me;
