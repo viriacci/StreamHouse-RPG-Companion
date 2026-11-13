@@ -1,10 +1,6 @@
-/* StreamHouse RPG Companion v7 | Cloud adapter, browser + Supabase Auth (Discord OAuth)
-   All writes are subject to database Row Level Security.
-   No Discord secret or service_role is used client-side. */
+
 (function(global){
   'use strict';
-  // Publiczne domyslne ustawienia dzialaja tez, gdy konfiguracja VPS jest pusta.
-  // Zewnetrzne ustawienia z kompletnym URL i kluczem maja pierwszenstwo.
   const runtime=global.STREAMHOUSE_CLOUD_CONFIG||{};
   const fallback=global.STREAMHOUSE_CLOUD_DEFAULT_CONFIG||{};
   const settings=runtime.url&&runtime.publishableKey?runtime:fallback;
@@ -118,7 +114,6 @@
   }
   async function createInvite(campaignId){await own();const c=await ensureAPI();return query(c.rpc('sh_create_invite',{p_campaign_id:campaignId}))}
   async function joinByCode(code){await own();const c=await ensureAPI();return query(c.rpc('sh_join_by_code',{p_code:String(code||'').trim().toLowerCase()}))}
-  // v11.8: real campaign invitations and server-validated membership operations.
   async function listCampaignInvites(){await own();return query((await ensureAPI()).rpc('sh_campaign_pending_invites'))}
   async function listCampaignRoster(campaignId){await own();return query((await ensureAPI()).rpc('sh_campaign_list_members',{p_campaign_id:campaignId}))}
   async function listCampaignSentInvites(campaignId){
@@ -151,7 +146,6 @@
     const chars=await query(c.from('sh_characters').select('id,name,payload').in('id',links.map(x=>x.character_id)));
     return chars.map(x=>({id:x.id,name:x.name,owner_id:links.find(link=>link.character_id===x.id)?.owner_id||null,character:x.payload}));
   }
-  // v11.4: identyfikatory kont (nie nicki) wiążą zaproszenia i wiadomości prywatne.
   const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   function peerId(value){const id=String(value||'').trim().toLowerCase();if(!uuid.test(id))throw Error('Wpisz poprawne ID konta StreamHouse (UUID).');return id;}
   async function requestFriend(id){await own();const result=await query((await ensureAPI()).rpc('sh_friend_request',{p_target:peerId(id)}));friendCache=null;return result}
