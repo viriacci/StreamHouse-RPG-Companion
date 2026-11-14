@@ -98,8 +98,8 @@
    vec3 N=normalize(mat3(normalize(vTangent),normalize(vBitangent),normalize(vNormal))*normalize(mapped));
    vec3 V=normalize(vec3(0.0,0.0,5.0)-vPos);
    float bevel=clamp(vBevel,0.0,1.0);
-   float metal=mix(.015,.97,bevel*uSilverRim);
-   rough=mix(rough,.085,bevel*uSilverRim);
+   float metal=mix(.015,.99,bevel*uSilverRim);
+   rough=mix(rough,.105,bevel*uSilverRim);
    vec3 silver=uTrimColor;
    base=mix(base,silver,bevel*uSilverRim);
    rough=mix(rough,.125,bevel*(1.0-uSilverRim)*.72);
@@ -117,8 +117,8 @@
    float fres=pow(1.0-max(dot(N,V),0.0),3.0);
    color+=mix(vec3(.08,.26,.21),vec3(.24,.27,.36),uSilverRim)*fres*(1.0-.65*bevel);
    float streak=pow(max(dot(reflect(-V,N),normalize(vec3(.48,.79,.3))),0.0),7.0);
-   color+=bevel*uSilverRim*(.7+silver)*(.26+.89*streak);
-   color+=bevel*uSilverRim*vec3(.25,.30,.38)*pow(1.0-max(dot(N,V),0.0),2.0);
+   color+=bevel*uSilverRim*(.42+silver)*(.13+.75*streak);
+   color+=bevel*uSilverRim*vec3(.30,.39,.48)*pow(1.0-max(dot(N,V),0.0),2.0);
    float win=(1.0-step(.45,abs(vFace-uWinner)))*uFinished;
    vec3 texel=texture(uAlbedo,vUV).rgb;
    float numeral=texture(uInkMask,vUV).a;
@@ -157,8 +157,8 @@
     const fit=.42/Math.max(maxCoord, .001);
     const row=Math.floor(i/columns),col=i%columns;
     const uv=p=>{const l=sub(p,center);return [(col+.5+dot(l,t)*fit)/columns,1-(row+.5-dot(l,b)*fit)/rowCount]};
-    const top=plus(center,mul(n,.040));
-    const inner=pts.map(p=>plus(plus(center,mul(sub(p,center),.885)),mul(n,.036)));
+    const top=plus(center,mul(n,.029));
+    const inner=pts.map(p=>plus(plus(center,mul(sub(p,center),.940)),mul(n,.026)));
     const norms=pts.map(p=>norm(plus(mul(n,.34),mul(norm(p),.66))));
     function tri(a,na,aa,c,nc,ac,d,nd,ad){emit(a,na,uv(a),t,b,aa,i);emit(c,nc,uv(c),t,b,ac,i);emit(d,nd,uv(d),t,b,ad,i)}
     for(let j=0;j<pts.length;j++)tri(top,n,0,inner[j],n,0,inner[(j+1)%pts.length],n,0);
@@ -179,7 +179,7 @@
      let lateral=norm(cross(edge,radial));
      if(len(lateral)<.1)lateral=norm(cross(edge,[0,1,0]));
      const normalFor=theta=>norm(plus(mul(radial,Math.cos(theta)),mul(lateral,Math.sin(theta))));
-     const radius=.0145,offset=.008,segments=8;
+     const radius=.009,offset=.004,segments=8;
      for(let j=0;j<segments;j++){
        const n0=normalFor(j*2*Math.PI/segments),n1=normalFor((j+1)*2*Math.PI/segments);
        const rail=(p,n)=>plus(plus(p,mul(radial,offset)),mul(n,radius));
