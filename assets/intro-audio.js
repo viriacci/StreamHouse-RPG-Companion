@@ -5,9 +5,9 @@ async function play(){
  const Audio=window.AudioContext||window.webkitAudioContext;
  if(!Audio)throw Error('Przeglądarka nie obsługuje dźwięku.');
  context=context||new Audio();
- await context.resume();
+ const resume=context.state==='running'?Promise.resolve():context.resume();
  const ctx=context,t=ctx.currentTime+.03;
- const master=ctx.createGain();master.gain.value=.26;master.connect(ctx.destination);
+ const master=ctx.createGain();master.gain.value=.32;master.connect(ctx.destination);
  const noise=ctx.createBuffer(1,Math.floor(ctx.sampleRate*2.45),ctx.sampleRate);
  const data=noise.getChannelData(0);
  let seed=0x5a17;
@@ -39,6 +39,7 @@ async function play(){
  tone(440,2.10,1.15,'sine',.13,439);
  tone(659.25,2.17,.83,'sine',.085,660);
  tone(880,2.21,.63,'sine',.045,878);
+ await resume;
  return true;
 }
 window.StreamHouseIntroAudio=Object.freeze({play});

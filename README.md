@@ -1,3 +1,7 @@
+### v11.10.1 · poprawki czatów, favicon i intro
+
+W pokojach MG i gracza są dwa niezależne czaty: prywatny po lewej oraz kampanii po prawej. Na wąskich ekranach otwarcie jednego okna zamyka drugi panel, ale oba przyciski są zawsze dostępne. Dodano pliki PNG 16×16 i 32×32 oraz `favicon.ico` z poprawionymi ścieżkami i wersją cache. Dźwięk intro jest uruchamiany przez pierwszą interakcję z dokumentem (zgodnie z politykami autoplay przeglądarki); odtwarzanie z przycisku nadal działa. [Szczegóły](docs/ZMIANY-V11.10.1.md).
+
 ### v11.10 · Kampanie, czat i nowa oprawa
 
 Dodano porzucanie kampanii przez graczy oraz archiwizację i przywracanie przez MG, rozdzielono karty MG od drużyny, udostępnianie linku do znajomych z kopiowaniem do schowka, globalny czat na wszystkich ekranach, srebrno-zielony favicon D20, cieńsze metaliczne ranty kości i oryginalny dźwięk intro uruchamiany kliknięciem. Obie nowe migracje SQL zostały wykonane w Supabase StreamHouseRPG. [Pełna dokumentacja v11.10](docs/ZMIANY-V11.10.md).

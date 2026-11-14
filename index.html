@@ -90,7 +90,7 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
     <div class="intro-kicker">WITAJ W MIEJSCU, GDZIE WSZYSTKO SIĘ ZACZYNA</div>
     <h2 class="intro-name">STREAMHOUSE</h2>
     <p class="intro-sub">RPG Companion</p>
-    <div class="intro-progress" aria-hidden="true"><i></i></div><button type="button" id="intro-sound" class="intro-audio-toggle">Włącz dźwięk intro</button>
+    <div class="intro-progress" aria-hidden="true"><i></i></div><button type="button" id="intro-sound" class="intro-audio-toggle">Kliknij gdziekolwiek, aby włączyć dźwięk</button>
   </div>
   <div class="intro-corner">CZY STARCZY CI ODWAGI, ŻEBY KREOWAĆ WŁASNY ŚWIAT?</div>
 </div>
@@ -181,13 +181,41 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
 (()=>{
  'use strict';
  const intro=document.getElementById('intro'), replay=document.getElementById('replayIntro');
- let introTimer; let introFinished=false;
+ let introTimer; let introFinished=false,firstGestureUsed=false;
+ const introSound=document.getElementById('intro-sound');
  function finish(){if(introFinished)return;introFinished=true;clearTimeout(introTimer);intro.classList.add('is-out');intro.setAttribute('aria-hidden','true');document.body.classList.add('entered')}
- function start(withSound=false){clearTimeout(introTimer);introFinished=false;document.body.classList.remove('entered');intro.classList.remove('is-out');intro.removeAttribute('aria-hidden');introTimer=setTimeout(finish,3800);
-   if(withSound)window.StreamHouseIntroAudio?.play().then(()=>{document.getElementById('intro-sound').textContent='Dźwięk włączony'}).catch(()=>{document.getElementById('intro-sound').textContent='Dźwięk niedostępny'});
+ function playSound(){
+   const audio=window.StreamHouseIntroAudio;
+   if(!audio){introSound.textContent='Dźwięk niedostępny';return}
+   try{
+     Promise.resolve(audio.play())
+       .then(()=>{introSound.textContent='Dźwięk włączony'})
+       .catch(()=>{introSound.textContent='Dźwięk zablokowany, kliknij ponownie'});
+   }catch(err){introSound.textContent='Dźwięk niedostępny'}
  }
- replay.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});start(true)});
- document.getElementById('intro-sound').addEventListener('click',()=>start(true));
+ function start(withSound=false){
+   clearTimeout(introTimer);introFinished=false;
+   document.body.classList.remove('entered');intro.classList.remove('is-out');
+   intro.removeAttribute('aria-hidden');
+   if(withSound){
+     intro.querySelectorAll('.trace,.crest,.intro-kicker,.intro-name,.intro-sub,.intro-progress i').forEach(element=>{
+       element.style.animation='none';void element.offsetWidth;element.style.animation='';
+     });
+     playSound();
+   }
+   introTimer=setTimeout(finish,3800);
+ }
+ function firstGesture(event){
+   if(firstGestureUsed)return;
+   if(event.type==='keydown'&&!['Enter',' '].includes(event.key))return;
+   firstGestureUsed=true;
+   if(event.target.closest?.('#intro-sound,#replayIntro'))return;
+   if(!introFinished)start(true);else playSound();
+ }
+ document.addEventListener('pointerdown',firstGesture,{capture:true,passive:true});
+ document.addEventListener('keydown',firstGesture,{capture:true});
+ replay.addEventListener('click',()=>{firstGestureUsed=true;window.scrollTo({top:0,behavior:'smooth'});start(true)});
+ introSound.addEventListener('click',()=>{firstGestureUsed=true;start(true)});
  document.querySelectorAll('[data-open-auth]').forEach(button=>button.addEventListener('click',()=>location.assign('StreamHouse-Portal.html')));
  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');if(reduced.matches)finish();else start();
  const canvas=document.getElementById('dust');const ctx=canvas.getContext('2d');if(!ctx||reduced.matches)return;
