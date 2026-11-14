@@ -52,6 +52,8 @@
     const returnUrl=new URL('StreamHouse-Portal.html',location.href);
     const invite=new URLSearchParams(location.search).get('invite');
     if(invite&&/^[a-f0-9]{32}$/i.test(invite)){try{sessionStorage.setItem('streamhouse:pending-invite',invite)}catch{}}
+    const friend=new URLSearchParams(location.search).get('friend');
+    if(friend&&/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(friend)){try{sessionStorage.setItem('streamhouse:pending-friend',friend)}catch{}}
     returnUrl.search='';
     returnUrl.hash='';
     const {error}=await c.auth.signInWithOAuth({provider:'discord',options:{redirectTo:returnUrl.href,scopes:'identify'}});
@@ -154,6 +156,20 @@
   }
   const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   function peerId(value){const id=String(value||'').trim().toLowerCase();if(!uuid.test(id))throw Error('Wpisz poprawne ID konta StreamHouse (UUID).');return id;}
+  async function copyFriendLink(){
+    const me=(await own()).id;
+    const nested=/\/(?:rozgrywka|pokoj)\//.test(location.pathname);
+    const url=new URL(nested?'../StreamHouse-Portal.html':'StreamHouse-Portal.html',location.href);
+    url.searchParams.set('friend',me);url.hash='';
+    const link=url.href;
+    if(navigator.clipboard?.writeText){try{await navigator.clipboard.writeText(link);return link}catch{}}
+    const field=document.createElement('textarea');field.value=link;
+    field.style.cssText='position:fixed;left:-9999px;top:0';
+    document.body.append(field);field.select();
+    const done=document.execCommand('copy');field.remove();
+    if(!done)throw Error('Nie udało się skopiować linku. Sprawdź uprawnienia schowka.');
+    return link;
+  }
   async function requestFriend(id){await own();const result=await query((await ensureAPI()).rpc('sh_friend_request',{p_target:peerId(id)}));friendCache=null;return result}
   async function respondFriend(id,accept){await own();const result=await query((await ensureAPI()).rpc('sh_friend_respond',{p_sender:peerId(id),p_accept:!!accept}));friendCache=null;return result}
   async function removeFriend(id){await own();const result=await query((await ensureAPI()).rpc('sh_friend_remove',{p_peer:peerId(id)}));friendCache=null;return result}
@@ -194,5 +210,5 @@
     }
     channel.subscribe();return ()=>{db.removeChannel(channel)};
   }
-  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,getProfile,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,leaveCampaign,setCampaignArchived,listArchive,upsertArchive,createInvite,joinByCode,listCampaignInvites,listCampaignRoster,listCampaignSentInvites,inviteFriendToCampaign,answerCampaignInvite,kickCampaignMember,subscribeCampaignInvites,shareHero,listShared,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
+  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,getProfile,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,leaveCampaign,setCampaignArchived,listArchive,upsertArchive,createInvite,joinByCode,listCampaignInvites,listCampaignRoster,listCampaignSentInvites,inviteFriendToCampaign,answerCampaignInvite,kickCampaignMember,subscribeCampaignInvites,shareHero,listShared,copyFriendLink,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
 })(window);
