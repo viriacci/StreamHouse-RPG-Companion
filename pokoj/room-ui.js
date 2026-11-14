@@ -89,7 +89,7 @@ function renderScene(){
 }
 function renderRoster(){
  const root=$('roster');clear(root);const now=Date.now();let active=0;
- const list=(snapshot?.presence||[]).slice().sort((a,b)=>(b.user_id===session.userId)-(a.user_id===session.userId));
+ const list=(snapshot?.presence||[]).filter(p=>p.user_id!==room?.campaign?.owner_id).slice().sort((a,b)=>(b.user_id===session.userId)-(a.user_id===session.userId));
  if(!list.length){root.append(textNode('p','Brak aktywnych graczy.','faint'))}
  for(const member of list){const isActive=now-new Date(member.last_seen).getTime()<60000;if(isActive)active++;
  const row=textNode('div','','member');const avatar=textNode('span',(member.display_name||'?').slice(0,1).toUpperCase(),'letter');const who=textNode('div','','who');who.append(textNode('strong',member.display_name||'Awanturnik'),textNode('small',member.user_id===session.userId?'Ty':isActive?'W pokoju':'Nieaktywny'));const dot=textNode('i','','on-dot'+(isActive?' active':''));row.append(avatar,who,dot);root.append(row)}
