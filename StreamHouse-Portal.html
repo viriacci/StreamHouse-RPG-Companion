@@ -296,6 +296,22 @@ async function maybeHandleInvite(){
  inviteHandled=true;
  try{await joinCode(token)}finally{try{sessionStorage.removeItem('streamhouse:pending-invite')}catch{};params.delete('invite');history.replaceState(null,'',location.pathname+(params.size?'?'+params.toString():'')+location.hash)}
 }
+async function maybeHandleFriendLink(){
+ const params=new URLSearchParams(location.search);
+ let friend=params.get('friend');
+ if(!friend){try{friend=sessionStorage.getItem('streamhouse:pending-friend')}catch{}}
+ if(!friend||!authenticatedId)return;
+ try{
+  if(!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(friend))throw Error('Nieprawidłowy link do znajomych.');
+  if(friend===authenticatedId){showToast('To Twoje własne ID StreamHouse.');return}
+  if(!window.confirm('Wysłać zaproszenie do znajomych użytkownikowi '+friend.slice(0,8)+'…?'))return;
+  await cloud.requestFriend(friend);nav('friends');showToast('Wysłano zaproszenie do znajomych.');
+ }catch(err){showToast(err.message||'Nie udało się wysłać zaproszenia.')}
+ finally{
+  try{sessionStorage.removeItem('streamhouse:pending-friend')}catch{}
+  params.delete('friend');history.replaceState(null,'',location.pathname+(params.size?'?'+params.toString():'')+location.hash);
+ }
+}
 function openShareCharacter(){
  const c=data.campaigns.find(x=>x.id===$('dialog').dataset.campaignId);
  if(!c?.cloudId||c.archived||c.role==='mg')throw Error('Tylko gracz aktywnej kampanii może udostępnić swojego bohatera.');
@@ -474,7 +490,7 @@ const boot=async()=>{
   const nick=user.user_metadata?.custom_claims?.global_name||user.user_metadata?.full_name||user.user_metadata?.name||user.user_metadata?.user_name;
   if(nick&&data.nick==='Awanturnik')data.nick=trim(nick,32);
   render();
-  try{await pullCloud();await maybeHandleInvite();
+  try{await pullCloud();await maybeHandleInvite();await maybeHandleFriendLink();
     if(stopCampaignInviteUpdates)stopCampaignInviteUpdates();
     stopCampaignInviteUpdates=await cloud.subscribeCampaignInvites(event=>scheduleCloudRefresh(event?.new?.status!=='pending'));
    }
