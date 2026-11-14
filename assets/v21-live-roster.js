@@ -29,12 +29,12 @@ async function load(){
  const auth=await cloud.init();if(!auth.user?.id){returnToPortal();return}
  const campaigns=await cloud.listCampaigns();
  const found=campaigns.find(c=>c.id===campaignId);
- if(!found){returnToPortal();return}
+ if(!found||found.archived_at){returnToPortal();return}
  const kind=document.body.dataset.role==='gm'?'gm':'player';
  if(kind==='gm'&&found.role!=='gm'){const u=new URL('StreamHouse-v21-Gracz.html',location.href);u.searchParams.set('campaign',campaignId);location.replace(u.href);return}
  const container=$(kind==='gm'?'party-list':'player-party');if(!container)return;
  const title=document.querySelector('.location .eyebrow');if(title)title.textContent=found.title||'Kampania online';
- const cards=await cloud.listShared(campaignId);
+ const cards=await cloud.listShared(campaignId,found.owner_id);
  if(!active)return;
  container.replaceChildren();
  if(!cards.length){const info=document.createElement('div');info.className='sh-online-empty';info.textContent='Brak udostępnionych kart bohaterów. Dodaj kartę w panelu kampanii.';container.append(info)}
