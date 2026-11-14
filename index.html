@@ -65,7 +65,7 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
 
 .end-cta--solo{justify-content:center}.end-cta--solo p{margin-inline:auto}
 </style>
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"></head>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><style>.intro-audio-toggle{margin:16px auto 0;padding:10px 16px;border:1px solid #a9946c;background:#14241d;color:#eed4a0;cursor:pointer;font:12px Georgia,serif;letter-spacing:.06em}.intro-audio-toggle:hover{border-color:#f0d4a0;background:#243b2f}</style></head>
 <body>
 <div class="intro" id="intro" role="dialog" aria-label="Intro StreamHouse RPG Companion" aria-modal="true">
   <div class="intro-stage">
@@ -87,7 +87,7 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
     <div class="intro-kicker">WITAJ W MIEJSCU, GDZIE WSZYSTKO SIĘ ZACZYNA</div>
     <h2 class="intro-name">STREAMHOUSE</h2>
     <p class="intro-sub">RPG Companion</p>
-    <div class="intro-progress" aria-hidden="true"><i></i></div>
+    <div class="intro-progress" aria-hidden="true"><i></i></div><button type="button" id="intro-sound" class="intro-audio-toggle">Włącz dźwięk intro</button>
   </div>
   <div class="intro-corner">CZY STARCZY CI ODWAGI, ŻEBY KREOWAĆ WŁASNY ŚWIAT?</div>
 </div>
@@ -173,14 +173,18 @@ footer{max-width:1530px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:ce
   <footer><span>© 2026 STREAMHOUSE RPG COMPANION</span><span>Wyciągnął z czeluści piekieł: <a href="https://www.instagram.com/pan.szczesniak/" target="_blank" rel="noopener noreferrer">PanSzczesniak</a></span><span class="fine"><a href="https://discord.gg/pBG3ybyjk3" target="_blank" rel="noopener noreferrer">StreamHouse · Discord</a> &nbsp;·&nbsp; <button type="button" id="replayIntro" style="background:none;border:0;color:#bba177;cursor:pointer;font:inherit;padding:0">Odtwórz intro</button></span></footer>
 </div>
 
+<script src="assets/intro-audio.js"></script>
 <script>
 (()=>{
  'use strict';
  const intro=document.getElementById('intro'), replay=document.getElementById('replayIntro');
  let introTimer; let introFinished=false;
  function finish(){if(introFinished)return;introFinished=true;clearTimeout(introTimer);intro.classList.add('is-out');intro.setAttribute('aria-hidden','true');document.body.classList.add('entered')}
- function start(){clearTimeout(introTimer);introFinished=false;document.body.classList.remove('entered');intro.classList.remove('is-out');intro.removeAttribute('aria-hidden');introTimer=setTimeout(finish,3800)}
- replay.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});start()});
+ function start(withSound=false){clearTimeout(introTimer);introFinished=false;document.body.classList.remove('entered');intro.classList.remove('is-out');intro.removeAttribute('aria-hidden');introTimer=setTimeout(finish,3800);
+   if(withSound)window.StreamHouseIntroAudio?.play().then(()=>{document.getElementById('intro-sound').textContent='Dźwięk włączony'}).catch(()=>{document.getElementById('intro-sound').textContent='Dźwięk niedostępny'});
+ }
+ replay.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});start(true)});
+ document.getElementById('intro-sound').addEventListener('click',()=>start(true));
  document.querySelectorAll('[data-open-auth]').forEach(button=>button.addEventListener('click',()=>location.assign('StreamHouse-Portal.html')));
  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');if(reduced.matches)finish();else start();
  const canvas=document.getElementById('dust');const ctx=canvas.getContext('2d');if(!ctx||reduced.matches)return;
