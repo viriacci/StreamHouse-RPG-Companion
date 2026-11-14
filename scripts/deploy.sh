@@ -12,6 +12,7 @@ python3 scripts/check-project.py
 release_id="$(date -u +%Y%m%d%H%M%S)-$$"
 release="$SITE_ROOT/releases/$release_id"
 mkdir -p "$release" "$SITE_ROOT/releases"
+install -m 0644 favicon.ico "$release/favicon.ico"
 for f in index.html StreamHouse-Portal.html Kreator-Postaci.html Katalog-Rycin-PD.html; do
   install -m 0644 "$f" "$release/$f"
 done
