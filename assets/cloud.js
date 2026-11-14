@@ -92,9 +92,15 @@
   async function listCampaigns(){
     const u=await own(),c=await ensureAPI();
     const campaigns=await query(c.from('sh_campaigns')
-      .select('id,owner_id,client_id,title,description,currency')
+      .select('id,owner_id,client_id,title,description,currency,archived_at')
       .order('created_at',{ascending:false}).limit(150));
     return campaigns.map(x=>({...x,role:x.owner_id===u.id?'gm':'player'}));
+  }
+  async function leaveCampaign(campaignId){
+    await own();return query((await ensureAPI()).rpc('sh_campaign_leave',{p_campaign_id:campaignId}));
+  }
+  async function setCampaignArchived(campaignId,archived){
+    await own();return query((await ensureAPI()).rpc('sh_campaign_set_archived',{p_campaign_id:campaignId,p_archived:!!archived}));
   }
   async function listArchive(){
     const u=await own(),c=await ensureAPI();
@@ -137,9 +143,11 @@
     const u=await own(),c=await ensureAPI();
     return query(c.from('sh_campaign_characters').upsert({campaign_id:campaignId,character_id:characterId,owner_id:u.id},{onConflict:'campaign_id,character_id'}).select('campaign_id,character_id').single());
   }
-  async function listShared(campaignId){
+  async function listShared(campaignId,gmId=null){
     await own();const c=await ensureAPI();
-    const links=await query(c.from('sh_campaign_characters').select('character_id,owner_id').eq('campaign_id',campaignId).limit(100));
+    let request=c.from('sh_campaign_characters').select('character_id,owner_id').eq('campaign_id',campaignId);
+    if(gmId)request=request.neq('owner_id',gmId);
+    const links=await query(request.limit(100));
     if(!links.length)return [];
     const chars=await query(c.from('sh_characters').select('id,name,payload').in('id',links.map(x=>x.character_id)));
     return chars.map(x=>({id:x.id,name:x.name,owner_id:links.find(link=>link.character_id===x.id)?.owner_id||null,character:x.payload}));
@@ -186,5 +194,5 @@
     }
     channel.subscribe();return ()=>{db.removeChannel(channel)};
   }
-  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,getProfile,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,listArchive,upsertArchive,createInvite,joinByCode,listCampaignInvites,listCampaignRoster,listCampaignSentInvites,inviteFriendToCampaign,answerCampaignInvite,kickCampaignMember,subscribeCampaignInvites,shareHero,listShared,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
+  global.StreamHouseCloud=Object.freeze({configured,init,login,logout,user:()=>authUser,error:()=>lastError,getProfile,saveProfile,saveProfileTitle,upsertHero,listHeroes,getHeroById,deleteHero,upsertCampaign,listCampaigns,leaveCampaign,setCampaignArchived,listArchive,upsertArchive,createInvite,joinByCode,listCampaignInvites,listCampaignRoster,listCampaignSentInvites,inviteFriendToCampaign,answerCampaignInvite,kickCampaignMember,subscribeCampaignInvites,shareHero,listShared,requestFriend,respondFriend,removeFriend,listFriends,listDirectMessages,sendDirectMessage,subscribeMessages,client:ensureAPI});
 })(window);
