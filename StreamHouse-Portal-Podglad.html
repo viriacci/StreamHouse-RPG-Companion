@@ -133,6 +133,7 @@ footer.app-foot{padding:20px clamp(20px,4vw,60px);border-top:1px solid #79623d66
 <div id="modal-root" hidden class="dialog-backdrop" role="presentation"><div id="dialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><button class="dialog-close" type="button" id="dialog-close" aria-label="Zamknij okno">×</button><div class="dialog-inner" id="dialog-content"></div></div></div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <script src="assets/cloud-config.js"></script>
+<script src="assets/cloud-config.local.js"></script>
 <script src="assets/cloud.js"></script>
 <script>
 (()=>{
@@ -310,4 +311,4 @@ if(cloud?.configured){cloud.init().then(async({user})=>{if(!user)return;
 window.addEventListener('streamhouse:cloud-change',()=>{if(!$('dashboardScreen').hidden)render()});
 })();
 </script>
-<script defer src="assets/dice-geometry.js"></script><script defer src="assets/welcome-d20.js"></script><script defer src="assets/messages-overlay.js"></script><script src="assets/cloud-config.local.js"></script></body></html>
+<script defer src="assets/dice-geometry.js"></script><script defer src="assets/welcome-d20.js"></script><script defer src="assets/messages-overlay.js"></script></body></html>
