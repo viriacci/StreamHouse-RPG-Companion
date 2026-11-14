@@ -74,9 +74,7 @@ function makeInstance(el){
       if(button.id==='shm-copy'){
         await navigator.clipboard.writeText(connections.me);notify(el,'Skopiowano Twoje ID.');
       }else if(button.id==='shm-share-id'){
-        const payload={title:'Mój identyfikator StreamHouse',text:'Dodaj mnie w StreamHouse: '+connections.me};
-        if(navigator.share){try{await navigator.share(payload)}catch(err){if(err.name!=='AbortError')throw err}}
-        else{await navigator.clipboard.writeText(connections.me);notify(el,'Skopiowano Twoje ID.')}
+        await C.copyFriendLink();notify(el,'Skopiowano link zaproszenia do znajomych.');
       }else if(button.dataset.shmOpen){selected=button.dataset.shmOpen;await refreshFriends();await refreshThread();}
       else if(button.dataset.shmRemove){
         if(confirm('Usunąć tego znajomego lub cofnąć zaproszenie?')){
