@@ -6,7 +6,17 @@ let mounted=null,mounting=false;
 async function mount(){
  if(mounting||mounted)return;mounting=true;
  try{
-  const result=await C.init();if(!result.user?.id||mounted)return;
+  const result=await C.init();if(mounted)return;
+   if(!result.user?.id){
+     const toggle=document.createElement('button');toggle.type='button';toggle.className='shm-overlay-toggle';toggle.textContent='✉ Czat';toggle.setAttribute('aria-expanded','false');
+     const panel=document.createElement('div');panel.className='shm-overlay';panel.hidden=true;
+     const href=new URL(/\/(?:rozgrywka|pokoj)\//.test(location.pathname)?'../StreamHouse-Portal.html':'StreamHouse-Portal.html',location.href).href;
+     panel.innerHTML='<section class="shm-shell"><div class="shm-head"><h3>Wiadomości StreamHouse</h3></div><p class="shm-muted">Zaloguj się przez Discord, aby rozmawiać ze znajomymi.</p><a class="shm-button gold" href="'+href+'">Przejdź do logowania</a></section>';
+     toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden))});
+     document.body.append(toggle,panel);
+     mounted={userId:null,destroy(){panel.remove();toggle.remove()}};
+     return;
+   }
   const toggle=document.createElement('button');toggle.type='button';toggle.className='shm-overlay-toggle';toggle.textContent='✉ Czat';toggle.setAttribute('aria-expanded','false');
   const panel=document.createElement('div');panel.className='shm-overlay';panel.hidden=true;
   panel.innerHTML=`<section class="shm-shell" aria-label="Prywatny czat StreamHouse"><div class="shm-head"><div><span class="shm-eyebrow">STREAMHOUSE · WIADOMOŚCI</span><h3>Przy <em>ognisku.</em></h3></div><button type="button" data-ov="close" class="shm-button">Zamknij</button></div>
@@ -48,11 +58,16 @@ async function mount(){
    }catch(err){note(err.message||String(err),true)}finally{chatting=false}
   }
   async function refresh(){await loadFriends();await loadThread()}
-  toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden)refresh()});
+  function setOpen(open){
+     panel.hidden=!open;toggle.setAttribute('aria-expanded',String(open));
+     try{sessionStorage.setItem('streamhouse:chat:open',open?'1':'0')}catch{}
+     if(open)refresh();
+   }
+   toggle.addEventListener('click',()=>setOpen(panel.hidden));
   panel.addEventListener('click',async ev=>{
    const b=ev.target.closest('button[data-ov]');if(!b)return;
    try{
-    if(b.dataset.ov==='close'){panel.hidden=true;toggle.setAttribute('aria-expanded','false');return}
+    if(b.dataset.ov==='close'){setOpen(false);return}
     if(b.dataset.ov==='copy'){await navigator.clipboard.writeText(friends.me);note('Skopiowano ID.');return}
     if(b.dataset.ov==='share'){await C.copyFriendLink();note('Skopiowano link zaproszenia do znajomych.');return}
     if(b.dataset.ov==='open'){selected=b.dataset.peer;await refresh();return}
@@ -64,11 +79,15 @@ async function mount(){
   q('message').addEventListener('keydown',ev=>{if(ev.key==='Enter'&&!ev.shiftKey){ev.preventDefault();q('send').requestSubmit()}});
   q('send').addEventListener('submit',async ev=>{ev.preventDefault();if(!selected)return;const input=q('message'),message=input.value.trim();if(!message)return;const btn=q('send').querySelector('button');btn.disabled=true;try{await C.sendDirectMessage(selected,message);input.value='';await loadThread()}catch(err){note(err.message||String(err),true)}finally{btn.disabled=false}});
   await loadFriends();
+  try{if(sessionStorage.getItem('streamhouse:chat:open')==='1')setOpen(true)}catch{}
   C.subscribeMessages(()=>{if(alive&&!panel.hidden)refresh()}).then(fn=>{if(alive)unsubscribe=fn;else fn()}).catch(()=>{});
   tick=setInterval(()=>{if(alive&&!panel.hidden&&document.visibilityState==='visible')refresh()},20000);
-  mounted={destroy(){alive=false;clearInterval(tick);unsubscribe?.();panel.remove();toggle.remove()}};
+  mounted={userId:result.user.id,destroy(){alive=false;clearInterval(tick);unsubscribe?.();panel.remove();toggle.remove()}};
  }catch(err){}finally{mounting=false}
 }
-window.addEventListener('streamhouse:cloud-change',()=>{if(!C.user()){mounted?.destroy();mounted=null}else mount()});
+window.addEventListener('streamhouse:cloud-change',()=>{
+  if(mounted?.userId===(C.user()?.id||null))return;
+  mounted?.destroy();mounted=null;mount();
+});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();
