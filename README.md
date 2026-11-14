@@ -1,3 +1,7 @@
+### v11.10 · Kampanie, czat i nowa oprawa
+
+Dodano porzucanie kampanii przez graczy oraz archiwizację i przywracanie przez MG, rozdzielono karty MG od drużyny, udostępnianie linku do znajomych z kopiowaniem do schowka, globalny czat na wszystkich ekranach, srebrno-zielony favicon D20, cieńsze metaliczne ranty kości i oryginalny dźwięk intro uruchamiany kliknięciem. Obie nowe migracje SQL zostały wykonane w Supabase StreamHouseRPG. [Pełna dokumentacja v11.10](docs/ZMIANY-V11.10.md).
+
 ### v11.9 · Optymalizacja paneli i zapytań
 
 Wspólny CSS i JavaScript paneli MG oraz gracza został wydzielony do buforowanych zasobów. Każdy plik HTML v21 jest krótszy o 197 KB. Ograniczono cykliczne odświeżania pokoju, powtarzane pobrania listy znajomych i kampanii oraz działanie animacji poza ekranem. Usunięto niepotrzebne komentarze z kodu, zachowując historyczne migracje SQL. Szczegóły, testy i ograniczenia: [docs/ZMIANY-V11.9.md](docs/ZMIANY-V11.9.md).
