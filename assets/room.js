@@ -43,7 +43,7 @@
     if(!cloud?.configured)throw Error('Skonfiguruj połączenie z Supabase w assets/cloud-config.js.');
     await cloud.init();const auth=cloud.user();if(!auth?.id)throw Error('Zaloguj się do portalu przez Discord.');
     const campaigns=await cloud.listCampaigns();const campaign=campaigns.find(c=>c.id===id);
-    if(!campaign)throw Error('Nie należysz do tej kampanii lub kampania nie istnieje.');
+    if(!campaign||campaign.archived_at)throw Error('Nie masz dostępu do tej kampanii lub została zarchiwizowana.');
     const isGM=campaign.role==='gm'&&campaign.owner_id===auth.id;
     const db=await cloud.client();
     const read=async()=>{
@@ -52,7 +52,7 @@
         db.from('sh_room_events').select('id,actor_id,kind,body,meta,created_at').eq('campaign_id',id).order('id',{ascending:false}).limit(80),
         db.from('sh_room_presence').select('user_id,display_name,last_seen').eq('campaign_id',id).limit(100),
         isGM?db.from('sh_room_gm_notes').select('content').eq('campaign_id',id).maybeSingle():Promise.resolve({data:null,error:null}),
-        cloud.listShared(id),
+        cloud.listShared(id,campaign.owner_id),
         db.from('sh_room_character_state').select('character_id,hp,max_hp,inventory,revision').eq('campaign_id',id).limit(100)
       ]);
       const states=new Map(err(heroStates).map(x=>[x.character_id,x]));
