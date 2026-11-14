@@ -54,7 +54,7 @@ async function mount(){
    try{
     if(b.dataset.ov==='close'){panel.hidden=true;toggle.setAttribute('aria-expanded','false');return}
     if(b.dataset.ov==='copy'){await navigator.clipboard.writeText(friends.me);note('Skopiowano ID.');return}
-    if(b.dataset.ov==='share'){if(navigator.share){try{await navigator.share({title:'StreamHouse',text:'Dodaj mnie w StreamHouse: '+friends.me})}catch(err){if(err.name!=='AbortError')throw err}}else{await navigator.clipboard.writeText(friends.me);note('Skopiowano ID.')}return}
+    if(b.dataset.ov==='share'){await C.copyFriendLink();note('Skopiowano link zaproszenia do znajomych.');return}
     if(b.dataset.ov==='open'){selected=b.dataset.peer;await refresh();return}
     if(b.dataset.ov==='accept'||b.dataset.ov==='reject'){await C.respondFriend(b.dataset.peer,b.dataset.ov==='accept');await refresh();return}
     if(b.dataset.ov==='remove'){await C.removeFriend(b.dataset.peer);selected='';await refresh()}
