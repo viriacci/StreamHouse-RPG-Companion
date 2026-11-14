@@ -1,6 +1,7 @@
 (function overlayRuntime(){
 'use strict';
-const C=window.StreamHouseCloud;if(!C?.configured)return;
+if(window.top!==window.self&&new URLSearchParams(location.search).get('embed')==='1')return;
+ const C=window.StreamHouseCloud;if(!C?.configured)return;
 const esc=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 let mounted=null,mounting=false;
 async function mount(){
