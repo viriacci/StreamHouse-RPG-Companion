@@ -38,7 +38,10 @@ def check():
             'rozgrywka/assets/premium-atlases.js','rozgrywka/assets/premium-library.js',
             'supabase/migrations/20261110190000_streamhouse_private_campaigns.sql',
             'supabase/migrations/20261110230000_streamhouse_live_room.sql',
-            'supabase/migrations/20261110235000_streamhouse_character_state.sql']
+            'supabase/migrations/20261110235000_streamhouse_character_state.sql',
+            'supabase/migrations/20261114015459_streamhouse_campaign_archive_leave_v11_10.sql',
+            'supabase/migrations/20261114020727_streamhouse_archive_pending_invites_v11_10.sql',
+            'assets/favicon.svg','assets/intro-audio.js','assets/messages-overlay.js']
     for item in extras:
         if not (ROOT/item).exists():errors.append('Brak kluczowego pliku: '+item)
     if errors:
