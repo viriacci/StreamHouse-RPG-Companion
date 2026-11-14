@@ -123,7 +123,7 @@
         textureTri(ink,[srcC,uv(face.points[j]),uv(face.points[k])],[dstC,ps[j],ps[k]]);
       }
     }
-    const inset=.11;
+    const inset=.062;
     for(let j=0;j<ps.length;j++){
       const k=(j+1)%ps.length,p=ps[j],q=ps[k];
       const innerP=[p[0]*(1-inset)+mid[0]*inset,p[1]*(1-inset)+mid[1]*inset];
@@ -136,9 +136,9 @@
         const base=config.rim, rgb=[1,3,5].map(i=>parseInt(base.slice(i,i+2),16));
         const scale=(v,f)=>Math.round(Math.min(255,Math.max(0,v*f)));
         const toHex=(factor)=>'#'+rgb.map(v=>scale(v,factor).toString(16).padStart(2,'0')).join('');
-        grad.addColorStop(0,shine>.55?toHex(1.24):toHex(.85));grad.addColorStop(.25,toHex(1.07));grad.addColorStop(.6,toHex(.48));grad.addColorStop(1,toHex(.20));
+        grad.addColorStop(0,shine>.55?toHex(1.32):toHex(.78));grad.addColorStop(.18,toHex(1.14));grad.addColorStop(.52,toHex(.51));grad.addColorStop(.78,toHex(.89));grad.addColorStop(1,toHex(.22));
         polygon(ctx,[p,q,innerQ,innerP]);ctx.fillStyle=grad;ctx.fill();
-        ctx.strokeStyle=config.rim;ctx.lineWidth=Math.max(1.2,w/650);ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.stroke();
+        ctx.strokeStyle=config.rim;ctx.lineWidth=Math.max(.85,w/900);ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.stroke();
         ctx.strokeStyle='#35302a';ctx.lineWidth=Math.max(.7,w/1200);ctx.beginPath();ctx.moveTo(...innerP);ctx.lineTo(...innerQ);ctx.stroke();
       } else {
         const grad=ctx.createLinearGradient(p[0],p[1],innerP[0],innerP[1]);grad.addColorStop(0,'#97a888');grad.addColorStop(.4,'#273d33');grad.addColorStop(1,'#0a1b19');polygon(ctx,[p,q,innerQ,innerP]);ctx.fillStyle=grad;ctx.globalAlpha=.6;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle='#a6bb9a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.stroke();
