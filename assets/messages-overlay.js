@@ -9,16 +9,16 @@ async function mount(){
  try{
   const result=await C.init();if(mounted)return;
    if(!result.user?.id){
-     const toggle=document.createElement('button');toggle.type='button';toggle.className='shm-overlay-toggle';toggle.textContent='✉ Czat';toggle.setAttribute('aria-expanded','false');
+     const toggle=document.createElement('button');toggle.type='button';toggle.className='shm-overlay-toggle';toggle.textContent='✉ Znajomi';toggle.setAttribute('aria-label','Prywatne wiadomości ze znajomymi');toggle.setAttribute('aria-expanded','false');
      const panel=document.createElement('div');panel.className='shm-overlay';panel.hidden=true;
      const href=new URL(/\/(?:rozgrywka|pokoj)\//.test(location.pathname)?'../StreamHouse-Portal.html':'StreamHouse-Portal.html',location.href).href;
      panel.innerHTML='<section class="shm-shell"><div class="shm-head"><h3>Wiadomości StreamHouse</h3></div><p class="shm-muted">Zaloguj się przez Discord, aby rozmawiać ze znajomymi.</p><a class="shm-button gold" href="'+href+'">Przejdź do logowania</a></section>';
-     toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden))});
+     toggle.addEventListener('click',()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden)window.dispatchEvent(new CustomEvent('streamhouse:chat-open',{detail:{kind:'friends'}}))});
      document.body.append(toggle,panel);
      mounted={userId:null,destroy(){panel.remove();toggle.remove()}};
      return;
    }
-  const toggle=document.createElement('button');toggle.type='button';toggle.className='shm-overlay-toggle';toggle.textContent='✉ Czat';toggle.setAttribute('aria-expanded','false');
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='shm-overlay-toggle';toggle.textContent='✉ Znajomi';toggle.setAttribute('aria-label','Prywatne wiadomości ze znajomymi');toggle.setAttribute('aria-expanded','false');
   const panel=document.createElement('div');panel.className='shm-overlay';panel.hidden=true;
   panel.innerHTML=`<section class="shm-shell" aria-label="Prywatny czat StreamHouse"><div class="shm-head"><div><span class="shm-eyebrow">STREAMHOUSE · WIADOMOŚCI</span><h3>Przy <em>ognisku.</em></h3></div><button type="button" data-ov="close" class="shm-button">Zamknij</button></div>
 <div class="shm-own"><span>Twoje ID</span><code data-ov-id></code><button type="button" class="shm-button" data-ov="copy">Kopiuj</button><button type="button" class="shm-button gold" data-ov="share">Udostępnij</button></div>
@@ -62,7 +62,7 @@ async function mount(){
   function setOpen(open){
      panel.hidden=!open;toggle.setAttribute('aria-expanded',String(open));
      try{sessionStorage.setItem('streamhouse:chat:open',open?'1':'0')}catch{}
-     if(open)refresh();
+     if(open){window.dispatchEvent(new CustomEvent('streamhouse:chat-open',{detail:{kind:'friends'}}));refresh()}
    }
    toggle.addEventListener('click',()=>setOpen(panel.hidden));
   panel.addEventListener('click',async ev=>{
@@ -89,6 +89,13 @@ async function mount(){
 window.addEventListener('streamhouse:cloud-change',()=>{
   if(mounted?.userId===(C.user()?.id||null))return;
   mounted?.destroy();mounted=null;mount();
+});
+window.addEventListener('streamhouse:chat-open',event=>{
+ if(event.detail?.kind!=='campaign'||!window.matchMedia('(max-width:960px)').matches)return;
+ const panel=document.querySelector('.shm-overlay'),toggle=document.querySelector('.shm-overlay-toggle');
+ if(!panel||panel.hidden)return;
+ panel.hidden=true;toggle?.setAttribute('aria-expanded','false');
+ try{sessionStorage.setItem('streamhouse:chat:open','0')}catch{}
 });
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();

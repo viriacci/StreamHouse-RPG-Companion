@@ -16,15 +16,19 @@ root.innerHTML=`<button class="sh-chat-toggle" id="sh-chat-toggle" type="button"
 <section class="sh-chat-panel" id="sh-chat-panel" hidden aria-label="Czat drużyny"><div class="sh-chat-head"><strong>Głosy przy ognisku</strong><button id="sh-chat-close" aria-label="Zamknij czat" type="button">×</button></div>
 <div class="sh-chat-status" id="sh-chat-status">Łączenie…</div><div class="sh-chat-messages" id="sh-chat-messages" role="log" aria-live="polite"></div>
 <div class="sh-chat-alert" id="sh-chat-alert" role="status" aria-live="polite"></div><form class="sh-chat-form" id="sh-chat-form"><textarea id="sh-chat-text" maxlength="1200" placeholder="Wiadomość do drużyny…" required></textarea><button type="submit" disabled>Wyślij</button></form></section>`;
+document.body.classList.add('sh-has-campaign-chat');
 document.body.append(root);
 const $=id=>root.querySelector('#'+id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function message(text){$('sh-chat-alert').textContent=text||''}
 function setStatus(t){$('sh-chat-status').textContent=t}
-function open(){opened=true;$('sh-chat-panel').hidden=false;$('sh-chat-toggle').setAttribute('aria-expanded','true');if(loaded)refresh();$('sh-chat-text').focus()}
+function open(){opened=true;$('sh-chat-panel').hidden=false;$('sh-chat-toggle').setAttribute('aria-expanded','true');window.dispatchEvent(new CustomEvent('streamhouse:chat-open',{detail:{kind:'campaign'}}));if(loaded)refresh();$('sh-chat-text').focus()}
 function close(){opened=false;$('sh-chat-panel').hidden=true;$('sh-chat-toggle').setAttribute('aria-expanded','false')}
 $('sh-chat-toggle').addEventListener('click',()=>opened?close():open());
 $('sh-chat-close').addEventListener('click',close);
+window.addEventListener('streamhouse:chat-open',event=>{
+ if(event.detail?.kind==='friends'&&window.matchMedia('(max-width:960px)').matches&&opened)close();
+});
 async function rows(){
   if(!room)throw Error('Pokój jeszcze nie został połączony.');
   if(room.mode==='demo')return (await room.read()).events;
