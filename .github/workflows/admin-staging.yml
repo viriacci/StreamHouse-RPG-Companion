@@ -1,0 +1,49 @@
+name: StreamHouse admin staging preview
+
+on:
+  push:
+    branches:
+      - feature/admin-staging-v11.11
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  staging:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rozpakuj zasoby multimedialne
+        run: bash scripts/unpack-media.sh
+      - name: Kontrole projektu
+        run: |
+          python3 scripts/check-project.py
+          python3 scripts/check-admin.py
+          node --check admin/admin.js
+          bash -n scripts/deploy-staging.sh
+      - name: Przygotuj izolowany podgląd demo
+        run: |
+          mkdir -p staging-public/assets
+          cp index.html StreamHouse-Portal.html Kreator-Postaci.html Katalog-Rycin-PD.html favicon.ico staging-public/
+          cp -a assets rozgrywka pokoj gotowe-karty admin staging-public/
+          cat > staging-public/assets/cloud-config.js <<'EOF'
+          window.STREAMHOUSE_CLOUD_DEFAULT_CONFIG=Object.freeze({url:'',publishableKey:''});
+          window.STREAMHOUSE_CLOUD_CONFIG=window.STREAMHOUSE_CLOUD_DEFAULT_CONFIG;
+          EOF
+          cat > staging-public/assets/cloud-config.local.js <<'EOF'
+          window.STREAMHOUSE_CLOUD_CONFIG={url:'',publishableKey:''};
+          window.STREAMHOUSE_ADMIN_ENV='staging';
+          window.STREAMHOUSE_ADMIN_DEMO=true;
+          EOF
+          if grep -Fq 'xqfglhaapojxnjdmxkrm' staging-public/assets/cloud-config.js staging-public/assets/cloud-config.local.js; then
+            echo 'BŁĄD: wykryto produkcyjne Supabase w podglądzie' >&2
+            exit 1
+          fi
+      - name: Spakuj testową stronę do pobrania
+        uses: actions/upload-artifact@v4
+        with:
+          name: streamhouse-admin-v11.11-preview
+          path: staging-public/
+          if-no-files-found: error
+          retention-days: 7
