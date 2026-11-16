@@ -3,6 +3,7 @@ const fs=require('fs');
 const vm=require('vm');
 const assert=require('assert');
 const script=fs.readFileSync('admin/admin.js','utf8');
+const registry=JSON.parse(fs.readFileSync('control-center/projects.example.json','utf8'));
 function run(environment){
  const nodes=new Map();
  const handlers={};
@@ -24,7 +25,8 @@ function run(environment){
  const sandbox={
   window:environment,document,
   setTimeout,clearTimeout,
-  Date,Number,console,Promise,
+  Date,Number,console,Promise,URL,
+  fetch:async()=>({ok:true,json:async()=>registry}),
   location:{href:'http://127.0.0.1:8091/admin/index.html'}
  };
  vm.runInNewContext(script,sandbox,{timeout:1000});
@@ -46,8 +48,14 @@ function action(type,name,id){
  await new Promise(resolve=>setTimeout(resolve,5));
  assert(app.node('content').innerHTML.includes('Centrum dowodzenia'));
  assert(app.node('content').innerHTML.includes('TRYB DEMONSTRACYJNY'));
+ assert(app.node('content').innerHTML.includes('StreamHouse RPG Companion'));
+ assert(app.node('content').innerHTML.includes('Wizytówka szkoleniowca'));
+ assert(app.node('content').innerHTML.includes('Wyłączone do czasu konfiguracji backendu'));
  assert(app.node('content').innerHTML.includes('Legenda Zaginionej Korony'));
  assert(!app.node('content').innerHTML.includes('xqfglhaapojxnjdmxkrm'));
+ await app.handlers['document:click']({target:action('click','goto-projects'),preventDefault(){}});
+ assert(app.node('content').innerHTML.includes('Centralny rejestr projektów'));
+ assert(app.node('content').innerHTML.includes('rpg.panszczesniak.pl'));
  await app.handlers['document:click']({
   target:action('click','goto-campaigns'),
   preventDefault(){}
@@ -59,5 +67,5 @@ function action(type,name,id){
  });
  assert(app.node('content').innerHTML.includes('Mistrz Gry'));
  assert(app.node('content').innerHTML.includes('Usuń gracza'));
- console.log('PASS: staging gate, offline demo, dashboard, campaign list, roster.');
+ console.log('PASS: staging gate, offline demo, multi-project registry, disabled deployments, campaign list, roster.');
 })().catch(err=>{console.error(err);process.exitCode=1});
