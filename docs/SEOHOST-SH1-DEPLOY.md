@@ -1,6 +1,6 @@
 # SEOHOST SH1 · ręczna publikacja demo z GitHub Actions
 
-Ten workflow uruchamia się **tylko ręcznie** i **wyłącznie** z gałęzi feature/admin-staging-v11.11. Wybór docelowy jest ograniczony do `admin` lub `testrpg`. Nie wdraża na Mikrus, nie zmienia DNS, nie używa produkcyjnej bazy i nie publikuje main.
+Workflow może zostać uruchomiony z gałęzi feature/admin-staging-v11.11 przez ściśle nazwany commit, a po dodaniu pliku workflow do gałęzi głównej także przyciskiem workflow_dispatch. **Żaden zwyczajny push nie powoduje publikacji.** Wybór docelowy jest ograniczony do `admin` lub `testrpg`. Nie wdraża na Mikrus, nie zmienia DNS, nie używa produkcyjnej bazy i nie publikuje main.
 
 ## Potwierdzone przez właściciela
 
@@ -15,7 +15,7 @@ W obydwu katalogach początkowo jest tylko index.html i cgi-bin. Przed pierwszym
 - `SH1_DEPLOY_PRIVATE_KEY`: osobny, **bezhasłowy** klucz Ed25519 wygenerowany tylko do automatycznych deployów na testowy serwer. Nigdy nie umieszczaj w repo.
 - `SH1_KNOWN_HOSTS`: wpis dla [h108.seohost.pl]:57185 ze zweryfikowanym fingerprintem klucza **serwera**. Wpis w OpenSSH known_hosts nie jest tym samym co klucz prywatny użytkownika.
 
-Environment najlepiej ograniczyć do gałęzi feature/admin-staging-v11.11. W GitHub Actions workflow wybierz Publish demo to SEOHOST SH1, gałąź feature/admin-staging-v11.11 i target admin lub testrpg.
+Environment **seohost-staging** najlepiej ograniczyć do gałęzi feature/admin-staging-v11.11 oraz ustawić wymagane zatwierdzenie wdrożeń, jeżeli panel GitHub udostępnia tę opcję. Workflow_dispatch wymaga obecności pliku w default branch, dlatego na obecnym etapie gałęzi testowej uruchomienie polega na commicie z dokładnym tematem `deploy(sh1): admin staging` albo `deploy(sh1): testrpg staging`. Dowolny inny commit przeprowadzi tylko istniejące testy z admin-staging.yml. Przed użyciem koniecznie skonfiguruj sekrety i ograniczenia środowiska. Nie zmieniamy main na tym etapie.
 
 ## Konfiguracja klucza na Windows
 
