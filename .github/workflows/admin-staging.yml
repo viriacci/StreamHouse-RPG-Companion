@@ -21,6 +21,7 @@ jobs:
           python3 scripts/check-project.py
           python3 scripts/check-admin.py
           node --check admin/admin.js
+          node tests/admin-demo.cjs
           bash -n scripts/deploy-staging.sh
       - name: Przygotuj izolowany podgląd demo
         run: |
@@ -40,6 +41,19 @@ jobs:
             echo 'BŁĄD: wykryto produkcyjne Supabase w podglądzie' >&2
             exit 1
           fi
+      - name: Test odpowiedzi HTTP staging
+        run: |
+          python3 -m http.server 8091 --bind 127.0.0.1 --directory staging-public >/tmp/streamhouse-admin-staging.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in 1 2 3 4 5; do
+            curl -fsS http://127.0.0.1:8091/admin/ >/dev/null && break || sleep 1
+          done
+          for path in /admin/index.html /admin/admin.js /admin/admin.css /favicon.ico /assets/cloud-config.js /assets/cloud-config.local.js; do
+            curl -fsS "http://127.0.0.1:8091$path" >/dev/null
+          done
+          ! grep -Fq 'xqfglhaapojxnjdmxkrm' staging-public/assets/cloud-config.js
+          ! grep -Fq 'xqfglhaapojxnjdmxkrm' staging-public/assets/cloud-config.local.js
       - name: Spakuj testową stronę do pobrania
         uses: actions/upload-artifact@v4
         with:
