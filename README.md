@@ -1,3 +1,9 @@
+### PanSzczesniak Control Center · architektura wielu projektów (staging)
+
+Panel administratora zostaje rozwinięty w niezależny od domeny i hostingu system: frontend na SEOHOST SH1, Mikrus jako backend operacyjny, Cloudflare dla DNS i części analityki. Rejestr demonstracyjny obejmuje StreamHouse RPG oraz przyszłą stronę szkoleniowca. Publikacja na produkcję jest nadal zablokowana, dopóki nie powstanie bezpieczna usługa backendowa i kontrola wdrożeń.
+
+[Schemat architektury i plan DNS](docs/CONTROL-CENTER-ARCHITECTURE.md) · [Rejestr projektów](control-center/projects.example.json)
+
 ### v11.11 · Admin Control Center (staging, bez zmian na main)
 
 Nowy panel `admin/index.html` obejmuje statystyki, użytkowników, role moderatorów, kampanie, drużyny i dziennik operacji. Administrator uzyskuje dostęp wyłącznie przez funkcje Supabase sprawdzające uprawnienia po stronie bazy. Staging ma własny deploy do `127.0.0.1:8091` oraz automatyczny artefakt demo w GitHub Actions. Nie jest podłączony do produkcyjnych danych i nie migruje produkcyjnego projektu Supabase.
