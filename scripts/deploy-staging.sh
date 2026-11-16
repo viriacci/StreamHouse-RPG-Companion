@@ -49,7 +49,7 @@ install -d -m 0755 "$release" "$STAGING_ROOT/releases"
 for f in index.html StreamHouse-Portal.html Kreator-Postaci.html Katalog-Rycin-PD.html favicon.ico;do
   install -m 0644 "$f" "$release/$f"
 done
-for dir in assets rozgrywka pokoj gotowe-karty admin;do
+for dir in assets rozgrywka pokoj gotowe-karty admin control-center;do
   install -d -m 0755 "$release/$dir"
   rsync -a --exclude='*.bak' "$dir/" "$release/$dir/"
 done
