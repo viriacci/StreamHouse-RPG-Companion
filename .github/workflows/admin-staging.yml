@@ -23,6 +23,10 @@ jobs:
           node --check admin/admin.js
           node tests/admin-demo.cjs
           bash -n scripts/deploy-staging.sh
+          bash -n scripts/build-seohost-sh1.sh
+          bash scripts/build-seohost-sh1.sh
+          node --check dist/seohost-sh1/admin/admin.js
+          test -f dist/seohost-sh1/testrpg/index.html
       - name: Przygotuj izolowany podgląd demo
         run: |
           mkdir -p staging-public/assets
@@ -59,5 +63,12 @@ jobs:
         with:
           name: streamhouse-admin-v11.11-preview
           path: staging-public/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Spakuj dwa niezależne katalogi SH1
+        uses: actions/upload-artifact@v4
+        with:
+          name: panszczesniak-sh1-testowe-webrooty
+          path: dist/seohost-sh1/
           if-no-files-found: error
           retention-days: 7
