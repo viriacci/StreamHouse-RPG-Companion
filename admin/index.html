@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101611">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>StreamHouse · Centrum administracji [STAGING]</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div id="app" class="app">
+  <aside class="sidebar" aria-label="Nawigacja administratora">
+    <a class="brand" href="../StreamHouse-Portal.html"><span class="brand-mark">✦</span><span>STREAMHOUSE<small>CONTROL CENTER</small></span></a>
+    <div class="sidebar-label">PANEL TESTOWY · V11.11</div>
+    <nav class="navigation" aria-label="Moduły">
+      <button type="button" data-view="dashboard" aria-current="page"><span>◈</span> Przegląd</button>
+      <button type="button" data-view="users"><span>♙</span> Użytkownicy</button>
+      <button type="button" data-view="campaigns"><span>⚔</span> Kampanie</button>
+      <button type="button" data-view="audit"><span>▤</span> Audyt</button>
+      <button type="button" data-view="system"><span>⚙</span> System</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <span class="online-dot"></span> Środowisko STAGING
+      <p>Osobna wersja robocza.<br>Bez publikacji na main.</p>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button type="button" class="mobile-menu" id="mobile-menu" aria-label="Otwórz menu">☰</button>
+      <div class="breadcrumbs">STREAMHOUSE <span>/</span> ADMIN <span>/</span> <strong id="breadcrumb">PRZEGLĄD</strong></div>
+      <div class="user-area"><span class="env" id="env-label">STAGING</span><span id="logged-user">Sprawdzanie dostępu…</span><button type="button" id="logout-btn" class="quiet" hidden>Wyloguj</button></div>
+    </header>
+    <main class="content" id="content" tabindex="-1">
+      <section class="gate card" aria-live="polite">
+        <div class="kicker">AUTORYZACJA</div>
+        <h1>Weryfikowanie dostępu</h1>
+        <p>Łączenie z odseparowanym środowiskiem administratora.</p>
+      </section>
+    </main>
+    <footer>StreamHouse RPG Companion · Panel administratora · gałąź staging</footer>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="modal-root" class="modal-root" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-header"><div><div class="kicker">POTWIERDZENIE OPERACJI</div><h2 id="modal-title">Potwierdź</h2></div><button type="button" id="modal-close" aria-label="Zamknij">×</button></div>
+    <p id="modal-description"></p>
+    <form id="modal-form">
+      <label for="modal-reason">Powód operacji (minimum 5 znaków)</label>
+      <textarea id="modal-reason" minlength="5" maxlength="250" required placeholder="Podaj uzasadnienie operacji, które zostanie zapisane w audycie."></textarea>
+      <div class="modal-actions"><button type="button" id="modal-cancel" class="quiet">Anuluj</button><button type="submit" id="modal-submit" class="danger">Potwierdź</button></div>
+    </form>
+  </div>
+</div>
+<script src="../assets/cloud-config.js"></script>
+<script src="../assets/cloud-config.local.js"></script>
+<script src="../assets/cloud.js"></script>
+<script defer src="admin.js"></script>
+</body>
+</html>
