@@ -8,7 +8,7 @@ const integer=value=>Number(value||0).toLocaleString('pl-PL');
 const cloud=window.StreamHouseCloud;
 const demo=window.STREAMHOUSE_ADMIN_DEMO===true;
 const enabled=window.STREAMHOUSE_ADMIN_ENV==='staging';
-const views={dashboard:'PRZEGLĄD',users:'UŻYTKOWNICY',campaigns:'KAMPANIE',audit:'AUDYT',system:'SYSTEM'};
+const views={dashboard:'PRZEGLĄD',projects:'MOJE STRONY',users:'UŻYTKOWNICY',campaigns:'KAMPANIE',audit:'AUDYT',system:'SYSTEM'};
 const sampleOwner='10000000-0000-4000-8000-000000000001';
 const samplePlayer='10000000-0000-4000-8000-000000000002';
 const sampleMod='10000000-0000-4000-8000-000000000003';
@@ -41,7 +41,7 @@ const demoStore={
 let state={
  view:'dashboard',role:null,user:null,busy:false,search:'',status:'all',
  offset:0,limit:20,metrics:null,users:[],campaigns:[],audit:[],
- selectedCampaign:null,members:[],modalAction:null,modalContext:null
+ selectedCampaign:null,members:[],modalAction:null,modalContext:null,projectCatalog:null,catalogError:null
 };
 let toastTimer=0,searchTimer=0;
 function notify(message,isError=false){
@@ -169,9 +169,41 @@ function renderActivity(rows){
  ' · '+short(r.subject_id)+'</div><small>'+escaped(r.details?.reason||'Operacja systemowa')+'</small></div></div>').join(''):
  '<div class="empty">Nie zapisano jeszcze żadnych działań administratorów.</div>')+'</div>';
 }
+async function loadProjectCatalog(){
+ try{
+  const response=await fetch('../control-center/projects.example.json',{cache:'no-store'});
+  if(!response.ok)throw new Error('Błąd HTTP '+response.status);
+  const data=await response.json();
+  if(data.schema_version!==1||!Array.isArray(data.projects)||!Array.isArray(data.hosts))throw new Error('Nieprawidłowy katalog projektów.');
+  state.projectCatalog=data;state.catalogError=null;
+ }catch(error){state.catalogError=error.message||'Nie udało się pobrać katalogu';}
+}
+function projectAnchor(value){
+ if(!value)return '<span class="secondary">Domena jeszcze nieustalona</span>';
+ try{
+  const url=new URL(value);
+  if(url.protocol!=='https:')throw new Error('URL must use HTTPS');
+  return '<a href="'+escaped(url.href)+'" target="_blank" rel="noopener noreferrer">'+escaped(url.hostname)+'</a>';
+ }catch{return '<span class="secondary">Niepoprawny adres</span>'}
+}
+function projectCards(){
+ const projects=state.projectCatalog?.projects||[];
+ if(!projects.length)return '<div class="card"><p class="subline">'+escaped(state.catalogError||'Nie ma jeszcze projektów w katalogu.')+'</p></div>';
+ return '<div class="project-grid">'+projects.map(p=>'<article class="card project-card"><div class="kicker">'+escaped(p.phase||'Planowany')+'</div><h2>'+escaped(p.name)+'</h2>'+
+ '<p class="subline">Identyfikator projektu: <code>'+escaped(p.id)+'</code></p><div class="project-endpoints"><div><span>Produkcja</span><strong>'+projectAnchor(p.production?.url)+'</strong><small>'+escaped(p.production?.host_id||'Nie wybrano serwera')+'</small></div>'+
+ '<div><span>Testy</span><strong>'+projectAnchor(p.staging?.url)+'</strong><small>'+escaped(p.staging?.host_id||'Nie wybrano serwera')+'</small></div></div>'+
+ '<div class="project-modules">'+(p.modules||[]).map(m=>'<span>'+escaped(m)+'</span>').join('')+'</div>'+
+ '<div class="project-disabled"><span>Publikowanie</span><strong>Wyłączone do czasu konfiguracji backendu</strong></div></article>').join('')+'</div>';
+}
+function renderProjects(){
+ return header('Moje strony','Centralny rejestr projektów, domen i serwerów. Możesz dodać tutaj nawet stronę z zupełnie innej domeny i hostingu.')+
+ '<div class="demo-banner"><strong>REJESTR WERSJI ROBOCZEJ</strong> · Adresy są planowane. Brak aktywnej integracji i przycisków publikacji. Działająca administracja RPG znajduje się w pozostałych zakładkach.</div>'+
+ projectCards();
+}
 function renderDashboard(){
- return header('Centrum dowodzenia','Stan kampanii, aktywność systemu i skróty do najważniejszych operacji.')+
- stats()+'<div class="sub-grid"><section class="card"><div class="section-title"><h2>Ostatnie kampanie</h2>'+
+ return header('Centrum dowodzenia','Projekty, domeny i wdrożenia w jednym miejscu. Statystyki poniżej na razie dotyczą wyłącznie StreamHouse RPG.')+
+ '<div class="section-title"><h2>Twoje projekty</h2><button class="quiet" type="button" data-action="goto-projects">Zarządzaj projektami →</button></div>'+projectCards()+
+ '<div class="section-title" style="margin-top:30px"><h2>StreamHouse RPG · statystyki</h2></div>'+stats()+'<div class="sub-grid"><section class="card"><div class="section-title"><h2>Ostatnie kampanie</h2>'+
  '<button class="quiet" type="button" data-action="goto-campaigns">Wszystkie →</button></div>'+
  campaignTable(state.campaigns||[],false)+'</section>'+
  '<section class="card"><div class="section-title"><h2>Ostatnie działania</h2><button class="quiet" type="button" data-action="goto-audit">Cały audyt →</button></div>'+
@@ -227,7 +259,7 @@ function renderSystem(){
 }
 function render(){
  setHeader();const content=$('content');
- const viewsHtml={dashboard:renderDashboard,users:renderUsers,campaigns:renderCampaigns,audit:renderAudit,system:renderSystem};
+ const viewsHtml={dashboard:renderDashboard,projects:renderProjects,users:renderUsers,campaigns:renderCampaigns,audit:renderAudit,system:renderSystem};
  content.innerHTML=banner()+(viewsHtml[state.view]||renderDashboard)();
 }
 async function navigate(view){
@@ -295,6 +327,7 @@ document.addEventListener('click',async event=>{
   }
   if(name==='refresh')await reload();
   if(name==='goto-campaigns')await navigate('campaigns');
+  if(name==='goto-projects')await navigate('projects');
   if(name==='goto-audit')await navigate('audit');
   if(name==='page-prev'){state.offset=Math.max(0,state.offset-state.limit);await reload()}
   if(name==='page-next'){state.offset+=state.limit;await reload()}
@@ -354,7 +387,7 @@ async function startup(){
  if(!enabled){gate('Panel dostępny tylko na staging','Włącz dedykowane środowisko testowe. Panel nie powinien łączyć się z produkcją ani używać jej kluczy.');return}
  if(demo){
   state.role='owner';state.user={id:sampleOwner,user_metadata:{name:'Kronikarz'}};
-  await reload();return;
+  await loadProjectCatalog();await reload();return;
  }
  if(!cloud?.configured){gate('Brak połączenia z testową bazą','Do pełnego testu potrzebna jest oddzielna baza Supabase oraz konfiguracja staging. Produkcyjne konto nie jest tu używane.');return}
  try{
@@ -364,7 +397,7 @@ async function startup(){
   if(!['owner','moderator'].includes(state.role)){
    gate('Brak uprawnień administracyjnych','Twoje konto jest zalogowane, ale nie ma przydzielonej roli. Zgłoś się do właściciela systemu.');return;
   }
-  await reload();
+  await loadProjectCatalog();await reload();
  }catch(error){gate('Błąd połączenia staging',error.message||String(error),'Spróbuj ponownie','refresh')}
 }
 startup();
