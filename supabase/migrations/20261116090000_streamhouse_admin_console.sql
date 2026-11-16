@@ -6,7 +6,7 @@ create table if not exists private.sh_admin_roles (
 );
 create table if not exists private.sh_admin_audit (
   id bigint generated always as identity primary key,
-  actor_id uuid not null references auth.users(id) on delete restrict,
+  actor_id uuid references auth.users(id) on delete set null,
   action text not null,
   subject_type text not null,
   subject_id uuid,
