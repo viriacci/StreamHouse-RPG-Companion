@@ -1,6 +1,11 @@
 name: Publish demo to SEOHOST SH1 (manual, staging only)
 
 on:
+  # Pozwala wywołać deployment z feature branch, bez zmian na main.
+  # Tylko dokładna treść wiadomości commita uruchamia job.
+  push:
+    branches:
+      - feature/admin-staging-v11.11
   workflow_dispatch:
     inputs:
       target:
@@ -15,12 +20,19 @@ permissions:
   contents: read
 
 concurrency:
-  group: seohost-sh1-${{ github.event.inputs.target }}
+  group: seohost-sh1-${{ github.event.inputs.target || github.ref }}
   cancel-in-progress: false
 
 jobs:
   deploy:
-    if: github.ref == 'refs/heads/feature/admin-staging-v11.11'
+    if: >-
+      github.ref == 'refs/heads/feature/admin-staging-v11.11' &&
+      (
+        (github.event_name == 'workflow_dispatch' && (inputs.target == 'admin' || inputs.target == 'testrpg')) ||
+        (github.event_name == 'push' && (github.event.head_commit.message == 'deploy(sh1): admin staging' || github.event.head_commit.message == 'deploy(sh1): testrpg staging'))
+      )
+    env:
+      SH1_TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.target || (github.event.head_commit.message == 'deploy(sh1): admin staging' && 'admin' || 'testrpg') }}
     runs-on: ubuntu-24.04
     environment: seohost-staging
     steps:
@@ -57,10 +69,8 @@ jobs:
             wait "$pid" || true
           done
       - name: Spakuj wybrany katalog
-        env:
-          TARGET: ${{ inputs.target }}
         run: |
-          case "$TARGET" in admin|testrpg) ;; *) exit 1;; esac
+          case "$SH1_TARGET" in admin|testrpg) ;; *) exit 1;; esac
           tar -czf /tmp/seohost-stage.tar.gz -C "dist/seohost-sh1/$TARGET" .
       - name: Przygotuj bezpieczny dostęp SSH
         env:
@@ -75,8 +85,6 @@ jobs:
           ssh-keygen -y -P "" -f "$HOME/.ssh/sh1_deploy" >/dev/null
           ssh-keygen -F '[h108.seohost.pl]:57185' -f "$HOME/.ssh/known_hosts" >/dev/null
       - name: Przenieś archiwum i wdroż na SH1
-        env:
-          TARGET: ${{ inputs.target }}
         run: |
           set -Eeuo pipefail
           ssh_args=(-i "$HOME/.ssh/sh1_deploy" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -p 57185)
@@ -84,8 +92,8 @@ jobs:
           server='srv130039@h108.seohost.pl'
           incoming="/home/srv130039/.panszczesniak-deploy/incoming"
           ssh "${ssh_args[@]}" "$server" "mkdir -p '$incoming'"
-          scp "${scp_args[@]}" /tmp/seohost-stage.tar.gz "$server:$incoming/${TARGET}-${GITHUB_RUN_ID}.tar.gz"
-          ssh "${ssh_args[@]}" "$server" bash -s -- "$TARGET" "$GITHUB_RUN_ID" <<'REMOTE'
+          scp "${scp_args[@]}" /tmp/seohost-stage.tar.gz "$server:$incoming/${SH1_TARGET}-${GITHUB_RUN_ID}.tar.gz"
+          ssh "${ssh_args[@]}" "$server" bash -s -- "$SH1_TARGET" "$GITHUB_RUN_ID" <<'REMOTE'
           set -Eeuo pipefail
           target="$1"
           run="$2"
@@ -118,10 +126,8 @@ jobs:
           echo "Staging $target successfully published (backup: $backup)"
           REMOTE
       - name: Podsumowanie
-        env:
-          TARGET: ${{ inputs.target }}
         run: |
-          if [ "$TARGET" = admin ]; then
+          if [ "$SH1_TARGET" = admin ]; then
             url="https://admin.panszczesniak.pl"
           else
             url="https://testrpg.panszczesniak.pl"
