@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "control_center": {
+    "name": "PanSzczesniak Control Center",
+    "admin_url": "https://admin.panszczesniak.pl",
+    "api_url": "https://api.panszczesniak.pl",
+    "frontend_host": "seohost-sh1",
+    "control_plane_host": "mikrus",
+    "environment": "planned",
+    "deployments_enabled": false
+  },
+  "hosts": [
+    {
+      "id": "mikrus",
+      "kind": "vps",
+      "role": [
+        "control-plane",
+        "production-web"
+      ],
+      "access": "restricted-agent",
+      "deployment_status": "not-configured"
+    },
+    {
+      "id": "seohost-sh1",
+      "kind": "shared-hosting",
+      "role": [
+        "staging-web",
+        "site-web",
+        "email"
+      ],
+      "access": "scoped-sftp",
+      "deployment_status": "not-configured"
+    }
+  ],
+  "projects": [
+    {
+      "id": "streamhouse-rpg",
+      "name": "StreamHouse RPG Companion",
+      "phase": "in-development",
+      "code_repository": "viriacci/StreamHouse-RPG-Companion",
+      "production": {
+        "url": "https://rpg.panszczesniak.pl",
+        "host_id": "mikrus",
+        "git_branch": "main",
+        "publish_enabled": false
+      },
+      "staging": {
+        "url": "https://testrpg.panszczesniak.pl",
+        "host_id": "seohost-sh1",
+        "git_branch": "feature/admin-staging-v11.11",
+        "publish_enabled": false
+      },
+      "modules": [
+        "analytics",
+        "deployments",
+        "rpg-admin"
+      ],
+      "analytics": {
+        "provider": "cloudflare",
+        "status": "unconfigured"
+      },
+      "data_policy": "project-isolated"
+    },
+    {
+      "id": "trainer-site",
+      "name": "Wizytówka szkoleniowca",
+      "phase": "planned",
+      "code_repository": null,
+      "production": {
+        "url": null,
+        "host_id": "seohost-sh1",
+        "git_branch": null,
+        "publish_enabled": false
+      },
+      "staging": {
+        "url": null,
+        "host_id": "seohost-sh1",
+        "git_branch": null,
+        "publish_enabled": false
+      },
+      "modules": [
+        "analytics",
+        "deployments",
+        "cms",
+        "bookings"
+      ],
+      "analytics": {
+        "provider": "cloudflare",
+        "status": "unconfigured"
+      },
+      "data_policy": "project-isolated"
+    }
+  ]
+}
