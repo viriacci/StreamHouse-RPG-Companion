@@ -73,6 +73,17 @@ jobs:
         run: |
           case "$SH1_TARGET" in admin|testrpg) ;; *) exit 1;; esac
           tar -czf /tmp/seohost-stage.tar.gz -C "dist/seohost-sh1/$SH1_TARGET" .
+      - name: Zablokuj publiczny panel bez HTTPS i hasła
+        if: env.SH1_TARGET == 'admin'
+        run: |
+          set -Eeuo pipefail
+          headers="$RUNNER_TEMP/sh1-admin-headers.txt"
+          code="$(curl --silent --show-error --location --max-redirs 2 --connect-timeout 10 --max-time 20 --dump-header "$headers" --output /dev/null --write-out '%{http_code}' 'https://admin.panszczesniak.pl/')"
+          if [ "$code" != "401" ] || ! grep -Eiq '^www-authenticate:[[:space:]]*Basic' "$headers"; then
+            echo "::error::Panel admin nie jest zabezpieczony HTTP Basic Auth przez HTTPS (HTTP $code). W DirectAdmin ustaw ochronę hasłem katalogu admin.panszczesniak.pl/public_html PRZED publikacją."
+            exit 1
+          fi
+          echo "HTTPS + HTTP Basic Auth confirmed on admin.panszczesniak.pl"
       - name: Przygotuj bezpieczny dostęp SSH
         env:
           DEPLOY_KEY: ${{ secrets.SH1_DEPLOY_PRIVATE_KEY }}
@@ -126,6 +137,17 @@ jobs:
           cp -a "$stage/." "$dest/"
           echo "Staging $target successfully published (backup: $backup)"
           REMOTE
+      - name: Sprawdź ochronę panelu po publikacji
+        if: env.SH1_TARGET == 'admin'
+        run: |
+          set -Eeuo pipefail
+          headers="$RUNNER_TEMP/sh1-admin-after.txt"
+          code="$(curl --silent --show-error --location --max-redirs 2 --connect-timeout 10 --max-time 20 --dump-header "$headers" --output /dev/null --write-out '%{http_code}' 'https://admin.panszczesniak.pl/')"
+          if [ "$code" != "401" ] || ! grep -Eiq '^www-authenticate:[[:space:]]*Basic' "$headers"; then
+            echo "::error::Brak aktywnej ochrony HTTP Basic po publikacji, sprawdź ochronę katalogu w DirectAdmin."
+            exit 1
+          fi
+          echo "Protected admin domain stays protected"
       - name: Podsumowanie
         run: |
           if [ "$SH1_TARGET" = admin ]; then
