@@ -61,7 +61,7 @@ jobs:
           for target in admin testrpg; do
             python3 -m http.server 8094 --bind 127.0.0.1 --directory "dist/seohost-sh1/$target" >/tmp/sh1-http.log 2>&1 &
             pid=$!
-            for attempt in 1 2 3 4 5; do
+            for _ in 1 2 3 4 5; do
               if curl --fail --silent "http://127.0.0.1:8094/" -o /dev/null; then break; fi
               sleep 1
             done
@@ -92,7 +92,7 @@ jobs:
           scp_args=(-i "$HOME/.ssh/sh1_deploy" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -P 57185)
           server='srv130039@h108.seohost.pl'
           incoming="/home/srv130039/.panszczesniak-deploy/incoming"
-          ssh "${ssh_args[@]}" "$server" "mkdir -p '$incoming'"
+          ssh "${ssh_args[@]}" "$server" 'mkdir -p /home/srv130039/.panszczesniak-deploy/incoming'
           scp "${scp_args[@]}" /tmp/seohost-stage.tar.gz "$server:$incoming/${SH1_TARGET}-${GITHUB_RUN_ID}.tar.gz"
           ssh "${ssh_args[@]}" "$server" bash -s -- "$SH1_TARGET" "$GITHUB_RUN_ID" <<'REMOTE'
           set -Eeuo pipefail
@@ -133,6 +133,8 @@ jobs:
           else
             url="https://testrpg.panszczesniak.pl"
           fi
-          echo "Publikacja demonstracyjna: $url" >> "$GITHUB_STEP_SUMMARY"
-          echo "Commit: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
-          echo "Bez danych produkcyjnych, bez automatycznej publikacji." >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "Publikacja demonstracyjna: $url"
+            echo "Commit: $GITHUB_SHA"
+            echo "Bez danych produkcyjnych, bez automatycznej publikacji."
+          } >> "$GITHUB_STEP_SUMMARY"
