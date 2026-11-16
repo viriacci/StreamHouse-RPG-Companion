@@ -1,3 +1,9 @@
+### v11.11 · Admin Control Center (staging, bez zmian na main)
+
+Nowy panel `admin/index.html` obejmuje statystyki, użytkowników, role moderatorów, kampanie, drużyny i dziennik operacji. Administrator uzyskuje dostęp wyłącznie przez funkcje Supabase sprawdzające uprawnienia po stronie bazy. Staging ma własny deploy do `127.0.0.1:8091` oraz automatyczny artefakt demo w GitHub Actions. Nie jest podłączony do produkcyjnych danych i nie migruje produkcyjnego projektu Supabase.
+
+**Wszystkie kroki testowania i wdrożenia:** [docs/ADMIN-STAGING-V11.11.md](docs/ADMIN-STAGING-V11.11.md).
+
 ### v11.10.1 · poprawki czatów, favicon i intro
 
 W pokojach MG i gracza są dwa niezależne czaty: prywatny po lewej oraz kampanii po prawej. Na wąskich ekranach otwarcie jednego okna zamyka drugi panel, ale oba przyciski są zawsze dostępne. Dodano pliki PNG 16×16 i 32×32 oraz `favicon.ico` z poprawionymi ścieżkami i wersją cache. Dźwięk intro jest uruchamiany przez pierwszą interakcję z dokumentem (zgodnie z politykami autoplay przeglądarki); odtwarzanie z przycisku nadal działa. [Szczegóły](docs/ZMIANY-V11.10.1.md).
