@@ -2,6 +2,7 @@
 from pathlib import Path
 from html.parser import HTMLParser
 import re
+import json
 import shutil
 import subprocess
 import sys
@@ -11,6 +12,7 @@ FILES=[
     'admin/index.html',
     'admin/admin.css',
     'admin/admin.js',
+    'control-center/projects.example.json',
     'supabase/migrations/20261116090000_streamhouse_admin_console.sql',
     'scripts/deploy-staging.sh'
 ]
@@ -36,6 +38,27 @@ def check():
 
     html=(ROOT/'admin/index.html').read_text(encoding='utf-8')
     javascript=(ROOT/'admin/admin.js').read_text(encoding='utf-8')
+    registry=json.loads((ROOT/'control-center/projects.example.json').read_text(encoding='utf-8'))
+    if registry.get('schema_version')!=1 or registry.get('control_center',{}).get('control_plane_host')!='mikrus':
+        errors.append('Niepoprawny rejestr lub brak Mikrusa jako centrum')
+    if registry.get('control_center',{}).get('deployments_enabled') is not False:
+        errors.append('Publikacje w katalogu muszą być wyłączone')
+    hosts={host.get('id') for host in registry.get('hosts',[])}
+    projects=registry.get('projects',[])
+    if len(projects)<2 or len({p.get('id') for p in projects})!=len(projects):
+        errors.append('Brak niezależnych projektów lub zduplikowane ID')
+    for project in projects:
+        if project.get('data_policy')!='project-isolated':
+            errors.append('Brak izolacji danych: '+str(project.get('id')))
+        for env_name in ('production','staging'):
+            env=project.get(env_name,{})
+            if env.get('publish_enabled') is not False:
+                errors.append('Niebezpieczna flaga publikacji: '+str(project.get('id')))
+            if env.get('host_id') not in hosts:
+                errors.append('Nieznany host: '+str(project.get('id')))
+    if '../control-center/projects.example.json' not in javascript:
+        errors.append('Panel nie korzysta z rejestru projektów')
+
     sql=(ROOT/'supabase/migrations/20261116090000_streamhouse_admin_console.sql').read_text(encoding='utf-8').lower()
     deploy=(ROOT/'scripts/deploy-staging.sh').read_text(encoding='utf-8')
     scan=Scanner();scan.feed(html)
