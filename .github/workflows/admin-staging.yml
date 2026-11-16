@@ -27,6 +27,8 @@ jobs:
           bash scripts/build-seohost-sh1.sh
           node --check dist/seohost-sh1/admin/admin.js
           test -f dist/seohost-sh1/testrpg/index.html
+      - name: Waliduj składnię workflow SEOHOST
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/seohost-sh1-deploy.yml
       - name: Przygotuj izolowany podgląd demo
         run: |
           mkdir -p staging-public/assets
