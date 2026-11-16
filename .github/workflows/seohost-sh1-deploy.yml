@@ -1,0 +1,131 @@
+name: Publish demo to SEOHOST SH1 (manual, staging only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Subdomena testowa; produkcja jest niedostępna"
+        type: choice
+        required: true
+        options:
+          - admin
+          - testrpg
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seohost-sh1-${{ github.event.inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/feature/admin-staging-v11.11'
+    runs-on: ubuntu-24.04
+    environment: seohost-staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: Waliduj gałąź i wymagane sekrety
+        env:
+          DEPLOY_KEY: ${{ secrets.SH1_DEPLOY_PRIVATE_KEY }}
+          HOST_KEY: ${{ secrets.SH1_KNOWN_HOSTS }}
+        run: |
+          test "$GITHUB_REF" = "refs/heads/feature/admin-staging-v11.11"
+          test -n "$DEPLOY_KEY" || { echo 'Missing secret SH1_DEPLOY_PRIVATE_KEY' >&2; exit 1; }
+          test -n "$HOST_KEY" || { echo 'Missing secret SH1_KNOWN_HOSTS' >&2; exit 1; }
+      - name: Rozpakuj multimedia
+        run: bash scripts/unpack-media.sh
+      - name: Uruchom wszystkie kontrole aplikacji
+        run: |
+          python3 scripts/check-project.py
+          python3 scripts/check-admin.py
+          node tests/admin-demo.cjs
+          bash -n scripts/build-seohost-sh1.sh
+      - name: Zbuduj odrębne katalogi stron
+        run: bash scripts/build-seohost-sh1.sh
+      - name: Sprawdź odpowiedź HTTP obu buildów
+        run: |
+          for target in admin testrpg; do
+            python3 -m http.server 8094 --bind 127.0.0.1 --directory "dist/seohost-sh1/$target" >/tmp/sh1-http.log 2>&1 &
+            pid=$!
+            for attempt in 1 2 3 4 5; do
+              if curl --fail --silent "http://127.0.0.1:8094/" -o /dev/null; then break; fi
+              sleep 1
+            done
+            curl --fail --silent "http://127.0.0.1:8094/" -o /dev/null
+            kill "$pid" || true
+            wait "$pid" || true
+          done
+      - name: Spakuj wybrany katalog
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          case "$TARGET" in admin|testrpg) ;; *) exit 1;; esac
+          tar -czf /tmp/seohost-stage.tar.gz -C "dist/seohost-sh1/$TARGET" .
+      - name: Przygotuj bezpieczny dostęp SSH
+        env:
+          DEPLOY_KEY: ${{ secrets.SH1_DEPLOY_PRIVATE_KEY }}
+          HOST_KEY: ${{ secrets.SH1_KNOWN_HOSTS }}
+        run: |
+          umask 077
+          mkdir -p "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/sh1_deploy"
+          printf '%s\n' "$HOST_KEY" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/sh1_deploy" "$HOME/.ssh/known_hosts"
+          ssh-keygen -y -P "" -f "$HOME/.ssh/sh1_deploy" >/dev/null
+          ssh-keygen -F '[h108.seohost.pl]:57185' -f "$HOME/.ssh/known_hosts" >/dev/null
+      - name: Przenieś archiwum i wdroż na SH1
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -Eeuo pipefail
+          ssh_args=(-i "$HOME/.ssh/sh1_deploy" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -p 57185)
+          scp_args=(-i "$HOME/.ssh/sh1_deploy" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -P 57185)
+          server='srv130039@h108.seohost.pl'
+          incoming="/home/srv130039/.panszczesniak-deploy/incoming"
+          ssh "${ssh_args[@]}" "$server" "mkdir -p '$incoming'"
+          scp "${scp_args[@]}" /tmp/seohost-stage.tar.gz "$server:$incoming/${TARGET}-${GITHUB_RUN_ID}.tar.gz"
+          ssh "${ssh_args[@]}" "$server" bash -s -- "$TARGET" "$GITHUB_RUN_ID" <<'REMOTE'
+          set -Eeuo pipefail
+          target="$1"
+          run="$2"
+          account="/home/srv130039"
+          case "$target" in
+            admin) dest="$account/domains/admin.panszczesniak.pl/public_html" ;;
+            testrpg) dest="$account/domains/testrpg.panszczesniak.pl/public_html" ;;
+            *) exit 2 ;;
+          esac
+          test -d "$dest"
+          test "$(realpath "$dest")" = "$dest" || { echo 'Invalid document root' >&2; exit 3; }
+          base="$account/.panszczesniak-deploy"
+          archive="$base/incoming/$target-$run.tar.gz"
+          test -s "$archive"
+          stage="$(mktemp -d "$base/$target-XXXXXXXX")"
+          trap 'rm -rf "$stage"; rm -f "$archive"' EXIT
+          tar -xzf "$archive" -C "$stage"
+          test -f "$stage/index.html"
+          if [ "$target" = admin ]; then
+            test -f "$stage/admin.js"
+            test -f "$stage/control-center/projects.example.json"
+          else
+            test -f "$stage/StreamHouse-Portal.html"
+          fi
+          # Snapshot przed nadpisaniem, bez usuwania innych plików na hostingu.
+          backup="$base/backups/$target/$run"
+          mkdir -p "$backup"
+          cp -a "$dest/." "$backup/"
+          cp -a "$stage/." "$dest/"
+          echo "Staging $target successfully published (backup: $backup)"
+          REMOTE
+      - name: Podsumowanie
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          if [ "$TARGET" = admin ]; then
+            url="https://admin.panszczesniak.pl"
+          else
+            url="https://testrpg.panszczesniak.pl"
+          fi
+          echo "Publikacja demonstracyjna: $url" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Bez danych produkcyjnych, bez automatycznej publikacji." >> "$GITHUB_STEP_SUMMARY"
