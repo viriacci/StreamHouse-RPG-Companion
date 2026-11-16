@@ -79,8 +79,8 @@ begin
     or coalesce(p.display_name,'') ilike '%'||pg_catalog.btrim(p_query)||'%'
     or u.id::text ilike '%'||pg_catalog.btrim(p_query)||'%'
  order by u.created_at desc,u.id
- limit pg_catalog.greatest(1,pg_catalog.least(coalesce(p_limit,40),100))
- offset pg_catalog.greatest(coalesce(p_offset,0),0);
+ limit greatest(1,least(coalesce(p_limit,40),100))
+ offset greatest(coalesce(p_offset,0),0);
 end
 $fn$;
 
@@ -112,8 +112,8 @@ begin
         or c.title ilike '%'||pg_catalog.btrim(p_query)||'%'
         or c.id::text ilike '%'||pg_catalog.btrim(p_query)||'%')
  order by c.created_at desc,c.id
- limit pg_catalog.greatest(1,pg_catalog.least(coalesce(p_limit,40),100))
- offset pg_catalog.greatest(coalesce(p_offset,0),0);
+ limit greatest(1,least(coalesce(p_limit,40),100))
+ offset greatest(coalesce(p_offset,0),0);
 end
 $fn$;
 
@@ -149,7 +149,7 @@ begin
  from private.sh_admin_audit a
  left join public.sh_profiles p on p.id=a.actor_id
  order by a.created_at desc,a.id desc
- limit pg_catalog.greatest(1,pg_catalog.least(coalesce(p_limit,40),100));
+ limit greatest(1,least(coalesce(p_limit,40),100));
 end
 $fn$;
 
