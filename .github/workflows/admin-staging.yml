@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir -p staging-public/assets
           cp index.html StreamHouse-Portal.html Kreator-Postaci.html Katalog-Rycin-PD.html favicon.ico staging-public/
-          cp -a assets rozgrywka pokoj gotowe-karty admin staging-public/
+          cp -a assets rozgrywka pokoj gotowe-karty admin control-center staging-public/
           cat > staging-public/assets/cloud-config.js <<'EOF'
           window.STREAMHOUSE_CLOUD_DEFAULT_CONFIG=Object.freeze({url:'',publishableKey:''});
           window.STREAMHOUSE_CLOUD_CONFIG=window.STREAMHOUSE_CLOUD_DEFAULT_CONFIG;
