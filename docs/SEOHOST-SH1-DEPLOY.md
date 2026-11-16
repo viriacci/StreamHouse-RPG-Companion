@@ -8,7 +8,9 @@ Workflow może zostać uruchomiony z gałęzi feature/admin-staging-v11.11 przez
 - ADMIN: /home/srv130039/domains/admin.panszczesniak.pl/public_html
 - RPG STAGING: /home/srv130039/domains/testrpg.panszczesniak.pl/public_html
 
-W obydwu katalogach początkowo jest tylko index.html i cgi-bin. Przed pierwszym wdrożeniem aktywuj HTTPS i rozważ ochronę hasłem dla panelu, np. przez DirectAdmin (katalog z hasłem), aby publiczny gość nie mylił demonstracyjnych uprawnień z prawdziwymi.
+W obydwu katalogach początkowo jest tylko index.html i cgi-bin.
+
+**Warunek konieczny publikacji ADMIN:** na `https://admin.panszczesniak.pl/` musi działać HTTPS oraz ochrona HTTP Basic Auth całego katalogu `domains/admin.panszczesniak.pl/public_html`. Ustaw ochronę katalogu hasłem w DirectAdmin i przetestuj ją w trybie incognito. Workflow dwukrotnie sprawdza odpowiedź HTTP 401 oraz nagłówek `WWW-Authenticate: Basic`, przed i po publikacji. Bez spełnienia warunku wdrożenie zostanie przerwane bez dotykania plików serwera. Panel działa w trybie demonstracyjnym z rolą owner, więc nie wolno publikować go otwartego.
 
 ## Sekrety GitHub Environment: seohost-staging
 
